@@ -5,6 +5,13 @@ on: [push]
 jobs: 
   test:
     runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+      SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+      SUPABASE_JWT_SECRET: ${{ secrets.SUPABASE_JWT_SECRET }}
+      SENTRY_DSN: ""
+      ENVIRONMENT: "test"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
