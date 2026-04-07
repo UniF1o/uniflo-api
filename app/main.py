@@ -13,6 +13,6 @@ if settings.SENTRY_DSN:
 app = FastAPI(title="UniFlo", version="0.1.0")
 
 
-@app.get("/health", methods=["GET", "HEAD"])
+@app.get("/health")
 def health_check():
     return {"status": "ok", "environment": settings.ENVIRONMENT}
