@@ -16,3 +16,6 @@ app = FastAPI(title="UniFlo", version="0.1.0")
 @app.get("/health")
 def health_check():
     return {"status": "ok", "environment": settings.ENVIRONMENT}
+@app.head("/ping")
+def service_ping():
+    return {"status": "200 ok", "environment": settings.ENVIRONMENT}
