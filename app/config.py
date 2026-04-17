@@ -8,7 +8,8 @@ class Settings(BaseSettings):
     SUPABASE_JWT_SECRET: str
     SENTRY_DSN: str = ""
     ENVIRONMENT: str = "development"
-
+    WEBHOOK_SECRET: str 
+    DELETE_WEBHOOK_SECRET: str 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 

@@ -10,13 +10,15 @@ jobs:
       SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
       SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
       SUPABASE_JWT_SECRET: ${{ secrets.SUPABASE_JWT_SECRET }}
+      WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+      DELETE_WEBHOOK_SECRET: ${{ secrets.DELETE_WEBHOOK_SECRET }}
       SENTRY_DSN: ""
       ENVIRONMENT: "test"
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
-          python-version: "3.11"
+          python-version: "3.12"
       - run: pip install -r requirements.txt
       - run: pytest
   deploy:
