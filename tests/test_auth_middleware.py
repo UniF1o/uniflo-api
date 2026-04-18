@@ -1,6 +1,7 @@
 from fastapi.testclient import TestClient
-from unittest.mock import patch
+from unittest.mock import MagicMock, patch
 from app.main import app
+from app.db import get_session
 
 client = TestClient(app)
 
@@ -63,6 +64,9 @@ def test_invalid_token():
 # jwt.decode is mocked to return a valid payload — no real Supabase token needed
 # /profile doesn't exist yet so 404 — but 404 confirms middleware let the request through
 def test_valid_token_passes_through():
+    mock_session = MagicMock()
+    mock_session.exec.return_value.first.return_value = None
+    app.dependency_overrides[get_session] = lambda: mock_session
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
         mock_decode.return_value = {
             "sub": "a1b2c3d4-0000-0000-0000-000000000000",
