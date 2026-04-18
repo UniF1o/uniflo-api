@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     WEBHOOK_SECRET: str 
     DELETE_WEBHOOK_SECRET: str 
+    SUPABASE_STORAGE_BUCKET: str
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
