@@ -65,7 +65,7 @@ def test_invalid_token():
 def test_valid_token_passes_through():
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
         mock_decode.return_value = {
-            "sub": "a1b2c3d4-uuid",
+            "sub": "a1b2c3d4-0000-0000-0000-000000000000",
             "email": "student@gmail.com",
             "role": "student",
         }
