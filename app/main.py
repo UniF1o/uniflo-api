@@ -6,6 +6,7 @@ from app.api.middleware.auth import AuthMiddleware
 from app.api.webhooks.router import router as webhooks_router
 from app.api.auth.router import router as auth_router
 from app.api.profiles.router import router as profiles_router
+from app.api.documents.router import router as documents_router
 
 if settings.SENTRY_DSN:
     sentry_sdk.init(
@@ -20,6 +21,7 @@ app.add_middleware(AuthMiddleware)
 app.include_router(webhooks_router) #user table links endpoints
 app.include_router(auth_router) #auth endpoints
 app.include_router(profiles_router) #profile create,update and response endpoints
+app.include_router(documents_router) #documents upload,delete and response endpoints
 
 @app.get("/health")
 def health_check():
