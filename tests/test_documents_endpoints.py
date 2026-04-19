@@ -49,11 +49,11 @@ def test_upload_document_success():
     app.dependency_overrides[get_session] = lambda: mock_session
 
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
-         patch("app.api.documents.service.supabase") as mock_supabase:
+         patch("app.api.documents.service.get_supabase") as mock_get_supabase:
 
         mock_auth(mock_decode)
-        mock_supabase.storage.from_.return_value.upload.return_value = {}
-        mock_supabase.storage.from_.return_value.get_public_url.return_value = (
+        mock_get_supabase.storage.from_.return_value.upload.return_value = {}
+        mock_get_supabase.storage.from_.return_value.get_public_url.return_value = (
             "https://supabase.co/storage/v1/object/public/documents/id.pdf"
         )
 
@@ -145,10 +145,10 @@ def test_delete_document_success():
     app.dependency_overrides[get_session] = lambda: mock_session
 
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
-         patch("app.api.documents.service.supabase") as mock_supabase:
+         patch("app.api.documents.service.get_supabase") as mock_get_supabase:
 
         mock_auth(mock_decode)
-        mock_supabase.storage.from_.return_value.remove.return_value = {}
+        mock_get_supabase.storage.from_.return_value.remove.return_value = {}
 
         response = client.delete(
             f"/documents/{VALID_DOCUMENT_ID}",

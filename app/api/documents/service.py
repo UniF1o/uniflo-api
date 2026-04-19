@@ -5,7 +5,7 @@ from sqlmodel import Session, select
 from app.models.document import Document
 from app.models.student_profile import StudentProfile
 from app.api.profiles.service import get_profile
-from app.supabase_client import supabase
+from app.supabase_client import get_supabase
 from app.config import settings
 
 
@@ -40,14 +40,14 @@ async def upload_document(
     file_path = f"{user_id}/{document_type}/{file.filename}"
 
     # upload to Supabase Storage
-    response = supabase.storage.from_(settings.SUPABASE_STORAGE_BUCKET).upload(
+    response = get_supabase.storage.from_(settings.SUPABASE_STORAGE_BUCKET).upload(
         path=file_path,
         file=contents,
         file_options={"content-type": file.content_type, "upsert": "true"}
     )
 
     # build public URL
-    storage_url = supabase.storage.from_(
+    storage_url = get_supabase.storage.from_(
         settings.SUPABASE_STORAGE_BUCKET
     ).get_public_url(file_path)
 
@@ -88,7 +88,7 @@ def delete_document(session: Session, user_id: str, document_id: uuid.UUID) -> N
     file_path = f"{user_id}/{document.type}/{document.storage_url.split('/')[-1]}"
 
     # delete from Supabase Storage
-    supabase.storage.from_(settings.SUPABASE_STORAGE_BUCKET).remove([file_path])
+    get_supabase.storage.from_(settings.SUPABASE_STORAGE_BUCKET).remove([file_path])
 
     # delete from database
     session.delete(document)
