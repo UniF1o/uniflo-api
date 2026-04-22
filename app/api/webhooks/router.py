@@ -1,63 +1,68 @@
-from fastapi import APIRouter, Request
-from fastapi.responses import JSONResponse
+import hmac
+import uuid
+
+from fastapi import APIRouter, Depends, Header, HTTPException
+from pydantic import BaseModel, EmailStr
 from sqlmodel import Session
 
 from app.config import settings
-from app.models.user import User
 from app.db import get_session
-from fastapi import Depends
+from app.models.user import User
 
-router = APIRouter()
+router = APIRouter(prefix="/webhooks", tags=["webhooks"])
 
-@router.post("/webhooks/user-created")
-async def user_created(
-    request: Request,
-    session: Session = Depends(get_session)
+
+class UserCreatedRecord(BaseModel):
+    id: uuid.UUID
+    email: EmailStr
+
+
+class UserCreatedPayload(BaseModel):
+    record: UserCreatedRecord
+
+
+class UserDeletedRecord(BaseModel):
+    id: uuid.UUID
+
+
+class UserDeletedPayload(BaseModel):
+    record: UserDeletedRecord
+
+
+def _verify_secret(provided: str | None, expected: str) -> None:
+    if not provided or not hmac.compare_digest(provided, expected):
+        raise HTTPException(status_code=401, detail="Unauthorised")
+
+
+@router.post("/user-created")
+def user_created(
+    payload: UserCreatedPayload,
+    x_webhook_secret: str | None = Header(default=None, alias="x-webhook-secret"),
+    session: Session = Depends(get_session),
 ):
-    secret = request.headers.get("x-webhook-secret")
+    _verify_secret(x_webhook_secret, settings.WEBHOOK_SECRET)
 
-    if secret != settings.WEBHOOK_SECRET:
-        return JSONResponse(
-            status_code= 401,
-            content = {"detail":"Unauthorised"}
-        )
-    payload = await request.json()
-    record = payload["record"]
+    record = payload.record
+    if session.get(User, record.id):
+        return {"status": "user already exists"}
 
-    user_id = record["id"]
-    email = record["email"]
-    #user_created_at = record["created_at"]
-
-    existing = session.get(User, user_id)
-    if existing:
-        return {"status":"user already exists"}
-    user = User(id=user_id, email=email,  role="student") #created_at=user_created_at,
-    session.add(user)
+    session.add(User(id=record.id, email=record.email, role="student"))
     session.commit()
+    return {"status": "ok"}
 
-    return {"status":"ok"}
 
-@router.post("/webhooks/user-deleted")
-async def user_deleted(
-    request: Request,
-    session: Session = Depends(get_session)
+@router.post("/user-deleted")
+def user_deleted(
+    payload: UserDeletedPayload,
+    x_webhook_secret: str | None = Header(default=None, alias="x-webhook-secret"),
+    session: Session = Depends(get_session),
 ):
-    secret = request.headers.get("x-webhook-secret")
+    _verify_secret(x_webhook_secret, settings.DELETE_WEBHOOK_SECRET)
 
-    if secret != settings.DELETE_WEBHOOK_SECRET:
-        return JSONResponse(
-            status_code= 401,
-            content = {"detail":"Unauthorised"}
-        )
-    payload = await request.json()
-    record = payload["record"]
-
-    user_id = record["id"]
-    
-    existing = session.get(User, user_id)
+    existing = session.get(User, payload.record.id)
     if not existing:
-        return {"status":"user doesn't exist"}
+        return {"status": "user doesn't exist"}
+
     session.delete(existing)
     session.commit()
-
-    return {"status":"ok"}
+    return {"status": "ok"}

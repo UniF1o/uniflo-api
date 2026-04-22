@@ -1,9 +1,13 @@
 from fastapi import APIRouter, Depends, Request
 from sqlmodel import Session
 
-from app.db import get_session
-from app.api.profiles.schemas import StudentProfileCreate, StudentProfileUpdate, StudentProfileResponse
 from app.api.profiles import service
+from app.api.profiles.schemas import (
+    StudentProfileCreate,
+    StudentProfileResponse,
+    StudentProfileUpdate,
+)
+from app.db import get_session
 
 router = APIRouter(prefix="/profile", tags=["profile"])
 
