@@ -1,13 +1,15 @@
-from datetime import date, datetime
-from typing import Optional
-from pydantic import BaseModel, ConfigDict
-from enum import Enum
 import uuid
+from datetime import date, datetime
+from enum import Enum
+from typing import Optional
+
+from pydantic import BaseModel, ConfigDict
+
 
 class GenderEnum(str, Enum):
     MALE = "Male"
     FEMALE = "Female"
-    #OTHER = "Other" At this moment all unis follow HEMIS reporting so non-binary is not an option yet
+    # All SA universities follow HEMIS reporting, so non-binary is not an option yet.
 
 
 class HomeLanguageEnum(str, Enum):
@@ -60,6 +62,6 @@ class StudentProfileResponse(BaseModel):
     phone: str
     address: str
     nationality: str
-    gender: str
-    home_language: str
+    gender: GenderEnum
+    home_language: HomeLanguageEnum
     updated_at: Optional[datetime] = None

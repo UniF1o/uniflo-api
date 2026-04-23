@@ -1,10 +1,11 @@
 import uuid
-from fastapi import APIRouter, Depends, Request, UploadFile, File, Form
+
+from fastapi import APIRouter, Depends, File, Form, Request, UploadFile
 from sqlmodel import Session
 
-from app.db import get_session
-from app.api.documents.schemas import DocumentType, DocumentResponse
 from app.api.documents import service
+from app.api.documents.schemas import DocumentResponse, DocumentType
+from app.db import get_session
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 

@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 from enum import Enum
+
 from pydantic import BaseModel, ConfigDict
 
 
@@ -15,6 +16,6 @@ class DocumentResponse(BaseModel):
 
     id: uuid.UUID
     student_id: uuid.UUID
-    type: str
+    type: DocumentType
     storage_url: str
     uploaded_at: datetime
