@@ -14,7 +14,7 @@ class Settings(BaseSettings):
     DELETE_WEBHOOK_SECRET: str
     SENTRY_DSN: Optional[str] = None
     ENVIRONMENT: str = "development"
-    CORS_ORIGINS: list[str] = ["http://localhost:3000"]
+    CORS_ORIGINS: list[str] = ["http://localhost:3000", "https://uniflo-web.vercel.app"]
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
