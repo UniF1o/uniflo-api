@@ -1,14 +1,17 @@
 import uuid
-from datetime import datetime,timezone
+from datetime import datetime, timezone
 from typing import Optional
 
 from sqlalchemy import Column, DateTime
 from sqlmodel import Field, SQLModel
 
+
 class ApplicationJob(SQLModel, table=True):
-    __tablename__  = "application_jobs"
-    id:  Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
-    application_id: uuid.UUID = Field(foreign_key="applications.id", nullable=False, index=True)
+    __tablename__ = "application_jobs"
+    id: Optional[uuid.UUID] = Field(default_factory=uuid.uuid4, primary_key=True)
+    application_id: uuid.UUID = Field(
+        foreign_key="applications.id", nullable=False, index=True
+    )
     status: Optional[str] = Field(index=True)
     attempts: int = Field(default=0)
     last_error: Optional[str]

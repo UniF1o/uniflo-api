@@ -59,8 +59,9 @@ def test_upload_document_success():
     mock_session.refresh.side_effect = lambda d: None
     app.dependency_overrides[get_session] = lambda: mock_session
 
-    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
-         patch("app.api.documents.service.get_supabase") as mock_get_supabase:
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.documents.service.get_supabase"
+    ) as mock_get_supabase:
         mock_auth(mock_decode)
         _wire_storage_mocks(mock_get_supabase)
 
@@ -121,8 +122,9 @@ def test_get_documents_success():
     mock_session.exec.return_value.all.return_value = [make_mock_document()]
     app.dependency_overrides[get_session] = lambda: mock_session
 
-    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
-         patch("app.api.documents.service.get_supabase") as mock_get_supabase:
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.documents.service.get_supabase"
+    ) as mock_get_supabase:
         mock_auth(mock_decode)
         _wire_storage_mocks(mock_get_supabase)
 
@@ -156,8 +158,9 @@ def test_delete_document_success():
     mock_session.get.return_value = make_mock_document()
     app.dependency_overrides[get_session] = lambda: mock_session
 
-    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
-         patch("app.api.documents.service.get_supabase") as mock_get_supabase:
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.documents.service.get_supabase"
+    ) as mock_get_supabase:
         mock_auth(mock_decode)
         bucket = _wire_storage_mocks(mock_get_supabase)
 

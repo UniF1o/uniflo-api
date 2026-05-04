@@ -7,11 +7,11 @@ from app.models.application import Application
 from app.models.application_job import ApplicationJob
 
 __all__ = [
-            "StudentProfile", 
-            "AcademicRecord", 
-            "Document", 
-            "User",
-            "University",
-            "Application",
-            "ApplicationJob"
-            ]
+    "StudentProfile",
+    "AcademicRecord",
+    "Document",
+    "User",
+    "University",
+    "Application",
+    "ApplicationJob",
+]

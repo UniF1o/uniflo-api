@@ -4,6 +4,7 @@ from typing import Optional
 
 from sqlmodel import Field, SQLModel
 
+
 class University(SQLModel, table=True):
     __tablename__ = "universities"
 

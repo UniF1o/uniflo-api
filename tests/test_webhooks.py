@@ -23,7 +23,12 @@ def test_user_created_wrong_secret():
         response = client.post(
             "/webhooks/user-created",
             headers={"x-webhook-secret": "wrongsecret"},
-            json={"record": {"id": "a1b2c3d4-0000-0000-0000-000000000000", "email": "student@gmail.com"}}
+            json={
+                "record": {
+                    "id": "a1b2c3d4-0000-0000-0000-000000000000",
+                    "email": "student@gmail.com",
+                }
+            },
         )
     app.dependency_overrides.clear()
     assert response.status_code == 401
@@ -41,7 +46,12 @@ def test_user_created_success():
         response = client.post(
             "/webhooks/user-created",
             headers={"x-webhook-secret": VALID_SECRET},
-            json={"record": {"id": "a1b2c3d4-0000-0000-0000-000000000000", "email": "student@gmail.com"}}
+            json={
+                "record": {
+                    "id": "a1b2c3d4-0000-0000-0000-000000000000",
+                    "email": "student@gmail.com",
+                }
+            },
         )
 
     app.dependency_overrides.clear()
@@ -60,7 +70,12 @@ def test_user_created_already_exists():
         response = client.post(
             "/webhooks/user-created",
             headers={"x-webhook-secret": VALID_SECRET},
-            json={"record": {"id": "a1b2c3d4-0000-0000-0000-000000000000", "email": "student@gmail.com"}}
+            json={
+                "record": {
+                    "id": "a1b2c3d4-0000-0000-0000-000000000000",
+                    "email": "student@gmail.com",
+                }
+            },
         )
 
     app.dependency_overrides.clear()
@@ -79,7 +94,7 @@ def test_user_deleted_success():
         response = client.post(
             "/webhooks/user-deleted",
             headers={"x-webhook-secret": VALID_SECRET},
-            json={"record": {"id": "a1b2c3d4-0000-0000-0000-000000000000"}}
+            json={"record": {"id": "a1b2c3d4-0000-0000-0000-000000000000"}},
         )
 
     app.dependency_overrides.clear()
@@ -98,7 +113,7 @@ def test_user_deleted_not_found():
         response = client.post(
             "/webhooks/user-deleted",
             headers={"x-webhook-secret": VALID_SECRET},
-            json={"record": {"id": "a1b2c3d4-0000-0000-0000-000000000000"}}
+            json={"record": {"id": "a1b2c3d4-0000-0000-0000-000000000000"}},
         )
 
     app.dependency_overrides.clear()

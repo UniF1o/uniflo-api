@@ -13,5 +13,7 @@ class AcademicRecord(SQLModel, table=True):
     student_id: uuid.UUID = Field(foreign_key="student_profiles.id", nullable=False)
     institution: str
     year: int
-    subjects: Optional[Any] = Field(default=None, sa_column=Column(JSONB, nullable=True))
+    subjects: Optional[Any] = Field(
+        default=None, sa_column=Column(JSONB, nullable=True)
+    )
     aggregate: Optional[int] = Field(default=None)
