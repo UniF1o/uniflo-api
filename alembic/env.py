@@ -5,15 +5,6 @@ from sqlmodel import SQLModel
 
 from alembic import context
 from app.config import settings
-from app.models import (
-    AcademicRecord,
-    Document,
-    StudentProfile,
-    User,
-    University,
-    Application,
-    ApplicationJob,
-)  # noqa: F401
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
