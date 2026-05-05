@@ -1,10 +1,13 @@
-import sys
 import os
+import sys
+
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from app.db import get_engine
 from datetime import date
+
 from sqlmodel import Session, select
+
+from app.db import get_engine
 from app.models import University
 
 """
