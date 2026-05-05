@@ -13,7 +13,7 @@ def get_auth_headers():
         mock_decode.return_value = {
             "sub": "a1b2c3d4-0000-0000-0000-000000000000",
             "email": "student@gmail.com",
-            "role": "student"
+            "role": "student",
         }
         return {"Authorization": "Bearer validtoken"}
 
@@ -32,11 +32,10 @@ def test_get_me_existing_user():
         mock_decode.return_value = {
             "sub": "a1b2c3d4-0000-0000-0000-000000000000",
             "email": "student@gmail.com",
-            "role": "student"
+            "role": "student",
         }
         response = client.get(
-            "/auth/me",
-            headers={"Authorization": "Bearer validtoken"}
+            "/auth/me", headers={"Authorization": "Bearer validtoken"}
         )
 
     app.dependency_overrides.clear()
@@ -60,11 +59,10 @@ def test_get_me_self_heal():
         mock_decode.return_value = {
             "sub": "a1b2c3d4-0000-0000-0000-000000000000",
             "email": "student@gmail.com",
-            "role": "student"
+            "role": "student",
         }
         response = client.get(
-            "/auth/me",
-            headers={"Authorization": "Bearer validtoken"}
+            "/auth/me", headers={"Authorization": "Bearer validtoken"}
         )
 
     app.dependency_overrides.clear()

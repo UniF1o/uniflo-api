@@ -26,9 +26,11 @@ def _safe_extension(filename: str | None) -> str:
 
 def _create_signed_url(storage_path: str) -> str:
     """Generate a short-lived signed URL for a private-bucket object."""
-    result = get_supabase().storage.from_(
-        settings.SUPABASE_STORAGE_BUCKET
-    ).create_signed_url(storage_path, SIGNED_URL_TTL_SECONDS)
+    result = (
+        get_supabase()
+        .storage.from_(settings.SUPABASE_STORAGE_BUCKET)
+        .create_signed_url(storage_path, SIGNED_URL_TTL_SECONDS)
+    )
     # storage3 returns a TypedDict; key casing varies across versions.
     return (
         result.get("signedURL")

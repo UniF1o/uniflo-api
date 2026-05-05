@@ -18,7 +18,7 @@ VALID_PROFILE_DATA = {
     "address": "1 Main Road, Cape Town",
     "nationality": "South African",
     "gender": "Male",
-    "home_language": "English"
+    "home_language": "English",
 }
 
 
@@ -30,7 +30,7 @@ def mock_auth(mock_decode):
     mock_decode.return_value = {
         "sub": VALID_USER_ID,
         "email": "student@gmail.com",
-        "role": "student"
+        "role": "student",
     }
 
 
@@ -57,9 +57,7 @@ def test_create_profile_success():
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
         mock_auth(mock_decode)
         response = client.post(
-            "/profile",
-            json=VALID_PROFILE_DATA,
-            headers=auth_headers()
+            "/profile", json=VALID_PROFILE_DATA, headers=auth_headers()
         )
 
     app.dependency_overrides.clear()
@@ -75,9 +73,7 @@ def test_create_profile_already_exists():
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
         mock_auth(mock_decode)
         response = client.post(
-            "/profile",
-            json=VALID_PROFILE_DATA,
-            headers=auth_headers()
+            "/profile", json=VALID_PROFILE_DATA, headers=auth_headers()
         )
 
     app.dependency_overrides.clear()
@@ -151,9 +147,7 @@ def test_update_profile_success():
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
         mock_auth(mock_decode)
         response = client.patch(
-            "/profile",
-            json={"phone": "0839876543"},
-            headers=auth_headers()
+            "/profile", json={"phone": "0839876543"}, headers=auth_headers()
         )
 
     app.dependency_overrides.clear()
@@ -169,9 +163,7 @@ def test_update_profile_not_found():
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
         mock_auth(mock_decode)
         response = client.patch(
-            "/profile",
-            json={"phone": "0839876543"},
-            headers=auth_headers()
+            "/profile", json={"phone": "0839876543"}, headers=auth_headers()
         )
 
     app.dependency_overrides.clear()
