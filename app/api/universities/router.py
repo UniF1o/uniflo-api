@@ -6,8 +6,8 @@ from slowapi import Limiter
 from slowapi.util import get_remote_address
 from sqlmodel import Session
 
-from app.api.universities.schemas import UniversitiesListResponse, UniversityRead
 from app.api.universities import service
+from app.api.universities.schemas import UniversitiesListResponse, UniversityRead
 from app.db import get_session
 
 limiter = Limiter(key_func=get_remote_address)

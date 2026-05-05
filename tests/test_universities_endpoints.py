@@ -1,8 +1,10 @@
 import uuid
+from unittest.mock import MagicMock
+
 from fastapi.testclient import TestClient
-from unittest.mock import MagicMock, patch
-from app.main import app
+
 from app.db import get_session
+from app.main import app
 
 client = TestClient(app)
 

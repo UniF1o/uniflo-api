@@ -1,7 +1,8 @@
 import uuid
+from typing import Optional
+
 from fastapi import HTTPException
 from sqlmodel import Session, select
-from typing import Optional
 
 from app.models.university import University
 

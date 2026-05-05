@@ -1,7 +1,9 @@
 import uuid
 from datetime import date
 from typing import Optional
+
 from pydantic import BaseModel, ConfigDict
+
 
 class UniversityRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
