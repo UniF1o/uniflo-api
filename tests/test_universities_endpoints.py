@@ -113,6 +113,8 @@ def test_get_university_not_found():
 
 # GET /universities/{id} returns 422 when id is not a valid UUID
 def test_get_university_invalid_uuid():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
     response = client.get("/universities/not-a-uuid")
     assert response.status_code == 422
 
