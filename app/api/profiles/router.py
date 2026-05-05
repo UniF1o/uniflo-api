@@ -26,7 +26,7 @@ def create_profile(
 
 @router.get(
     "", response_model=StudentProfileResponse
-)  # Gets sttudent profile details <3
+)  # Gets student profile details <3
 def get_profile(request: Request, session: Session = Depends(get_session)):
     user_id = request.state.user["sub"]
     return service.get_profile(session, user_id)

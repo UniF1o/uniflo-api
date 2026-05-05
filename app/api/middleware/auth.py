@@ -10,9 +10,9 @@ PUBLIC_EXACT = {
     "/ping",
     "/openapi.json",
     "/webhooks/user-created",
-    "/webhooks/user-deleted",
+    "/webhooks/user-deleted"
 }
-PUBLIC_PREFIXES = ("/docs", "/redoc")
+PUBLIC_PREFIXES = ("/docs", "/redoc",  "/universities")
 
 
 def _is_public(path: str) -> bool:
