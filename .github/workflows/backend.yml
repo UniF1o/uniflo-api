@@ -30,7 +30,32 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     needs: test
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main'
     steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.12"
+      - run: pip install -r requirements.txt
+      - name: Run Alembic migrations
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_JWT_SECRET: ${{ secrets.SUPABASE_JWT_SECRET }}
+          SUPABASE_STORAGE_BUCKET: ${{ secrets.SUPABASE_STORAGE_BUCKET }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          DELETE_WEBHOOK_SECRET: ${{ secrets.DELETE_WEBHOOK_SECRET }}
+        run: alembic upgrade head
+      - name: Seed universities
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          SUPABASE_JWT_SECRET: ${{ secrets.SUPABASE_JWT_SECRET }}
+          SUPABASE_STORAGE_BUCKET: ${{ secrets.SUPABASE_STORAGE_BUCKET }}
+          WEBHOOK_SECRET: ${{ secrets.WEBHOOK_SECRET }}
+          DELETE_WEBHOOK_SECRET: ${{ secrets.DELETE_WEBHOOK_SECRET }}
+        run: python scripts/seed_universities.py
       - name: Deploy to Render
-        run: curl -fsS ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: curl ${{ secrets.RENDER_DEPLOY_HOOK }}
