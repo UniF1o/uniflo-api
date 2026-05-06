@@ -5,6 +5,7 @@ from slowapi import Limiter, _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
 
+from app.api.applications.router import router as applications_router
 from app.api.auth.router import router as auth_router
 from app.api.documents.router import router as documents_router
 from app.api.middleware.auth import AuthMiddleware
@@ -41,6 +42,7 @@ app.include_router(auth_router)
 app.include_router(profiles_router)
 app.include_router(documents_router)
 app.include_router(universities_router)
+app.include_router(applications_router)
 
 @app.get("/health")
 def health_check():
