@@ -6,17 +6,11 @@ from typing import Optional
 from pydantic import BaseModel, ConfigDict, field_validator
 
 
-class ApplicationStatus(str, Enum):
-    PENDING = "pending"
-    PROCESSING = "processing"
-    SUBMITTED = "submitted"
-    FAILED = "failed"
-
 class ApplicationJobRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
     id: uuid.UUID
-    status: Optional[ApplicationStatus]
+    status: Optional[str]
     attempts: int
     last_error: Optional[str]
     screenshot_url: Optional[str]
@@ -32,7 +26,7 @@ class ApplicationRead(BaseModel):
     university_id: uuid.UUID
     programme: str
     application_year: int
-    status: Optional[ApplicationStatus]
+    status: Optional[str]
     submitted_at: Optional[datetime]
     updated_at: Optional[datetime]
     created_at: datetime

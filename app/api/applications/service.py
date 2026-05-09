@@ -5,7 +5,7 @@ from typing import Optional
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
-from app.api.applications.schemas import ApplicationCreate, ApplicationStatus
+from app.api.applications.schemas import ApplicationCreate
 from app.models.application import Application
 from app.models.application_job import ApplicationJob
 from app.models.student_profile import StudentProfile
@@ -68,7 +68,7 @@ def create_application(
         university_id=data.university_id,
         programme=data.programme,
         application_year=data.application_year,
-        status=ApplicationStatus.PENDING,
+        status="pending",
         created_at=datetime.now(timezone.utc),
     )
     session.add(application)
@@ -76,7 +76,7 @@ def create_application(
 
     job = ApplicationJob(
         application_id=application.id,
-        status=ApplicationStatus.PENDING,
+        status="pending",
         attempts=0,
     )
     session.add(job)
