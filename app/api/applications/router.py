@@ -6,6 +6,7 @@ from sqlmodel import Session
 
 from app.api.applications import service
 from app.api.applications.schemas import ApplicationCreate, ApplicationRead
+from app.api.automation.background import process_application
 from app.db import get_session
 
 router = APIRouter(prefix="/applications", tags=["applications"])
@@ -20,7 +21,7 @@ def create_application(
 ):
     user_id = request.state.user["sub"]
     application = service.create_application(session, user_id, data)
-    background_tasks.add_task(process_application_stub, application.id)
+    background_tasks.add_task(process_application, application.id)
     return application
 
 
@@ -49,8 +50,3 @@ def retry_application(application_id: uuid.UUID):
         status_code=501,
         content={"detail": "retry_not_yet_implemented"}
     )
-
-
-def process_application_stub(application_id: uuid.UUID):
-    # Phase 2 stub — replaced by real Playwright adapter in Phase 3
-    pass
