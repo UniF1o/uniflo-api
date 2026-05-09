@@ -6,8 +6,8 @@ from sqlmodel import Session
 
 from app.api.applications import service
 from app.api.applications.schemas import ApplicationCreate, ApplicationRead
-from app.db import get_session
 from app.api.automation.background import process_application
+from app.db import get_session
 
 router = APIRouter(prefix="/applications", tags=["applications"])
 
