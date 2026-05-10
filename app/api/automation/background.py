@@ -6,10 +6,10 @@ from datetime import datetime, timezone
 
 from sqlmodel import Session, select
 
+from app.config import settings
 from app.db import get_engine
 from app.models.application import Application
 from app.models.application_job import ApplicationJob
-from app.config import settings
 
 logger = logging.getLogger(__name__)
 
