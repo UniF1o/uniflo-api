@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 
 from sqlmodel import Session, select
 
+from app.config import settings
 from app.db import get_engine
 from app.models.application import Application
 from app.models.application_job import ApplicationJob
@@ -20,6 +21,12 @@ def process_application(application_id: uuid.UUID) -> None:
 
     Phase 3 replaces this with real Playwright adapter calls.
     """
+    if not settings.FAKE_AUTOMATION:
+        logger.info(
+            "process_application: FAKE_AUTOMATION disabled — skipping stub for %s",
+            application_id
+        )
+        return
     try:
         with Session(get_engine()) as session:
             # fetch application and latest job

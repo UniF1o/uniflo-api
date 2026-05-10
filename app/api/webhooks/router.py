@@ -34,7 +34,7 @@ def _verify_secret(provided: str | None, expected: str) -> None:
         raise HTTPException(status_code=401, detail="Unauthorised")
 
 
-@router.post("/user-created")
+@router.post("/user-created", operation_id="webhooks_user_created")
 def user_created(
     payload: UserCreatedPayload,
     x_webhook_secret: str | None = Header(default=None, alias="x-webhook-secret"),
@@ -51,7 +51,7 @@ def user_created(
     return {"status": "ok"}
 
 
-@router.post("/user-deleted")
+@router.post("/user-deleted", operation_id="webhooks_user_deleted")
 def user_deleted(
     payload: UserDeletedPayload,
     x_webhook_secret: str | None = Header(default=None, alias="x-webhook-secret"),
