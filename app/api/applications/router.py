@@ -12,7 +12,7 @@ from app.db import get_session
 router = APIRouter(prefix="/applications", tags=["applications"])
 
 
-@router.post("", response_model=ApplicationRead, status_code=201)
+@router.post("", response_model=ApplicationRead, status_code=201, operation_id="applications_create")
 def create_application(
     request: Request,
     data: ApplicationCreate,
@@ -25,7 +25,7 @@ def create_application(
     return application
 
 
-@router.get("", response_model=list[ApplicationRead])
+@router.get("", response_model=list[ApplicationRead], operation_id="applications_list")
 def list_applications(
     request: Request,
     session: Session = Depends(get_session)
@@ -34,7 +34,7 @@ def list_applications(
     return service.list_applications(session, user_id)
 
 
-@router.get("/{application_id}", response_model=ApplicationRead)
+@router.get("/{application_id}", response_model=ApplicationRead, operation_id="applications_get")
 def get_application(
     application_id: uuid.UUID,
     request: Request,
@@ -44,7 +44,7 @@ def get_application(
     return service.get_application(session, user_id, application_id)
 
 
-@router.post("/{application_id}/retry")
+@router.post("/{application_id}/retry", operation_id="applications_retry")
 def retry_application(application_id: uuid.UUID):
     return JSONResponse(
         status_code=501,

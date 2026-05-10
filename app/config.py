@@ -15,6 +15,7 @@ class Settings(BaseSettings):
     SENTRY_DSN: Optional[str] = None
     ENVIRONMENT: str = "development"
     CORS_ORIGINS: list[str] = ["http://localhost:3000", "https://uniflo-web.vercel.app"]
+    FAKE_AUTOMATION: bool = True
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 

@@ -10,7 +10,7 @@ from app.models.user import User
 router = APIRouter(prefix="/auth", tags=["auth"])
 
 
-@router.get("/me", response_model=UserResponse)
+@router.get("/me", response_model=UserResponse, operation_id="auth_me")
 def get_me(request: Request, session: Session = Depends(get_session)):
     user_id = uuid.UUID(request.state.user["sub"])
     email = request.state.user["email"]

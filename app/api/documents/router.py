@@ -10,7 +10,7 @@ from app.db import get_session
 router = APIRouter(prefix="/documents", tags=["documents"])
 
 
-@router.post("/upload", response_model=DocumentResponse, status_code=201)
+@router.post("/upload", response_model=DocumentResponse, status_code=201, operation_id="documents_upload")
 async def upload_document(
     request: Request,
     file: UploadFile = File(...),
@@ -21,13 +21,13 @@ async def upload_document(
     return await service.upload_document(session, user_id, document_type.value, file)
 
 
-@router.get("", response_model=list[DocumentResponse])
+@router.get("", response_model=list[DocumentResponse], operation_id="documents_list")
 def get_documents(request: Request, session: Session = Depends(get_session)):
     user_id = request.state.user["sub"]
     return service.get_documents(session, user_id)
 
 
-@router.delete("/{document_id}", status_code=200)
+@router.delete("/{document_id}", status_code=200, operation_id="documents_delete")
 def delete_document(
     document_id: uuid.UUID, request: Request, session: Session = Depends(get_session)
 ):
