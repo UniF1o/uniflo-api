@@ -8,9 +8,7 @@ from app.models.university import University
 
 
 def list_universities(
-    session: Session,
-    q: Optional[str] = None,
-    is_active: Optional[bool] = None
+    session: Session, q: Optional[str] = None, is_active: Optional[bool] = None
 ) -> list[University]:
     statement = select(University)
 
@@ -29,9 +27,6 @@ def get_university(session: Session, university_id: uuid.UUID) -> University:
     university = session.get(University, university_id)
 
     if not university:
-        raise HTTPException(
-            status_code=404,
-            detail="university_not_found"
-        )
+        raise HTTPException(status_code=404, detail="university_not_found")
 
     return university

@@ -28,14 +28,14 @@ app = FastAPI(title="UniFlo", version="0.1.0")
 app.state.limiter = limiter
 app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
+app.add_middleware(AuthMiddleware)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins_list,
+    allow_origins=settings.CORS_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
-app.add_middleware(AuthMiddleware)
 
 app.include_router(webhooks_router)
 app.include_router(auth_router)
@@ -43,6 +43,7 @@ app.include_router(profiles_router)
 app.include_router(documents_router)
 app.include_router(universities_router)
 app.include_router(applications_router)
+
 
 @app.get("/health")
 def health_check():

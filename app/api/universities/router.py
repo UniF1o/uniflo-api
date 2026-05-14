@@ -14,23 +14,25 @@ limiter = Limiter(key_func=get_remote_address)
 router = APIRouter(prefix="/universities", tags=["universities"])
 
 
-@router.get("", response_model=UniversitiesListResponse, operation_id="universities_list")
+@router.get(
+    "", response_model=UniversitiesListResponse, operation_id="universities_list"
+)
 @limiter.limit("60/minute")
 def list_universities(
     request: Request,
     q: Optional[str] = None,
     is_active: Optional[bool] = None,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
 ):
     universities = service.list_universities(session, q, is_active)
     return UniversitiesListResponse(items=universities)
 
 
-@router.get("/{university_id}", response_model=UniversityRead, operation_id="universities_get")
+@router.get(
+    "/{university_id}", response_model=UniversityRead, operation_id="universities_get"
+)
 @limiter.limit("60/minute")
 def get_university(
-    request: Request,
-    university_id: uuid.UUID,
-    session: Session = Depends(get_session)
+    request: Request, university_id: uuid.UUID, session: Session = Depends(get_session)
 ):
     return service.get_university(session, university_id)

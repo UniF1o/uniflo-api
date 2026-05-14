@@ -13,7 +13,10 @@ router = APIRouter(prefix="/profile", tags=["profile"])
 
 
 @router.post(
-    "", response_model=StudentProfileResponse, status_code=201, operation_id="profiles_create"
+    "",
+    response_model=StudentProfileResponse,
+    status_code=201,
+    operation_id="profiles_create",
 )  # Creates profile :)
 def create_profile(
     request: Request,

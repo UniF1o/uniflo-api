@@ -19,15 +19,14 @@ def get_student_profile(session: Session, user_id: str) -> StudentProfile:
     profile = session.exec(statement).first()
 
     if not profile:
-        raise HTTPException(
-            status_code=403,
-            detail="profile_not_found"
-        )
+        raise HTTPException(status_code=403, detail="profile_not_found")
 
     return profile
 
 
-def get_latest_job(session: Session, application_id: uuid.UUID) -> Optional[ApplicationJob]:
+def get_latest_job(
+    session: Session, application_id: uuid.UUID
+) -> Optional[ApplicationJob]:
     statement = (
         select(ApplicationJob)
         .where(ApplicationJob.application_id == application_id)
@@ -38,9 +37,7 @@ def get_latest_job(session: Session, application_id: uuid.UUID) -> Optional[Appl
 
 
 def create_application(
-    session: Session,
-    user_id: str,
-    data: ApplicationCreate
+    session: Session, user_id: str, data: ApplicationCreate
 ) -> Application:
     # resolve student profile
     profile = get_student_profile(session, user_id)
@@ -58,8 +55,8 @@ def create_application(
             status_code=400,
             detail={
                 "code": "applications_closed",
-                "close_date": university.close_date.isoformat()
-            }
+                "close_date": university.close_date.isoformat(),
+            },
         )
 
     # create application and job in same transaction
@@ -106,9 +103,7 @@ def list_applications(session: Session, user_id: str) -> list[Application]:
 
 
 def get_application(
-    session: Session,
-    user_id: str,
-    application_id: uuid.UUID
+    session: Session, user_id: str, application_id: uuid.UUID
 ) -> Application:
     profile = get_student_profile(session, user_id)
 

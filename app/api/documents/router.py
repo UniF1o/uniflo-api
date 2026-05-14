@@ -10,7 +10,12 @@ from app.db import get_session
 router = APIRouter(prefix="/documents", tags=["documents"])
 
 
-@router.post("/upload", response_model=DocumentResponse, status_code=201, operation_id="documents_upload")
+@router.post(
+    "/upload",
+    response_model=DocumentResponse,
+    status_code=201,
+    operation_id="documents_upload",
+)
 async def upload_document(
     request: Request,
     file: UploadFile = File(...),
