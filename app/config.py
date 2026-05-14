@@ -1,6 +1,5 @@
 from typing import Optional
 
-from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -14,17 +13,16 @@ class Settings(BaseSettings):
     DELETE_WEBHOOK_SECRET: str
     SENTRY_DSN: Optional[str] = None
     ENVIRONMENT: str = "development"
-    CORS_ORIGINS: list[str] = ["http://localhost:3000", "https://uniflo-web.vercel.app"]
+    # Stored as str so pydantic-settings v2 does not attempt json.loads() on it.
+    # Use the cors_origins property wherever a list is needed.
+    CORS_ORIGINS: str = "http://localhost:3000,https://uniflo-web.vercel.app"
     FAKE_AUTOMATION: bool = True
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
-    @field_validator("CORS_ORIGINS", mode="before")
-    @classmethod
-    def _parse_cors_origins(cls, v):
-        if isinstance(v, str):
-            return [origin.strip() for origin in v.split(",") if origin.strip()]
-        return v
+    @property
+    def cors_origins(self) -> list[str]:
+        return [o.strip() for o in self.CORS_ORIGINS.split(",") if o.strip()]
 
 
 settings = Settings()
