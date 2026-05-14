@@ -23,7 +23,7 @@ def _is_public(path: str) -> bool:
 
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        if _is_public(request.url.path) or request.method == "OPTIONS":
+        if _is_public(request.url.path):
             return await call_next(request)
 
         auth_header = request.headers.get("Authorization")
