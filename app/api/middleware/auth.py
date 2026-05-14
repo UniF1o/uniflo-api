@@ -1,6 +1,8 @@
 import jwt
 from fastapi import Request
 from fastapi.responses import JSONResponse
+from jwt import PyJWKClient
+from jwt.exceptions import PyJWKClientError
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.config import settings
@@ -13,6 +15,8 @@ PUBLIC_EXACT = {
     "/webhooks/user-deleted",
 }
 PUBLIC_PREFIXES = ("/docs", "/redoc", "/universities")
+
+_jwks_client = PyJWKClient(f"{settings.SUPABASE_URL}/auth/v1/.well-known/jwks.json")
 
 
 def _is_public(path: str) -> bool:
@@ -35,10 +39,11 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
         token = auth_header.split(" ", 1)[1]
         try:
+            signing_key = _jwks_client.get_signing_key_from_jwt(token)
             payload = jwt.decode(
                 token,
-                settings.SUPABASE_JWT_SECRET,
-                algorithms=["HS256"],
+                signing_key.key,
+                algorithms=["RS256", "ES256"],
                 options={"verify_aud": False},
             )
             request.state.user = payload
@@ -47,7 +52,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 status_code=401,
                 content={"detail": "Token has expired"},
             )
-        except jwt.InvalidTokenError:
+        except (jwt.InvalidTokenError, PyJWKClientError):
             return JSONResponse(
                 status_code=401,
                 content={"detail": "Invalid token"},
