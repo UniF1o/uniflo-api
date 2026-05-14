@@ -16,5 +16,6 @@ class UniversityRead(BaseModel):
     close_date: Optional[date] = None
     is_active: bool
 
+
 class UniversitiesListResponse(BaseModel):
     items: list[UniversityRead]

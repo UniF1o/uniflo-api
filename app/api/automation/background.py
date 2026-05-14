@@ -24,7 +24,7 @@ def process_application(application_id: uuid.UUID) -> None:
     if not settings.FAKE_AUTOMATION:
         logger.info(
             "process_application: FAKE_AUTOMATION disabled — skipping stub for %s",
-            application_id
+            application_id,
         )
         return
     try:
@@ -33,8 +33,7 @@ def process_application(application_id: uuid.UUID) -> None:
             application = session.get(Application, application_id)
             if not application:
                 logger.error(
-                    "process_application: application %s not found",
-                    application_id
+                    "process_application: application %s not found", application_id
                 )
                 return
 
@@ -48,7 +47,7 @@ def process_application(application_id: uuid.UUID) -> None:
             if not job:
                 logger.error(
                     "process_application: no job found for application %s",
-                    application_id
+                    application_id,
                 )
                 return
 
@@ -70,7 +69,7 @@ def process_application(application_id: uuid.UUID) -> None:
                 application.submitted_at = datetime.now(timezone.utc)
                 logger.info(
                     "process_application: application %s submitted successfully",
-                    application_id
+                    application_id,
                 )
             else:
                 job.status = "failed"
@@ -80,7 +79,7 @@ def process_application(application_id: uuid.UUID) -> None:
                 logger.error(
                     "process_application: application %s failed — %s",
                     application_id,
-                    job.last_error
+                    job.last_error,
                 )
 
             session.add(job)
@@ -91,7 +90,7 @@ def process_application(application_id: uuid.UUID) -> None:
         logger.exception(
             "process_application: unhandled exception for application %s: %s",
             application_id,
-            exc
+            exc,
         )
         # best-effort failure persistence
         try:
@@ -118,6 +117,5 @@ def process_application(application_id: uuid.UUID) -> None:
                 session.commit()
         except Exception as inner_exc:
             logger.exception(
-                "process_application: failed to persist failure state: %s",
-                inner_exc
+                "process_application: failed to persist failure state: %s", inner_exc
             )

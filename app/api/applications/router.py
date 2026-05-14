@@ -12,12 +12,17 @@ from app.db import get_session
 router = APIRouter(prefix="/applications", tags=["applications"])
 
 
-@router.post("", response_model=ApplicationRead, status_code=201, operation_id="applications_create")
+@router.post(
+    "",
+    response_model=ApplicationRead,
+    status_code=201,
+    operation_id="applications_create",
+)
 def create_application(
     request: Request,
     data: ApplicationCreate,
     background_tasks: BackgroundTasks,
-    session: Session = Depends(get_session)
+    session: Session = Depends(get_session),
 ):
     user_id = request.state.user["sub"]
     application = service.create_application(session, user_id, data)
@@ -26,19 +31,16 @@ def create_application(
 
 
 @router.get("", response_model=list[ApplicationRead], operation_id="applications_list")
-def list_applications(
-    request: Request,
-    session: Session = Depends(get_session)
-):
+def list_applications(request: Request, session: Session = Depends(get_session)):
     user_id = request.state.user["sub"]
     return service.list_applications(session, user_id)
 
 
-@router.get("/{application_id}", response_model=ApplicationRead, operation_id="applications_get")
+@router.get(
+    "/{application_id}", response_model=ApplicationRead, operation_id="applications_get"
+)
 def get_application(
-    application_id: uuid.UUID,
-    request: Request,
-    session: Session = Depends(get_session)
+    application_id: uuid.UUID, request: Request, session: Session = Depends(get_session)
 ):
     user_id = request.state.user["sub"]
     return service.get_application(session, user_id, application_id)
@@ -47,6 +49,5 @@ def get_application(
 @router.post("/{application_id}/retry", operation_id="applications_retry")
 def retry_application(application_id: uuid.UUID):
     return JSONResponse(
-        status_code=501,
-        content={"detail": "retry_not_yet_implemented"}
+        status_code=501, content={"detail": "retry_not_yet_implemented"}
     )

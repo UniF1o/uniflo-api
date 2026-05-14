@@ -12,6 +12,7 @@ class ApplicationStatus(str, Enum):
     SUBMITTED = "submitted"
     FAILED = "failed"
 
+
 class ApplicationJobRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
