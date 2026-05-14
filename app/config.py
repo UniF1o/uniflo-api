@@ -1,3 +1,4 @@
+import json
 from typing import Optional
 
 from pydantic import field_validator
@@ -23,6 +24,9 @@ class Settings(BaseSettings):
     @classmethod
     def _split_cors_origins(cls, v):
         if isinstance(v, str):
+            if v.strip().startswith("["):
+                return json.loads(v)
+            # handle comma-separated format: url1,url2
             return [origin.strip() for origin in v.split(",") if origin.strip()]
         return v
 
