@@ -27,15 +27,15 @@ class HomeLanguageEnum(str, Enum):
 
 
 class StudentProfileCreate(BaseModel):
-    first_name: str
-    last_name: str
-    id_number: str
-    date_of_birth: date
-    phone: str
-    address: str
-    nationality: str
-    gender: GenderEnum
-    home_language: HomeLanguageEnum
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    id_number: Optional[str] = None
+    date_of_birth: Optional[date] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    nationality: Optional[str] = None
+    gender: Optional[GenderEnum] = None
+    home_language: Optional[HomeLanguageEnum] = None
 
 
 class StudentProfileUpdate(BaseModel):
@@ -55,13 +55,13 @@ class StudentProfileResponse(BaseModel):
 
     id: uuid.UUID
     user_id: uuid.UUID
-    first_name: str
-    last_name: str
-    id_number: str
-    date_of_birth: date
-    phone: str
-    address: str
-    nationality: str
-    gender: GenderEnum
-    home_language: HomeLanguageEnum
+    first_name: Optional[str] = None
+    last_name: Optional[str] = None
+    id_number: Optional[str] = None
+    date_of_birth: Optional[date] = None
+    phone: Optional[str] = None
+    address: Optional[str] = None
+    nationality: Optional[str] = None
+    gender: Optional[GenderEnum] = None
+    home_language: Optional[HomeLanguageEnum] = None
     updated_at: Optional[datetime] = None

@@ -25,11 +25,17 @@ def create_profile(
     statement = select(StudentProfile).where(
         StudentProfile.user_id == uuid.UUID(user_id)
     )
-    if session.exec(statement).first():
-        raise HTTPException(status_code=409, detail="Profile already exists")
+    profile = session.exec(statement).first()
 
-    profile = StudentProfile(user_id=uuid.UUID(user_id), **data.model_dump())
-    session.add(profile)
+    if profile:
+        for field, value in data.model_dump(exclude_unset=True).items():
+            setattr(profile, field, value)
+    else:
+        profile = StudentProfile(
+            user_id=uuid.UUID(user_id), **data.model_dump(exclude_unset=True)
+        )
+        session.add(profile)
+
     session.commit()
     session.refresh(profile)
     return profile

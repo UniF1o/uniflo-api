@@ -36,11 +36,24 @@ def get_latest_job(
     return session.exec(statement).first()
 
 
+_REQUIRED_PROFILE_FIELDS = [
+    "first_name", "last_name", "id_number", "date_of_birth",
+    "phone", "address", "nationality", "gender", "home_language",
+]
+
+
 def create_application(
     session: Session, user_id: str, data: ApplicationCreate
 ) -> Application:
     # resolve student profile
     profile = get_student_profile(session, user_id)
+
+    incomplete = [f for f in _REQUIRED_PROFILE_FIELDS if getattr(profile, f) is None]
+    if incomplete:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "profile_incomplete", "missing_fields": incomplete},
+        )
 
     # validate university exists and is active
     university = session.get(University, data.university_id)
