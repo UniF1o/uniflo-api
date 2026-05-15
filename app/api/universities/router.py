@@ -2,15 +2,13 @@ import uuid
 from typing import Optional
 
 from fastapi import APIRouter, Depends, Request
-from slowapi import Limiter
-from slowapi.util import get_remote_address
 from sqlmodel import Session
 
 from app.api.universities import service
 from app.api.universities.schemas import UniversitiesListResponse, UniversityRead
 from app.db import get_session
+from app.rate_limit import limiter
 
-limiter = Limiter(key_func=get_remote_address)
 router = APIRouter(prefix="/universities", tags=["universities"])
 
 

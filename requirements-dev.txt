@@ -1,0 +1,9 @@
+-r requirements.txt
+
+# Tests
+pytest==9.0.2
+pytest-asyncio==1.3.0
+
+# Lint / format
+ruff==0.15.9
+black==26.3.1

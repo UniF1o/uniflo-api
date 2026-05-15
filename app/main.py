@@ -1,9 +1,8 @@
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from slowapi import Limiter, _rate_limit_exceeded_handler
+from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
-from slowapi.util import get_remote_address
 
 from app.api.applications.router import router as applications_router
 from app.api.auth.router import router as auth_router
@@ -13,6 +12,7 @@ from app.api.profiles.router import router as profiles_router
 from app.api.universities.router import router as universities_router
 from app.api.webhooks.router import router as webhooks_router
 from app.config import settings
+from app.rate_limit import limiter
 
 if settings.SENTRY_DSN:
     sentry_sdk.init(
@@ -20,8 +20,6 @@ if settings.SENTRY_DSN:
         environment=settings.ENVIRONMENT,
         traces_sample_rate=1.0,
     )
-
-limiter = Limiter(key_func=get_remote_address)
 
 app = FastAPI(title="UniFlo", version="0.1.0")
 
