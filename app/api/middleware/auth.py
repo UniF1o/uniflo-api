@@ -1,22 +1,54 @@
+import uuid
+
 import jwt
 from fastapi import Request
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse
 from jwt import PyJWKClient
 from jwt.exceptions import PyJWKClientError
+from sqlmodel import Session
 from starlette.middleware.base import BaseHTTPMiddleware
 
 from app.config import settings
+from app.db import get_engine
+from app.models.user import User
 
 PUBLIC_EXACT = {
     "/health",
     "/ping",
     "/openapi.json",
     "/webhooks/user-created",
+    "/webhooks/user-updated",
     "/webhooks/user-deleted",
 }
 PUBLIC_PREFIXES = ("/docs", "/redoc", "/universities")
 
 _jwks_client = PyJWKClient(f"{settings.SUPABASE_URL}/auth/v1/.well-known/jwks.json")
+
+
+def ensure_user_synced(sub: str | None, email: str | None) -> None:
+    """Belt-and-suspenders for the Supabase user-created/user-updated webhooks.
+
+    Guarantees that every authenticated request has a corresponding `users` row
+    and that its email matches the JWT. Removes the need for per-endpoint
+    self-heal logic.
+    """
+    if not sub or not email:
+        return
+    try:
+        user_id = uuid.UUID(sub)
+    except (ValueError, TypeError):
+        return
+
+    with Session(get_engine()) as session:
+        user = session.get(User, user_id)
+        if user is None:
+            session.add(User(id=user_id, email=email, role="student"))
+            session.commit()
+        elif user.email != email:
+            user.email = email
+            session.add(user)
+            session.commit()
 
 
 def _is_public(path: str) -> bool:
@@ -57,5 +89,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 status_code=401,
                 content={"detail": "Invalid token"},
             )
+
+        await run_in_threadpool(
+            ensure_user_synced, payload.get("sub"), payload.get("email")
+        )
 
         return await call_next(request)

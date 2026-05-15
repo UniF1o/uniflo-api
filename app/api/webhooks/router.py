@@ -21,6 +21,15 @@ class UserCreatedPayload(BaseModel):
     record: UserCreatedRecord
 
 
+class UserUpdatedRecord(BaseModel):
+    id: uuid.UUID
+    email: EmailStr
+
+
+class UserUpdatedPayload(BaseModel):
+    record: UserUpdatedRecord
+
+
 class UserDeletedRecord(BaseModel):
     id: uuid.UUID
 
@@ -49,6 +58,31 @@ def user_created(
     session.add(User(id=record.id, email=record.email, role="student"))
     session.commit()
     return {"status": "ok"}
+
+
+@router.post("/user-updated", operation_id="webhooks_user_updated")
+def user_updated(
+    payload: UserUpdatedPayload,
+    x_webhook_secret: str | None = Header(default=None, alias="x-webhook-secret"),
+    session: Session = Depends(get_session),
+):
+    _verify_secret(x_webhook_secret, settings.WEBHOOK_SECRET)
+
+    record = payload.record
+    existing = session.get(User, record.id)
+    if not existing:
+        # Treat update for an unknown user as a late-arriving create.
+        session.add(User(id=record.id, email=record.email, role="student"))
+        session.commit()
+        return {"status": "created"}
+
+    if existing.email != record.email:
+        existing.email = record.email
+        session.add(existing)
+        session.commit()
+        return {"status": "updated"}
+
+    return {"status": "noop"}
 
 
 @router.post("/user-deleted", operation_id="webhooks_user_deleted")
