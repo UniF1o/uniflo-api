@@ -83,6 +83,83 @@ def test_user_created_already_exists():
     assert response.json()["status"] == "user already exists"
 
 
+# user-updated webhook updates email for an existing user
+def test_user_updated_email_drift():
+    existing = MagicMock()
+    existing.email = "old@gmail.com"
+    mock_session = MagicMock()
+    mock_session.get.return_value = existing
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.webhooks.router.settings") as mock_settings:
+        mock_settings.WEBHOOK_SECRET = VALID_SECRET
+        response = client.post(
+            "/webhooks/user-updated",
+            headers={"x-webhook-secret": VALID_SECRET},
+            json={
+                "record": {
+                    "id": "a1b2c3d4-0000-0000-0000-000000000000",
+                    "email": "new@gmail.com",
+                }
+            },
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    assert response.json()["status"] == "updated"
+    assert existing.email == "new@gmail.com"
+
+
+# user-updated for an unknown user creates them (late-arriving create)
+def test_user_updated_creates_when_missing():
+    mock_session = MagicMock()
+    mock_session.get.return_value = None
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.webhooks.router.settings") as mock_settings:
+        mock_settings.WEBHOOK_SECRET = VALID_SECRET
+        response = client.post(
+            "/webhooks/user-updated",
+            headers={"x-webhook-secret": VALID_SECRET},
+            json={
+                "record": {
+                    "id": "a1b2c3d4-0000-0000-0000-000000000000",
+                    "email": "student@gmail.com",
+                }
+            },
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    assert response.json()["status"] == "created"
+
+
+# user-updated with no drift is a noop
+def test_user_updated_no_change():
+    existing = MagicMock()
+    existing.email = "student@gmail.com"
+    mock_session = MagicMock()
+    mock_session.get.return_value = existing
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.webhooks.router.settings") as mock_settings:
+        mock_settings.WEBHOOK_SECRET = VALID_SECRET
+        response = client.post(
+            "/webhooks/user-updated",
+            headers={"x-webhook-secret": VALID_SECRET},
+            json={
+                "record": {
+                    "id": "a1b2c3d4-0000-0000-0000-000000000000",
+                    "email": "student@gmail.com",
+                }
+            },
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    assert response.json()["status"] == "noop"
+
+
 # Valid webhook deletes existing user from database
 def test_user_deleted_success():
     mock_session = MagicMock()

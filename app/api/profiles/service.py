@@ -22,9 +22,8 @@ def get_profile(session: Session, user_id: str) -> StudentProfile:
 def create_profile(
     session: Session, user_id: str, data: StudentProfileCreate
 ) -> StudentProfile:
-    statement = select(StudentProfile).where(
-        StudentProfile.user_id == uuid.UUID(user_id)
-    )
+    user_uuid = uuid.UUID(user_id)
+    statement = select(StudentProfile).where(StudentProfile.user_id == user_uuid)
     profile = session.exec(statement).first()
 
     if profile:
@@ -32,7 +31,7 @@ def create_profile(
             setattr(profile, field, value)
     else:
         profile = StudentProfile(
-            user_id=uuid.UUID(user_id), **data.model_dump(exclude_unset=True)
+            user_id=user_uuid, **data.model_dump(exclude_unset=True)
         )
         session.add(profile)
 
