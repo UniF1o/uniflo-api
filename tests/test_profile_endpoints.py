@@ -64,10 +64,24 @@ def test_create_profile_success():
     assert response.status_code == 201
 
 
-# POST /profile called twice by same user returns 409
+# POST /profile called twice by same user upserts and returns 201
 def test_create_profile_already_exists():
     mock_session = MagicMock()
-    mock_session.exec.return_value.first.return_value = MagicMock()  # profile exists
+    mock_profile = MagicMock()
+    mock_profile.id = "b1a6c3d4-0000-0000-0000-000000000000"
+    mock_profile.user_id = VALID_USER_ID
+    mock_profile.first_name = "John"
+    mock_profile.last_name = "Doe"
+    mock_profile.id_number = "0001015009087"
+    mock_profile.date_of_birth = "2000-01-01"
+    mock_profile.phone = "0821234567"
+    mock_profile.address = "1 Main Road, Cape Town"
+    mock_profile.nationality = "South African"
+    mock_profile.gender = "Male"
+    mock_profile.home_language = "English"
+    mock_profile.updated_at = None
+    mock_session.exec.return_value.first.return_value = mock_profile  # profile exists
+    mock_session.refresh.side_effect = lambda p: None
     app.dependency_overrides[get_session] = lambda: mock_session
 
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
@@ -77,8 +91,7 @@ def test_create_profile_already_exists():
         )
 
     app.dependency_overrides.clear()
-    assert response.status_code == 409
-    assert response.json()["detail"] == "Profile already exists"
+    assert response.status_code == 201
 
 
 # GET /profile returns profile for authenticated user

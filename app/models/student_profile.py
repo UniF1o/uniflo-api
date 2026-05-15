@@ -13,15 +13,15 @@ class StudentProfile(SQLModel, table=True):
     user_id: uuid.UUID = Field(
         foreign_key="users.id", nullable=False, unique=True, index=True
     )
-    first_name: str = Field(nullable=False)
-    last_name: str = Field(nullable=False)
-    id_number: str = Field(unique=True)
-    date_of_birth: date
-    phone: str = Field(nullable=False)
-    address: str = Field(nullable=False)
-    nationality: str = Field(nullable=False)
-    gender: str = Field(nullable=False)
-    home_language: str = Field(nullable=False)
+    first_name: Optional[str] = Field(default=None, nullable=True)
+    last_name: Optional[str] = Field(default=None, nullable=True)
+    id_number: Optional[str] = Field(default=None, unique=True, nullable=True)
+    date_of_birth: Optional[date] = Field(default=None, nullable=True)
+    phone: Optional[str] = Field(default=None, nullable=True)
+    address: Optional[str] = Field(default=None, nullable=True)
+    nationality: Optional[str] = Field(default=None, nullable=True)
+    gender: Optional[str] = Field(default=None, nullable=True)
+    home_language: Optional[str] = Field(default=None, nullable=True)
     updated_at: Optional[datetime] = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         sa_column=Column(

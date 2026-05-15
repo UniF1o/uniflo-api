@@ -18,7 +18,7 @@ class Settings(BaseSettings):
     CORS_ORIGINS: str = "http://localhost:3000,https://uniflo-web.vercel.app"
     FAKE_AUTOMATION: bool = True
 
-    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     @property
     def cors_origins(self) -> list[str]:

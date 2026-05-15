@@ -127,6 +127,30 @@ def test_create_application_no_profile():
     assert response.json()["detail"] == "profile_not_found"
 
 
+# POST /applications returns 422 when student profile is incomplete
+def test_create_application_incomplete_profile():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
+         patch("app.api.applications.service.create_application") as mock_create:
+        mock_auth(mock_decode)
+        from fastapi import HTTPException
+        mock_create.side_effect = HTTPException(
+            status_code=422,
+            detail={"code": "profile_incomplete", "missing_fields": ["phone", "address"]},
+        )
+        response = client.post(
+            "/applications",
+            json=VALID_PAYLOAD,
+            headers=auth_headers()
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 422
+    assert response.json()["detail"]["code"] == "profile_incomplete"
+
+
 # POST /applications returns 400 when university is inactive
 def test_create_application_inactive_university():
     mock_session = MagicMock()
