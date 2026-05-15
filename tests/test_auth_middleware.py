@@ -75,7 +75,8 @@ def test_valid_token_passes_through():
 def test_ensure_user_synced_creates_when_missing():
     mock_session = MagicMock()
     mock_session.get.return_value = None
-    with patch("app.api.middleware.auth.Session") as MockSession:
+    with patch("app.api.middleware.auth.Session") as MockSession, \
+         patch("app.api.middleware.auth.get_engine"):
         MockSession.return_value.__enter__.return_value = mock_session
         ensure_user_synced(
             "a1b2c3d4-0000-0000-0000-000000000000", "student@gmail.com"
@@ -91,7 +92,8 @@ def test_ensure_user_synced_updates_email_drift():
     existing.email = "old@gmail.com"
     mock_session = MagicMock()
     mock_session.get.return_value = existing
-    with patch("app.api.middleware.auth.Session") as MockSession:
+    with patch("app.api.middleware.auth.Session") as MockSession, \
+         patch("app.api.middleware.auth.get_engine"):
         MockSession.return_value.__enter__.return_value = mock_session
         ensure_user_synced(
             "a1b2c3d4-0000-0000-0000-000000000000", "new@gmail.com"
@@ -103,7 +105,8 @@ def test_ensure_user_synced_updates_email_drift():
 
 # ensure_user_synced is a no-op when sub or email is missing from the JWT
 def test_ensure_user_synced_skips_when_missing_claims():
-    with patch("app.api.middleware.auth.Session") as MockSession:
+    with patch("app.api.middleware.auth.Session") as MockSession, \
+         patch("app.api.middleware.auth.get_engine"):
         ensure_user_synced(None, "student@gmail.com")
         ensure_user_synced("a1b2c3d4-0000-0000-0000-000000000000", None)
 
