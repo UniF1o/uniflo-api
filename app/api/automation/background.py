@@ -15,12 +15,9 @@ logger = logging.getLogger(__name__)
 
 
 def process_application(application_id: uuid.UUID) -> None:
-    """
-    Phase 2 stub — simulates the automation layer so CEO(our short king) can watch
-    status transitions on the dashboard end to end.
-
-    Phase 3 replaces this with real Playwright adapter calls.
-    """
+    """Phase 2 stub — simulates the automation layer so the dashboard can
+    show status transitions end to end. Phase 3 replaces this with real
+    Playwright adapter calls."""
     if not settings.FAKE_AUTOMATION:
         logger.info(
             "process_application: FAKE_AUTOMATION disabled — skipping stub for %s",

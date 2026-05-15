@@ -26,7 +26,7 @@ class HomeLanguageEnum(str, Enum):
     NDEBELE = "isiNdebele"
 
 
-class StudentProfileCreate(BaseModel):
+class StudentProfileWrite(BaseModel):
     first_name: Optional[str] = None
     last_name: Optional[str] = None
     id_number: Optional[str] = None
@@ -38,16 +38,9 @@ class StudentProfileCreate(BaseModel):
     home_language: Optional[HomeLanguageEnum] = None
 
 
-class StudentProfileUpdate(BaseModel):
-    first_name: Optional[str] = None
-    last_name: Optional[str] = None
-    id_number: Optional[str] = None
-    date_of_birth: Optional[date] = None
-    phone: Optional[str] = None
-    address: Optional[str] = None
-    nationality: Optional[str] = None
-    gender: Optional[GenderEnum] = None
-    home_language: Optional[HomeLanguageEnum] = None
+# Create and update use the same shape (all fields optional, upsert semantics).
+StudentProfileCreate = StudentProfileWrite
+StudentProfileUpdate = StudentProfileWrite
 
 
 class StudentProfileResponse(BaseModel):

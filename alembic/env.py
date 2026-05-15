@@ -4,6 +4,7 @@ from sqlalchemy import engine_from_config, pool
 from sqlmodel import SQLModel
 
 from alembic import context
+from app import models  # noqa: F401  — populate SQLModel.metadata for autogenerate
 from app.config import settings
 
 # this is the Alembic Config object, which provides

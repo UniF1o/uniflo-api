@@ -17,7 +17,7 @@ router = APIRouter(prefix="/profile", tags=["profile"])
     response_model=StudentProfileResponse,
     status_code=201,
     operation_id="profiles_create",
-)  # Creates profile :)
+)
 def create_profile(
     request: Request,
     data: StudentProfileCreate,
@@ -27,9 +27,7 @@ def create_profile(
     return service.create_profile(session, user_id, data)
 
 
-@router.get(
-    "", response_model=StudentProfileResponse, operation_id="profiles_get"
-)  # Gets student profile details <3
+@router.get("", response_model=StudentProfileResponse, operation_id="profiles_get")
 def get_profile(request: Request, session: Session = Depends(get_session)):
     user_id = request.state.user["sub"]
     return service.get_profile(session, user_id)
@@ -37,7 +35,7 @@ def get_profile(request: Request, session: Session = Depends(get_session)):
 
 @router.patch(
     "", response_model=StudentProfileResponse, operation_id="profiles_update"
-)  # Updates Student profile details
+)
 def update_profile(
     request: Request,
     data: StudentProfileUpdate,
