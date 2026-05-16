@@ -7,6 +7,9 @@ class Settings(BaseSettings):
     DATABASE_URL: str
     SUPABASE_URL: str
     SUPABASE_ANON_KEY: str
+    # Server-side Storage writes to a private bucket need service-role (anon
+    # is denied by Storage RLS). Optional so the app still boots if unset.
+    SUPABASE_SERVICE_ROLE_KEY: Optional[str] = None
     SUPABASE_JWT_SECRET: str
     SUPABASE_STORAGE_BUCKET: str
     WEBHOOK_SECRET: str
