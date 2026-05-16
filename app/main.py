@@ -1,6 +1,10 @@
+import logging
+import re
+
 import sentry_sdk
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from slowapi import _rate_limit_exceeded_handler
 from slowapi.errors import RateLimitExceeded
 
@@ -31,10 +35,51 @@ app.add_middleware(AuthMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
+    allow_origin_regex=settings.CORS_ORIGIN_REGEX,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+logger = logging.getLogger(__name__)
+
+_cors_origin_regex = (
+    re.compile(settings.CORS_ORIGIN_REGEX) if settings.CORS_ORIGIN_REGEX else None
+)
+
+
+def _error_cors_headers(request: Request) -> dict[str, str]:
+    # Starlette's ServerErrorMiddleware wraps the whole app *outside*
+    # CORSMiddleware, so an unhandled 500 never gets CORS headers and the
+    # browser only sees a network/CORS error -- the real cause is invisible.
+    # Reordering user middleware can't fix this; re-apply the CORS policy here.
+    origin = request.headers.get("origin")
+    if not origin:
+        return {}
+    allowed = origin in settings.cors_origins or (
+        _cors_origin_regex is not None
+        and _cors_origin_regex.fullmatch(origin) is not None
+    )
+    if not allowed:
+        return {}
+    return {
+        "Access-Control-Allow-Origin": origin,
+        "Access-Control-Allow-Credentials": "true",
+        "Vary": "Origin",
+    }
+
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception):
+    logger.exception("Unhandled error on %s %s", request.method, request.url.path)
+    if settings.SENTRY_DSN:
+        sentry_sdk.capture_exception(exc)
+    return JSONResponse(
+        status_code=500,
+        content={"detail": "internal_error"},
+        headers=_error_cors_headers(request),
+    )
+
 
 app.include_router(webhooks_router)
 app.include_router(auth_router)

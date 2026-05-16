@@ -1,3 +1,4 @@
+import logging
 import os
 import uuid
 
@@ -9,6 +10,8 @@ from app.api.profiles.service import get_profile
 from app.config import settings
 from app.models.document import Document
 from app.supabase_client import get_supabase
+
+logger = logging.getLogger(__name__)
 
 ALLOWED_MIME_TYPES = ["application/pdf", "image/jpeg", "image/png"]
 MAX_FILE_SIZE = 10 * 1024 * 1024  # 10MB
@@ -26,11 +29,17 @@ def _safe_extension(filename: str | None) -> str:
 
 def _create_signed_url(storage_path: str) -> str:
     """Generate a short-lived signed URL for a private-bucket object."""
-    result = (
-        get_supabase()
-        .storage.from_(settings.SUPABASE_STORAGE_BUCKET)
-        .create_signed_url(storage_path, SIGNED_URL_TTL_SECONDS)
-    )
+    try:
+        result = (
+            get_supabase()
+            .storage.from_(settings.SUPABASE_STORAGE_BUCKET)
+            .create_signed_url(storage_path, SIGNED_URL_TTL_SECONDS)
+        )
+    except Exception:
+        # Degrade to an empty URL rather than 500 the whole list/upload
+        # response if signing momentarily fails.
+        logger.exception("Signed URL creation failed for %s", storage_path)
+        return ""
     # storage3 returns a TypedDict; key casing varies across versions.
     return (
         result.get("signedURL")
@@ -75,11 +84,22 @@ async def upload_document(
     extension = _safe_extension(file.filename)
     storage_path = f"{user_id}/{document_type}/{document_id}{extension}"
 
-    get_supabase().storage.from_(settings.SUPABASE_STORAGE_BUCKET).upload(
-        path=storage_path,
-        file=contents,
-        file_options={"content-type": file.content_type, "upsert": "true"},
-    )
+    try:
+        get_supabase().storage.from_(settings.SUPABASE_STORAGE_BUCKET).upload(
+            path=storage_path,
+            file=contents,
+            file_options={"content-type": file.content_type, "upsert": "true"},
+        )
+    except Exception as exc:
+        # The storage client raises library-specific errors (auth/RLS, bucket
+        # missing, version mismatches). Convert to a handled response so it
+        # carries CORS headers and the real cause is logged, instead of an
+        # unhandled 500 that the browser only sees as a CORS/network failure.
+        logger.exception("Supabase Storage upload failed for %s", storage_path)
+        raise HTTPException(
+            status_code=502,
+            detail="Document storage upload failed. Please try again.",
+        ) from exc
 
     document = Document(
         id=document_id,
@@ -113,9 +133,18 @@ def delete_document(session: Session, user_id: str, document_id: uuid.UUID) -> N
     if document.student_id != profile.id:
         raise HTTPException(status_code=403, detail="Access denied")
 
-    get_supabase().storage.from_(settings.SUPABASE_STORAGE_BUCKET).remove(
-        [document.storage_path]
-    )
+    try:
+        get_supabase().storage.from_(settings.SUPABASE_STORAGE_BUCKET).remove(
+            [document.storage_path]
+        )
+    except Exception as exc:
+        logger.exception(
+            "Supabase Storage remove failed for %s", document.storage_path
+        )
+        raise HTTPException(
+            status_code=502,
+            detail="Document storage delete failed. Please try again.",
+        ) from exc
 
     session.delete(document)
     session.commit()
