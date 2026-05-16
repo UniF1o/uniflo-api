@@ -49,6 +49,7 @@ app/
     middleware/auth.py    JWT verification + ensure_user_synced
     auth/                 GET /auth/me
     profiles/             POST|GET|PATCH /profile
+    academic_records/     POST|GET|PATCH /academic-records (one per student)
     documents/            POST /documents/upload, GET /documents,
                           DELETE /documents/{id}
     universities/         GET /universities, GET /universities/{id}
@@ -56,7 +57,7 @@ app/
                           POST /applications/{id}/retry (501 stub)
     webhooks/             POST /webhooks/user-{created,updated,deleted}
     automation/           background.py -- Phase 2 fake processor
-alembic/                  Migrations (one chain, head = a3b2c1d4e5f6)
+alembic/                  Migrations (one chain, head = b4c3d2e1f0a9)
 scripts/seed_universities.py
 tests/                    pytest suite (59 tests)
 ```
@@ -177,6 +178,7 @@ cd25ac463c44  initial schema (profiles, documents, academic_records)
 1026b4a0314a  phase 2: universities, applications, application_jobs
 5f641ecfb811  (empty no-op revision; applied to prod, kept for chain integrity)
 a3b2c1d4e5f6  student_profiles: relax NOT NULLs for partial upsert
+b4c3d2e1f0a9  academic_records: aggregate -> Float, UNIQUE(student_id)
 ```
 
 `alembic upgrade head` is idempotent. `alembic/env.py` imports `app.models`, so
@@ -202,8 +204,10 @@ same suite plus `ruff check .` on every push and PR.
 - Render Web Service (Docker-less; runs from the GitHub repo).
 - CI workflow (`.github/workflows/backend.yml`) runs tests + lint on push and
   PR, then fires Render's deploy hook on `main`.
-- Migrations are NOT auto-applied -- run `alembic upgrade head` against the
-  production database manually (or via a Render shell) after merge.
+- Migrations are not auto-applied by CI. `alembic upgrade head` is run
+  against the production database as part of the release (by a person, or
+  via a Render shell). Revision `b4c3d2e1f0a9` has already been applied to
+  production.
 
 ---
 
