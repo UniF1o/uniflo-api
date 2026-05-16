@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     # Stored as str so pydantic-settings v2 does not attempt json.loads() on it.
     # Use the cors_origins property wherever a list is needed.
     CORS_ORIGINS: str = "http://localhost:3000,https://uniflo-web.vercel.app"
+    # Vercel preview deployments (uniflo-web-<hash>.vercel.app) aren't known
+    # ahead of time; allow them via regex in addition to the exact origins.
+    CORS_ORIGIN_REGEX: Optional[str] = r"https://uniflo-web-[a-z0-9-]+\.vercel\.app"
     FAKE_AUTOMATION: bool = True
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
