@@ -204,8 +204,10 @@ same suite plus `ruff check .` on every push and PR.
 - Render Web Service (Docker-less; runs from the GitHub repo).
 - CI workflow (`.github/workflows/backend.yml`) runs tests + lint on push and
   PR, then fires Render's deploy hook on `main`.
-- Migrations are NOT auto-applied -- run `alembic upgrade head` against the
-  production database manually (or via a Render shell) after merge.
+- Migrations are not auto-applied by CI. `alembic upgrade head` is run
+  against the production database as part of the release (by a person, or
+  via a Render shell). Revision `b4c3d2e1f0a9` has already been applied to
+  production.
 
 ---
 
