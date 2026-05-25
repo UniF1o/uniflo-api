@@ -1,4 +1,5 @@
 import uuid
+from enum import Enum
 from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
@@ -10,6 +11,11 @@ from pydantic import BaseModel, ConfigDict
 # frozen NSC list for now, so the backend does not re-validate it.
 
 
+class RecordType(str, Enum):
+    GRADE_11_FINAL = "grade_11_final"
+    GRADE_12_APRIL = "grade_12_april"
+
+
 class SubjectIn(BaseModel):
     name: str
     mark: int
@@ -17,6 +23,7 @@ class SubjectIn(BaseModel):
 
 
 class AcademicRecordCreate(BaseModel):
+    record_type: RecordType = RecordType.GRADE_11_FINAL
     institution: str
     year: int
     subjects: list[SubjectIn]
@@ -41,6 +48,7 @@ class AcademicRecordResponse(BaseModel):
 
     id: uuid.UUID
     student_id: uuid.UUID
+    record_type: RecordType
     institution: str
     year: int
     subjects: list[SubjectOut]

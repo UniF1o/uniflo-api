@@ -97,12 +97,15 @@ def _compute_aggregate(subjects: list[dict]) -> float:
     return round(sum(marks) / len(marks), 1)
 
 
-def get_record(session: Session, user_id: str) -> Optional[AcademicRecord]:
+def get_record(
+    session: Session, user_id: str, record_type: str = "grade_11_final"
+) -> Optional[AcademicRecord]:
     profile = _resolve_profile(session, user_id)
     if profile is None:
         return None
     statement = select(AcademicRecord).where(
-        AcademicRecord.student_id == profile.id
+        AcademicRecord.student_id == profile.id,
+        AcademicRecord.record_type == record_type,
     )
     return session.exec(statement).first()
 
@@ -116,8 +119,10 @@ def upsert_record(
     )
     aggregate = _compute_aggregate(subjects)
 
+    record_type = data.record_type.value
     statement = select(AcademicRecord).where(
-        AcademicRecord.student_id == profile.id
+        AcademicRecord.student_id == profile.id,
+        AcademicRecord.record_type == record_type,
     )
     record = session.exec(statement).first()
 
@@ -129,6 +134,7 @@ def upsert_record(
     else:
         record = AcademicRecord(
             student_id=profile.id,
+            record_type=record_type,
             institution=institution,
             year=year,
             subjects=subjects,
@@ -142,11 +148,15 @@ def upsert_record(
 
 
 def patch_record(
-    session: Session, user_id: str, data: AcademicRecordPatch
+    session: Session,
+    user_id: str,
+    data: AcademicRecordPatch,
+    record_type: str = "grade_11_final",
 ) -> AcademicRecord:
     profile = _require_profile(session, user_id)
     statement = select(AcademicRecord).where(
-        AcademicRecord.student_id == profile.id
+        AcademicRecord.student_id == profile.id,
+        AcademicRecord.record_type == record_type,
     )
     record = session.exec(statement).first()
     if record is None:

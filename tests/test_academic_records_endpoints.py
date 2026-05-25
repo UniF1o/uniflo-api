@@ -33,10 +33,11 @@ def make_mock_profile():
     return mock
 
 
-def make_mock_record():
+def make_mock_record(record_type="grade_11_final"):
     mock = MagicMock()
     mock.id = VALID_RECORD_ID
     mock.student_id = VALID_PROFILE_ID
+    mock.record_type = record_type
     mock.institution = "Northview High School"
     mock.year = 2024
     mock.subjects = [
@@ -77,6 +78,7 @@ def test_create_record_success():
     assert response.status_code == 201
     body = response.json()
     assert body["aggregate"] == 81.7
+    assert body["record_type"] == "grade_11_final"
     assert body["subjects"][2]["custom_name"] == "Dramatic Arts"
 
 
@@ -266,3 +268,80 @@ def test_academic_records_require_auth():
     assert client.get("/academic-records").status_code == 401
     assert client.post("/academic-records", json=VALID_PAYLOAD).status_code == 401
     assert client.patch("/academic-records", json={"year": 2025}).status_code == 401
+
+
+# POST with record_type=grade_12_april creates a separate record
+def test_create_record_grade_12_april():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.academic_records.service.upsert_record"
+    ) as mock_upsert:
+        mock_auth(mock_decode)
+        mock_upsert.return_value = make_mock_record("grade_12_april")
+        payload = {**VALID_PAYLOAD, "record_type": "grade_12_april"}
+        response = client.post("/academic-records", json=payload, headers=auth_headers())
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 201
+    assert response.json()["record_type"] == "grade_12_april"
+
+
+# GET ?record_type=grade_12_april returns the April record
+def test_get_record_grade_12_april():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.academic_records.service.get_record"
+    ) as mock_get:
+        mock_auth(mock_decode)
+        mock_get.return_value = make_mock_record("grade_12_april")
+        response = client.get(
+            "/academic-records?record_type=grade_12_april", headers=auth_headers()
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    assert response.json()["record_type"] == "grade_12_april"
+
+
+# GET ?record_type=grade_12_april returns null when no April record exists
+def test_get_record_grade_12_april_none():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.academic_records.service.get_record"
+    ) as mock_get:
+        mock_auth(mock_decode)
+        mock_get.return_value = None
+        response = client.get(
+            "/academic-records?record_type=grade_12_april", headers=auth_headers()
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    assert response.json() is None
+
+
+# PATCH ?record_type=grade_12_april updates the April record
+def test_patch_record_grade_12_april():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.academic_records.service.patch_record"
+    ) as mock_patch:
+        mock_auth(mock_decode)
+        mock_patch.return_value = make_mock_record("grade_12_april")
+        response = client.patch(
+            "/academic-records?record_type=grade_12_april",
+            json={"year": 2025},
+            headers=auth_headers(),
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    assert response.json()["record_type"] == "grade_12_april"

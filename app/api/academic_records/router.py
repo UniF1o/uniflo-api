@@ -1,6 +1,6 @@
 from typing import Optional
 
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Depends, Query, Request
 from sqlmodel import Session
 
 from app.api.academic_records import service
@@ -8,6 +8,7 @@ from app.api.academic_records.schemas import (
     AcademicRecordCreate,
     AcademicRecordPatch,
     AcademicRecordResponse,
+    RecordType,
 )
 from app.db import get_session
 
@@ -35,11 +36,13 @@ def create_academic_record(
     operation_id="academic_records_get",
 )
 def get_academic_record(
-    request: Request, session: Session = Depends(get_session)
+    request: Request,
+    record_type: RecordType = Query(default=RecordType.GRADE_11_FINAL),
+    session: Session = Depends(get_session),
 ):
     user_id = request.state.user["sub"]
     # null (not 404) when none yet -- 404-redirect semantics are /profile-only.
-    return service.get_record(session, user_id)
+    return service.get_record(session, user_id, record_type.value)
 
 
 @router.patch(
@@ -50,7 +53,8 @@ def get_academic_record(
 def update_academic_record(
     request: Request,
     data: AcademicRecordPatch,
+    record_type: RecordType = Query(default=RecordType.GRADE_11_FINAL),
     session: Session = Depends(get_session),
 ):
     user_id = request.state.user["sub"]
-    return service.patch_record(session, user_id, data)
+    return service.patch_record(session, user_id, data, record_type.value)

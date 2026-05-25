@@ -13,6 +13,18 @@ from app.models.application_job import ApplicationJob
 
 logger = logging.getLogger(__name__)
 
+# Canonical error codes written into application_jobs.last_error.
+# Phase 3 Playwright adapters must use only these values so the frontend
+# copy-map stays in sync.
+JOB_ERROR_CODES = frozenset([
+    "internal_error",
+    "portal_unavailable",
+    "login_failed",
+    "form_submit_failed",
+    "timeout",
+    "invalid_credentials",
+])
+
 
 def process_application(application_id: uuid.UUID) -> None:
     """Phase 2 stub — simulates the automation layer so the dashboard can
@@ -71,7 +83,7 @@ def process_application(application_id: uuid.UUID) -> None:
             else:
                 job.status = "failed"
                 job.attempts += 1
-                job.last_error = "Portal timed out while filling form (fake)"
+                job.last_error = "timeout"
                 application.status = "failed"
                 logger.error(
                     "process_application: application %s failed — %s",
@@ -103,7 +115,7 @@ def process_application(application_id: uuid.UUID) -> None:
 
                 if job:
                     job.status = "failed"
-                    job.last_error = f"internal: {type(exc).__name__}"
+                    job.last_error = "internal_error"
                     job.attempts += 1
                     session.add(job)
 
