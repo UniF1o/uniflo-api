@@ -6,6 +6,7 @@ from fastapi import HTTPException
 from sqlmodel import Session, select
 
 from app.api.applications.schemas import ApplicationCreate, ApplicationStatus
+from app.api.profiles.schemas import REQUIRED_PROFILE_FIELDS
 from app.models.application import Application
 from app.models.application_job import ApplicationJob
 from app.models.student_profile import StudentProfile
@@ -36,10 +37,7 @@ def get_latest_job(
     return session.exec(statement).first()
 
 
-_REQUIRED_PROFILE_FIELDS = [
-    "first_name", "last_name", "id_number", "date_of_birth",
-    "phone", "address", "nationality", "gender", "home_language",
-]
+_REQUIRED_PROFILE_FIELDS = REQUIRED_PROFILE_FIELDS
 
 
 def create_application(

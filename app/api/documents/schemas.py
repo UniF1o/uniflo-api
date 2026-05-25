@@ -9,6 +9,7 @@ class DocumentType(str, Enum):
     ID_COPY = "ID_COPY"
     MATRIC_RESULTS = "MATRIC_RESULTS"
     TRANSCRIPT = "TRANSCRIPT"
+    GRADE12_APRIL = "GRADE12_APRIL"
 
 
 class DocumentResponse(BaseModel):
