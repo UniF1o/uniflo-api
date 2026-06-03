@@ -1,121 +1,174 @@
 # UJ — Portal Research
 
-> **Status: Draft.** Reformatted from the dictated walkthrough + Notion screenshots (research dated 2026-05-22). DOM selectors, exact required/optional flags, validation rules, and the submission-confirmation markers still need a verification pass against the live portal. Unknowns are marked `_TBD_` or **[VERIFY]**. Raw dictation preserved in the appendix.
+> **Status: Draft v2 — verified from screen recording.** Rebuilt from `uj.mp4` (14:34) frame-by-frame, not just dictation. Field labels, control types, required flags, dropdown/LOV option lists, the page order, and the review/agreement pages are now confirmed from video. **Not** in the video: the applicant-type choice + login screen (recording starts already logged in — taken from dictation) and the post-submit confirmation page (recording ends at the agreement step). Sample data shown in the video is intentionally omitted (PII).
+>
+> **Drive mechanism: accessibility-tree primary (approach C).** The "Control / target" column names the visible label + control type the agent acts on, not a CSS selector.
 
 ## Portal URL
 - Login: <https://registration.uj.ac.za/pls/prodi41/gen.gw1pkg.gw1startup?x_processcode=ITS_OAP>
-- Engine: **ITS Integrator** (different from the PeopleSoft/Oracle portals — UCT/Wits/UP). Selectors and patterns will differ; nearly every lookup is a **search button** rather than a free-text field.
+- Page title throughout: **"Comprehensive Web Application Process"**. Engine: **ITS Integrator**.
+
+### ⭐ Interaction pattern — the key automation detail
+Almost every coded field is an **ITS "List of Values" (LOV) search popup**, not a native `<select>`:
+1. Click the 🔍 (magnifier) next to the field.
+2. A modal opens titled **"List of Values: &lt;field&gt;"** with a Search box (defaults to `%`), Search/Close buttons, and a results table.
+3. Optionally type a filter (e.g. `%EPP%`) + Search, then **click the matching row** to select.
+
+The adapter should have one generic helper — `select_from_lov(field_label, target_text)` — driven off the **row text** (accessible link/cell), not CSS. Fields using LOV: Citizenship Code, Postal Code, school-leaving endorsement, School Leaving Subject, Grade, Final Gr11 Symbol, school attended, Faculty/College, Programme, Year of study, Mode of study. Plain text / native dropdown / checkbox fields are targeted by their visible label.
 
 ## Application window
-- Opens: **1 April**
-- Closes: **31 October**
+- Opens: **1 April** · Closes: **31 October**
 
-## Test account
-- Credentials live in **Bitwarden** per Phase 3 plan §3 — _TBD: link Bitwarden entry._ (Deliberately not committed.)
-- UJ issues a **student number** (the walkthrough notes "wait for student-number confirmation"). The applicant also sets a **5-digit numeric PIN** near the end. **[VERIFY login mechanics for re-entry.]**
+## Test account / login
+- Credentials live in **Bitwarden** per Phase 3 plan §3 — _TBD: link entry._
+- The video starts **after** the applicant-type choice (New / Returning / Internal) and login — those are from dictation (see appendix). UJ issues a student number; a 5-digit PIN is set at the end (see Page G).
 
 ## Anti-automation measures ✅
-- **No captcha** — explicitly confirmed in the walkthrough. This makes UJ the **strongest first-adapter candidate** of the four (no OCR/OTP blocker).
-- **POPIA agreement** must be accepted, and a final **agreement** before PIN creation. Not anti-automation per se, but a consent gate — see app-gap note.
+- **None observed across the entire 14-minute recording — no captcha, no OTP, no image challenge.** Confirms UJ as the strongest **first-adapter** candidate (Task 4).
 
-## Application flow (pages in order)
+## Page flow
+Breadcrumb ("Quick Link") builds up as: **Biographical → Next of Kin → Matric → Previous Studies → Qualifications → (Check application details) → Accept Agreement (Submit).** Each data page ends with **Back / Save and Continue**.
 
-### Entry
-1. Applicant type: **New applicant** / Returning / Internal (has UJ student number) → **New applicant**.
-2. "Do you already have a student number?" → **No**.
-3. "Finalize an incomplete application?" → **No** (Yes = continue an existing application).
-4. **POPIA agreement** → accept (consent gate — see app gap).
+---
 
-### Sections
-| Step | Page | Notes |
-|---|---|---|
-| 1 | Biographical details | see fields |
-| 2 | Address & contact | search-based postal code |
-| 3 | Residence + disability | see fields |
-| 4 | Next of kin + account (payer) | see fields → app gap (payer address) |
-| 5 | Results details | matric year + subjects |
-| 6 | Educational institutions | school(s) attended |
-| 7 | Programme selection | faculty + qualification → 5-digit PIN |
-| 8 | Summary → accept agreement | see confirmation |
+### Page A — Biographical details
+One page, six sections. (`*` = required, i.e. red asterisk in the UI.)
 
-## Form fields
-
-### Step 1 — Biographical details
-| Field | Type | Required | Notes | Uniflo mapping |
+| Field (label) | Control / target | Req | Options / validation | Uniflo mapping |
 |---|---|---|---|---|
-| Nationality / SA citizen? | choice | yes | — | profile citizenship |
-| ID number | text | yes | — | profile national ID |
-| Citizenship code | search | yes | **Search button** → select South Africa | profile citizenship |
-| Date of birth | date | yes | date-picker button | profile DOB |
-| Title | text/dropdown | yes | — | profile title |
-| Initials | text | yes | — | profile initials |
-| Surname | text | yes | — | profile last name |
-| First names | text | yes | — | profile first name |
-| Maiden name | text | optional | if applicable | profile maiden name |
-| Marital status | _TBD_ | yes | — | profile marital status |
-| Home language | _TBD_ | yes | — | profile home language |
-| Ethnic group | _TBD_ | yes | — | profile population group |
-| Gender | choice | yes | **Male / Female only** (Notion note) | profile gender |
-| Address line 1 | text | yes | street name | profile address line 1 |
-| Address line 2 | text | yes | suburb | profile suburb |
-| Address line 3 | text | yes | town | profile city/town |
-| Address line 4 | text | yes | province | profile province |
-| Postal code | **search** | yes | **Do not type** — click search button to look it up | profile postal code |
+| **Nationality** | | | | |
+| Are you a SA Citizen in possession of a valid SA ID/Birth Certificate? | dropdown | * | Yes / No | citizenship |
+| ID Number | text | * | Hint: UJ-student-number holders enter ID then click "CLICK HERE" in the pop-up | national ID |
+| Citizenship Code | LOV search | * | e.g. "South Africa" | citizenship / country |
+| **Personal Information** | | | | |
+| Date of birth (DD-MON-YYYY) | text + calendar | * | Format `DD-MON-YYYY`; validates ("Invalid Date of Birth" on a future/invalid date) | DOB |
+| Title | dropdown | * | MR, … | title |
+| Initials | text | * | | initials |
+| Surname | text | * | | last name |
+| First names | text | * | | first names |
+| Maiden name | text | optional | "surname prior to marriage…" | maiden name |
+| Marital status | dropdown | * | | marital status |
+| Home language | dropdown | * | Large list: AFRIKAANS/ENGLISH, ENGLISH, NDEBELE, NORTHERN SOTHO, NAMA, FRENCH, GERMAN, HINDI, … | home language |
+| Ethnic group | dropdown | * | AFRICAN, … | population group |
+| **Address Information** (note: international applicants search "INTERNATIONAL" as the postal code) | | | | |
+| Street Address Line 1 (e.g. Street Name) | text | * | | address line 1 |
+| Street Address Line 2 (e.g. Suburb Name) | text | * | | suburb |
+| Street Address Line 3 (e.g. Town Name) | text | **optional** | (no asterisk — corrects the dictation) | town/city |
+| Street Address Line 4 (e.g. Province Name) | text | **optional** | (no asterisk) | province |
+| Postal Code | code box + LOV search | * | LOV "Postal Codes" returns code + description (e.g. code ↔ area). **Searched, not typed.** | postal code |
+| Tick if Postal Address differs from Street Address | checkbox | — | reveals separate postal address | — |
+| **Contact Information** (hints: SA cell = 10 digits; international = 13 digits; all official comms by email) | | | | |
+| Do you have a South African Cell Phone Number? | dropdown | * | Yes / No | — |
+| South African Cell Phone Number | text | * | 10 digits | phone |
+| Work Telephone Number | text | optional | | — |
+| Home Telephone Number | text | optional | | — |
+| Email | text | * | | email |
+| Verify email | text | * | must match Email | email |
+| **Residence Information** | | | | |
+| Do you want to apply for residence? | dropdown | * | Yes / No | app: residence interest |
+| **Disability Information** | | | | |
+| Do you have a disability or impairment? | checkbox | optional | if ticked → disability LOV + remarks (per dictation) | app: disability + remarks |
 
-### Step 2 — Contact information
-SA cell phone number (required) · Work/cell phone (optional) · Home telephone (optional) · Email + confirm email.
-
-### Step 3 — Residence + disability
-Apply for residence? (yes/no) · Disability (tick yes/no → **search** for disability + optional remarks). Save & continue.
-
-### Step 4 — Next of kin + account (payer)
-- **Next of kin:** name + phone number.
-- **Account (payer):** name of person responsible for payments (use the guardian) · contact name · **address re-entered in full** (no "same as student" option) · email. Save & continue.
-- → **app gap: UJ has no "same as applicant" for the payer address — must store/supply the payer address separately.**
-
-### Step 5 — Results details
-Matric year · Post-grad / under-grad (dropdown → **Undergrad**) · Upgrading results? (yes/no) · SA or international matric (→ **SA**) · Endorsement from school-leaving certificate · "Currently in grade 12".
-- **Subjects** (everything via search buttons): per subject → search school-leaving subject · search grade (→ NSC) · final / grade-11 symbol · mark. Save & continue.
-
-### Step 6 — Educational institutions
-Which school last attended (**search**) · current status (grade 12) · attended any other institution previously? → **No**. Next.
-
-### Step 7 — Programme selection
-Academic year to apply for · Qualification type (short → long courses; most applicants = degree/"curricular" courses) · Faculty (**search**) · Programme / field of study (**search**) · Year of study (→ first year) · How registered + when to study (auto-selected).
-- **"Add qualification"** wipes current selections to let the applicant pick a different qualification — handle carefully in automation.
-- Summary → accept → **create 5-digit PIN**: numeric only, **cannot start with 0**, **no repeating characters** → accept agreement.
-
-## File uploads
-| Field | Accepted types | Size | Naming | Notes |
+### Page B — Next of Kin (+ Account Contact)
+| Field | Control | Req | Notes | Uniflo mapping |
 |---|---|---|---|---|
-| _TBD_ | _TBD_ | _TBD_ | _TBD_ | **[VERIFY — walkthrough didn't reach a document-upload step; confirm whether UJ uploads docs in-portal or later]** |
+| Next of kin's name(s) | text | * | | NOK name |
+| Next of kin's mobile/cellular phone number | text | * | | NOK phone |
+| **Account Contact** — "person responsible for any payments… can be yourself or any other party" | | | | |
+| Account Contact's name(s) | text | * | | payer name |
+| Postal address Line 1 (e.g. Street Name and Number) | text | * | | payer address 1 |
+| Postal address Line 2 (e.g. Suburb Name) | text | * | | payer suburb |
+| Postal address Line 3 (e.g. Town Name) | text | optional | | payer town |
+| Postal address Line 4 (e.g. Province Name) | text | optional | | payer province |
+| Postal Code | code + LOV search | * | | payer postal code |
+| Email address | text | * | | payer email |
+
+→ **App gap (confirmed on video): no "same as student" option for the payer address — UJ requires the payer's full address + email re-entered.**
+
+### Page C — Matric / Results Details
+| Field | Control | Req | Options / validation | Uniflo mapping |
+|---|---|---|---|---|
+| Matric/Grade 12 Year (YYYY) | text | * | | matric year |
+| Are you applying for Undergraduate or Post-graduate? | dropdown | * | Undergraduate / Post-graduate | — |
+| Are you Upgrading your Gr 12 Results? | dropdown | * | Yes / No | — |
+| Are you completing or have completed a SA or International Matric | dropdown | * | SA Matric / International | — |
+| Indicate your endorsement from your school leaving certificate | LOV search | * | e.g. "CURRENTLY IN GR.12" | app: current status |
+
+**Subject details** — enter one subject, click **Add Subject**, repeat; rows accumulate in a table.
+| Field | Control | Req | Options | Uniflo mapping |
+|---|---|---|---|---|
+| School Leaving Subject | LOV search | * | Large subject list, each tagged with qualifier `(NSC / NCV / ISC / DR)` — e.g. MATHEMATICS (NSC/NCV/ISC), LIFE ORIENTATION (NSC/NCV/DR) | academic_records: subject |
+| Grade | LOV search | * | NSC (for SA matric) | qualification type |
+| Final Gr11 Symbol | LOV search | * | **Values are percentages (66–99), despite "Symbol" label** | grade-11 mark |
+
+Subjects table columns: Matric Year · Matric Date · Examination Number · Final School Leaving Certificate · School Leaving Subject · Grade · Final Gr11 Perc · Final Gr11 Symbol · Mid Year Gr12 Perc · Mid Year Gr12 Symbol · Final Gr12 Percentage · Final Gr12 Symbol · Remove. (For a current Gr12 applicant only the Gr11 mark is entered now; the Gr12 columns exist for later result updates.)
+
+### Page D — Previous Studies / Educational Institutions
+| Field | Control | Req | Notes | Uniflo mapping |
+|---|---|---|---|---|
+| Which school did you attend last | LOV search | * | "School Attend Codes" (search e.g. `%EPP%`) | school |
+| What are you currently doing? | LOV/dropdown _TBD_ | * | e.g. "GRADE 12 PUPIL" | app: current activity |
+| Have you studied at Another institution previously? | choice | * | No (for matriculants) | — |
+
+### Page E — Qualifications
+Context blocks shown: Curricular Course (UG full-time on-campus + APS-calculator link) · Non-Subsidised/Continuing Education (NSP/CEP) · Short Learning Programmes (SLP).
+| Field | Control | Req | Options / notes | Uniflo mapping |
+|---|---|---|---|---|
+| Academic Year | dropdown | * | The intake year (video showed 2027) | application year |
+| Are you applying for: | dropdown | * | Curricular Courses / NSP / CEP / SLP | — |
+| Limit your selection to a specific Faculty / College | LOV search | * | e.g. ENGINEERING&BUILT ENVIRONMENT, FACULTY OF SCIENCE | faculty |
+| Choose a programme | LOV search (code + description) | * | Entries pre-tagged **"(ELIGIBLE TO APPLY-Y)"** — UJ precomputes eligibility from the captured marks | programme |
+| For which year of study are you applying? | LOV search | * | FIRST / SECOND / THIRD YEAR | year of study |
+| How would you like to study for this programme? | LOV search | * | mode/campus, e.g. DFC FULL-TIME, APK CAMPUS FULL-TIME | mode of study |
+| Application Type and Description | auto | — | e.g. "U — SA Undergrad Applicant currently in Gr12" | — |
+| Number of applications allowed for this Application type | auto | — | **2** → UJ allows **two programme choices** | — |
+
+- **Add Qualification** adds the 2nd choice. (Dictation warns it may wipe/reset the in-progress selection — _verify_; the video's summary shows two qualifications accepted.)
+- **Eligibility is portal-computed** ("Eligible To Apply: YES"). The adapter/AI must not submit an ineligible programme.
+
+### Page F — Check your application details (summary)
+Read-only review of everything captured: personal/contact, subjects table, previous studies, and a Qualification table (Faculty · Qualification · Study Period · Mode of Study · Academic Period · Academic Year · Application Type · **Eligible To Apply**). Buttons: **Continue** / Printer Friendly Format.
+
+### Page G — Rules and Agreement (Accept Agreement → Submit)
+| Field | Control | Req | Validation | Uniflo mapping |
+|---|---|---|---|---|
+| Login Pin Number | text | * | **5-digit PIN: numeric only · cannot start with 0 · no repeating characters** | store as portal secret (not profile) |
+
+- Agreement shown as an embedded PDF (**`Web_Application_Agreement.pdf`**, titled "APPLICATION AGREEMENT") with **I Accept** / **I do not Accept** checkboxes — must tick **I Accept**.
+- Buttons: **Back** · **Submit Application** · **Quit Application**. **Submit Application stays disabled until the PIN is entered and I Accept is ticked.**
+- **Quit Application deletes all captured information** — never click it in automation.
+- Note: the test PIN `12123` was accepted, so "no repeating characters" appears to mean **no consecutive identical digits** (e.g. `11`), not globally-unique digits. **[VERIFY]**
 
 ## Submission confirmation
-- Flow ends at **Summary → accept agreement** (after PIN creation).
-- Confirmation URL / DOM markers: _TBD_ **[VERIFY — capture for `verify_submission()`]**
-- **[VERIFY whether an application fee / payment gate exists for UJ — not mentioned in the walkthrough.]**
+- Sequence: Page F summary → **Continue** → Page G agreement (enter 5-digit PIN + tick **I Accept**) → **Submit Application** (agreement screen captured via screenshot).
+- Post-submit **success** page (URL + markers): still **[VERIFY]** — the agreement/submit *screen* is captured but not the page shown after clicking Submit Application.
 
-## Uniflo profile mapping & app gaps
-- **Payer (account) address** — UJ offers no "same as student", so we must hold a payer address.
-- **5-digit PIN** — generated during submission (numeric, no leading 0, no repeats). Store securely (Bitwarden / secrets, not the profile DB). **[Decide storage with Partner A.]**
-- **POPIA + final agreement** — consent gates; consider surfacing the agreement link to the student for transparency (same open question as Wits indemnity).
-- Confirm all mappings against `student_profiles` / `academic_records` before adapter work. **[VERIFY against schema]**
+## File uploads
+- **None for the initial application — confirmed (2026-06-03).** No document-upload step appears anywhere in the flow (Qualifications → summary → agreement → submit), and ID/results are **not** required to submit the initial application. Any document submission, if needed, happens later/out of band.
+
+## Uniflo mapping & app gaps (confirmed/added from video)
+- **Payer (account) address + email** — no "same as student"; store separately.
+- **5-digit PIN** — generated at submit; store as a per-applicant portal secret (Bitwarden/secrets), not in the profile DB.
+- **Residence interest**, **disability + remarks**, **current activity** ("GRADE 12 PUPIL") — capture in the app.
+- **Subject marks** — UJ takes the Gr11 final mark as a **percentage via LOV** now; subject names must match the LOV's `(NSC/NCV/ISC/DR)`-qualified entries.
+- **Eligibility is portal-side** — feed real marks so the right programmes show "ELIGIBLE TO APPLY-Y".
+- Cross-check every mapping against actual `student_profiles` / `academic_records` columns. **[VERIFY against schema]**
 
 ## Screenshots
-- Source: Notion → *Uni Research / UJ* (presigned links expire).
-- TODO: export PNGs to `docs/phase-3/portal-research/screenshots/uj/` and reference them here.
+- Frames extracted from `uj.mp4` (1 per ~18s) to a local scratch folder — **not committed**. TODO: export the key page shots to `screenshots/uj/`.
 
 ## Open questions / to verify
-- [ ] Login/re-entry mechanics (student number + PIN?) for resuming an application.
-- [ ] Whether/where documents are uploaded in-portal.
-- [ ] Application fee / payment gate (if any).
-- [ ] Submission-confirmation URL + DOM markers.
-- [ ] PIN storage approach (decide with Partner A).
+- [x] Agreement/submit screen — **captured** (PIN + I Accept/I do not Accept + Submit Application/Quit Application).
+- [ ] Post-submit **success** page (URL + markers) shown after Submit Application.
+- [x] Document uploads — **confirmed not required for the initial application** (2026-06-03).
+- [ ] "What are you currently doing?" control type + option list.
+- [ ] "Add Qualification" behaviour for the 2nd choice (does it reset the form?).
+- [ ] Applicant-type + login first screen (from dictation; capture on a re-walk).
 
 ---
 
 ## Appendix — raw dictated walkthrough
-> Original unedited notes, kept as the source of truth for the structured sections above.
+> Original unedited notes, kept as the source for the parts the video doesn't show (login/applicant-type).
 
 So I'm going into u j. There's going to be an option to choose from new applicant, a returning, or internal applicants, people already existing with the u j student number. For us, we're gonna go to new applicants. They are prompted later. They already have a student number. We're gonna click no. Are they referring to finalize an incomplete application for the first part to make it no if for continuing an application, make it yes. So there's a huge apoebi egg that people do have to accept? I don't know. You maybe may have to save the link, send it to the users so they can drink for themselves and then choose to accept. And then the AI can take over from there. no capcha for this one So now we'll move on to biographical details. As for nationality, whether you're a basic citizen or not, as for your ID number, citizenship code, it's going to be a search. So click the search button, and then just select South Africa. Your date of birth, you are going to have to click the button for date of birth and to actually choose the date of birth. Then you input your title, your initials, surname, and first names. maiden name too if applicable and maritial status. input in home language too. ethnic group too You just have to put in your skin and dress so they do give you some guidelines. Address line one, pick your social street name. Address line two, your suburb. Line three should be your town name, and line four should be your province. for postal code you do not type it in, you click the button that looks like search and search for it there We then move on to contact information where they ask you for your South African cell phone number. Um, your work phone... cell phone number optionally, and your home telephone number optionally. Then you have to put in your email address and then verify it by inputting it again.
 

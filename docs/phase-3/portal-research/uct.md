@@ -1,150 +1,198 @@
 # UCT — Portal Research
 
-> **Status: Draft.** Reformatted from the dictated walkthrough + Notion screenshots (research dated 2026-05-25). DOM selectors, exact required/optional flags, validation rules, and the submission-confirmation markers still need a verification pass against the live portal. Unknowns are marked `_TBD_` or **[VERIFY]**. Raw dictation preserved in the appendix.
+> **Status: Draft v2 — verified from screen recording.** Rebuilt from `uct.mp4` (38:26) frame-by-frame. Field labels, control types, required flags, dropdown option lists, the 16-step flow, and the document-upload + review steps are confirmed from video. **Not** fully captured: Step 16 (Agreement and Submission) and the post-submit confirmation page — the recording ends at the Step 15 review confirm dialog. Sample data shown in the video is intentionally omitted (PII).
+>
+> **Drive mechanism: accessibility-tree primary (approach C).** The "Control / target" column names the visible label + control type, not a CSS selector.
 
 ## Portal URL
-- Landing / login: <https://publicaccess.uct.ac.za/psc/public/EMPLOYEE/SA/c/NUI_FRAMEWORK.PT_LANDINGPAGE.GBL?LP=UCT_ONLINE_APP_PUBLIC&lp=SA.EMPLOYEE.UCT_ONLINE_APP_PUBLIC>
-- Engine: PeopleSoft / Oracle (same family as Wits and UP) — selectors will look like `win0divUCT_...`. **[VERIFY]**
+- **Account creation:** `publicaccess.uct.ac.za/psc/public/...UCT_ONL_HOME_FL.GBL` (page "Create Account")
+- **Login + application:** `studentsonline.uct.ac.za/psc/students/...` (page "Online Application")
+- Engine: **PeopleSoft Fluid** (`NUI_FRAMEWORK` / `PT_AGSTARTPAGE_NUI`). Left-nav wizard, 16 numbered steps, each with a status (Not Started / In Progress / Complete / Visited). **Save** + **Next/Previous** top-right.
+
+### Interaction pattern (for the adapter — approach C)
+Mostly **native `<select>` dropdowns** (target by visible label — good for accessibility-tree). A handful of modal pickers:
+- **Postal Code** → PeopleSoft "Lookup" modal: Search Criteria (Postal Code / State / Suburb-Town-City, all "begins with") → Search → results grid (Postal Code · State · Suburb/Town/City · Post Office Box) → click row. (Suburb/Town/City then becomes a dropdown.)
+- **School Search** → modal: Province dropdown + Search Name (**≥4 consecutive letters**, need not be the first letters) → Search.
+- **Subjects** → "Subject Details" modal: Subject dropdown + percentage field(s).
+- **Contact numbers / emails** → "+" opens an add-row modal.
+- **Document upload** → "File Attachment" modal (My Device → file → Upload Complete → Done).
 
 ## Application window
-- Opens: **1 April 2026**
-- Closes: **31 July 2026**
+- For the **2027** intake (video shows year selector = 2027). Opens 1 April; closes 31 July (per earlier research — _verify each cycle_).
 
-## Test account
-- Credentials live in **Bitwarden** per Phase 3 plan §3 — _TBD: link Bitwarden entry._ (Deliberately not committed.)
-- Account is self-created (username + password chosen by applicant), unlike Wits/UP which email a system-generated ID.
+## Account / login
+- Credentials live in **Bitwarden** per Phase 3 plan §3 — _TBD: link entry._
+- **Self-created account** (username + password chosen by applicant), separate from the application login host.
 
 ## Anti-automation measures ⚠️
-- **Email OTP at account creation** — after "Create", an OTP is sent to the applicant's email; must be entered to verify before login. Headless automation needs inbox access to read it. Flag as a **partial blocker** — solvable only if the automation controls the test inbox. **[VERIFY whether OTP recurs at login or only at signup.]**
-- No captcha/security-code image reported for UCT (contrast Wits/UP). **[VERIFY]**
+- **Email OTP at account creation** — after "Create", a "Confirm Email Address" modal requires an **OTP emailed to the applicant (valid 15 minutes)** → Verify OTP. Headless automation needs inbox access. (No OTP seen at subsequent logins — _verify_.)
+- **NBT registration is a separate portal** (`nbtests.uct.ac.za`, "National Benchmark Tests project" / CETAP) with its **own account, contact-info, test/venue booking, fee agreements**, producing an **NBT Reference number** that Step 10 consumes. Required for all SA-resident undergrad applicants (and mandatory for Commerce & Health Sciences). **Flag: this is a second, independent automation surface — likely out of MVP scope; the student may need to complete NBT themselves.**
+- No captcha/image challenge observed.
 
-## Application flow (pages in order)
-
-### Account creation (pre-application)
-1. From the landing page → **Create account**.
-2. Fields: first name (as per ID), last name, date of birth (date-picker button), SA national ID **or** passport number, email, confirm email, username, password, confirm password.
-   - **Username rules:** ≥10 chars, case-sensitive, only letters/numbers/hyphens/underscores/full-stops, may not be an email address.
-   - **Password rules:** ≥16 chars, ≥1 special char, ≥1 number, ≥1 lowercase, ≥1 uppercase.
-3. Submit → **email OTP** → enter OTP → **Verify OTP** → redirected to login.
-4. Log in with username + password → choose **Undergraduate** → verify application year → **Start application**.
-
-### The application — 16 steps
-> ⚠️ **One-way flow:** once a section is completed you cannot go back. Every value must be verified before advancing. "Next" button is top-right; pattern is **Save → Next**.
-
+## Page flow — Online Application, 16 steps
 | # | Step | Notes |
 |---|---|---|
-| 1 | Introduction | Info only |
-| 2 | Personal information | see fields below |
-| 3 | Contact details | see fields below |
-| 4 | Parent / guardian information | see fields below |
-| 5 | School information | see fields below |
-| 6 | Tertiary information | "Applied to UCT before?" → leave blank; prior activity → blank (not expected for matric) |
-| 7 | _TBD — not covered in walkthrough_ | **[VERIFY: narrative skips 7]** |
-| 8 | Programme choices | 2 options: 1 compulsory + 1 other |
-| 9 | Referees & supervisors | Skippable for most undergrad applicants |
-| 10 | NBT information | **UCT-specific** — see fields |
-| 11 | Funding | see fields |
-| 12 | Student housing | "Be considered for student housing?" |
-| 13 | Redress & disadvantage factors | see fields |
-| 14–15 | _TBD_ | **[VERIFY exact ordering]** |
-| 16 | Document uploads → Review application | see uploads |
+| 1 | Introduction | Info only — see below |
+| 2 | Personal Information | |
+| 3 | Contact Details | |
+| 4 | Parent/Guardian and Fee Payer Information | |
+| 5 | Secondary School Information | |
+| 6 | Tertiary Information | minimal for matriculants |
+| 7 | Post School Activity | none for "completing school this year" |
+| 8 | Programme Choices | 2 choices |
+| 9 | Referees & Supervisors | skipped for undergrad |
+| 10 | NBT Information | NBT reference (from separate portal) |
+| 11 | Funding Information | |
+| 12 | Housing Information | |
+| 13 | Redress and Disadvantage Factor Information | |
+| 14 | Document Uploads | **SA ID required** |
+| 15 | Review Application | confirm dialog |
+| 16 | Agreement and Submission | **not captured — TBD** |
+
+> **Navigation:** the left-nav lets you jump to completed steps and there is a **Previous** button — the flow is **navigable**. **Confirmed (2026-06-03): the Previous button works**; the dictation's "can't go back once a section is complete" was a mistake.
+
+### Account creation (pre-application)
+First Name (as per SA ID/Passport) · Last Name · Date of Birth (calendar) · SA National ID / International Passport Number · Email · Repeat Email · Username · Password · Confirm Password → **Create** → email OTP → Verify → log in.
+- **Username:** ≥10 chars · case-sensitive · only numbers/letters/hyphens/underscores/full-stops · may not be an email.
+- **Password:** ≥16 chars · ≥1 special · ≥1 numeric · ≥1 lowercase · ≥1 uppercase.
+
+### Step 1 — Introduction
+Info only: after submission UCT emails an acknowledgement with the **applicant number + login** to monitor the application, and **instructions for submitting additional forms and documents** (so some documents are handled later, by email — not all in-portal).
 
 ## Form fields
 
-### Step 2 — Personal information
-| Field | Type | Required | Options / validation | Uniflo mapping | Selector |
-|---|---|---|---|---|---|
-| First name | text | yes | — | profile first name | _TBD_ |
-| Preferred name | text | _TBD_ | Goes on the **student card** → student should control it | **app gap** (see below) | _TBD_ |
-| Maiden name | text | optional | — | _TBD_ | _TBD_ |
-| Surname | text | yes | — | profile last name | _TBD_ |
-| Date of birth | date | yes | — | profile DOB | _TBD_ |
-| Home language | dropdown | yes | _TBD list_ | profile home language | _TBD_ |
-| Race | dropdown | yes | _TBD list_ | profile population group | _TBD_ |
-| SA ID number | text | yes | — | profile national ID | _TBD_ |
-| Title | dropdown | yes | Mr / Mrs / Prof / … | profile title | _TBD_ |
-| Citizenship | dropdown | yes | South Africa / … | profile citizenship | _TBD_ |
-| Has disability? | yes/no | yes | If yes → disability-type dropdown + **current support** field | **app gap** | _TBD_ |
-
-### Step 3 — Contact details
-| Field | Type | Required | Notes | Uniflo mapping |
+### Step 2 — Personal Information
+| Field | Control | Req | Options | Uniflo mapping |
 |---|---|---|---|---|
-| Country | dropdown | yes | — | profile country |
-| Postal code | text | yes | Drives the suburb dropdown | profile postal code |
-| Suburb / town / city | dropdown | yes | **Populated from postal code** | profile suburb/city |
-| Address line 1 | text | **yes** | Home address | profile address line 1 |
-| Address line 2–4 | text | optional | — | profile address lines 2–4 |
-| Postal address | group | — | "Same as home address" option | profile postal address |
-| Contact numbers | repeatable | yes | "+" adds a row: phone type + country code + number | profile phone |
-| Email addresses | repeatable | yes | "+" adds a row: email type + address | profile email |
+| First Name (as per ID/Passport) | text | * | | first name |
+| Middle Name (as per ID/Passport) | text | optional | | middle names |
+| Preferred Name | text | optional | → **app gap** (prints on student card) | preferred name |
+| Maiden Name | text | optional | | maiden name |
+| Surname (as per ID/Passport) | text | * | | last name |
+| Title | dropdown | optional | Associate Professor, Dr, Miss, Mr, Mrs, Ms, Mx, Professor | title |
+| Date of Birth | date | * | | DOB |
+| Sex | dropdown | * | Female / Male | sex |
+| Home Language | dropdown | * | (Ndebele, …) | home language |
+| Indicate Type of Citizenship or Residency in SA | dropdown | * | SA Citizen / … | citizenship |
+| Race (Self-Declared) | dropdown | * | African, …, No Information | population group |
+| SA ID Number | text | * | | national ID |
+| Do you need assistance because of a disability? | checkbox | — | if ticked → support detail → **app gap** | disability |
 
-### Step 4 — Parent / guardian information
-| Field | Type | Required | Notes |
+### Step 3 — Contact Details
+| Field | Control | Req | Notes | Uniflo mapping |
+|---|---|---|---|---|
+| Country | dropdown | * | South Africa | country |
+| Postal Code | **Lookup modal** | * | Search Criteria (Postal Code/State/Suburb-Town-City) → results grid | postal code |
+| Suburb/Town/City | dropdown | * | populated after postal code | suburb/city |
+| Address Line 1 | text | * | | address line 1 |
+| Address Line 2–4 | text | optional | | address lines 2–4 |
+| Postal Address | group | — | "My postal address is the same as my home address" checkbox (default on) | postal address |
+| Contact Numbers | "+" modal | * | Phone Type (Business / Fee / Home / Non-SA Cellular / **SA Cellular** / Term) + Country Code (auto, e.g. 027) + Telephone | phone |
+| Email Addresses | "+" modal | * | Email Type (Personal) + Email Address | email |
+
+### Step 4 — Parent/Guardian and Fee Payer Information
+Rules: **under 18** → Parent/Guardian **and** Fee Payer required; **18+** → Parent/Guardian optional but **Fee Payer compulsory**. International applicants completing P/G must give SA Cellular or Other Telephone.
+| Field | Control | Req | Uniflo mapping |
 |---|---|---|---|
-| Title, ID/SAID, first name, surname, relationship, email | mixed | yes | — |
-| Contact numbers | text | yes | SA cellular required |
-| Guardian address | group | _TBD_ | "Same as applicant" option; else enter manually → **app gap: capture guardian address** |
-| Fee payer | — | — | List parent/guardian as fee payer for simplicity |
+| P/G Title · First Name · Surname | mixed | cond. | guardian name |
+| P/G SA ID Number / Passport Information | text | cond. | guardian ID |
+| P/G Relationship | dropdown | cond. | (Brother, …) |
+| P/G Email Address | text | cond. | guardian email |
+| P/G Contact: SA Cellular · Work Telephone · Other Telephone | text | cond. | guardian phone |
+| Is your parent/guardian address different from your postal address? | checkbox | — | → **app gap: guardian address** |
+| Fee Payer Information | section | * | person responsible for fees (not the funder/bursary) |
 
-### Step 5 — School information
-| Field | Type | Required | Notes |
+### Step 5 — Secondary School Information
+Year of first secondary exam · School has 3 or 4 terms (dropdown) · Grade 11 at same school as Grade 12? (checkbox) · Grade 12 school in RSA? · **School Search** modal (Province + name ≥4 letters) · Qualification (dropdown, e.g. NSC(DBE)).
+**School Subjects** — tabs **Grade 11** / **Grade 12**:
+| Tab | Modal fields | Table columns |
+|---|---|---|
+| Grade 11 | Subject (large dropdown) · **Grade 11 Final %** | Subject |
+| Grade 12 | Subject · **April Results %** · **June Results %** | Subject · April Results % · June Results % |
+
+→ UCT captures **Grade 11 final %, Grade 12 April %, and Grade 12 June %** per subject. Subject dropdown is a native list (Accounting, Advance Program English/Maths, Afrikaans/English 1st/2nd/Home Lang, Electrical Technology, Engineering Graphics & Design, Geography, Life Orientation, Life Sciences, Mathematics, Physical Sciences, Xitsonga, "Exempted: Mathematics", …).
+
+### Step 6 — Tertiary Information
+"Applied to UCT before?" / prior tertiary — minimal/blank for matriculants. _(fields TBD)_
+
+### Step 7 — Post School Activity
+For "completing secondary school this year" → no fields, just **Save**.
+
+### Step 8 — Programme Choices
+First choice + **second choice (optional)**:
+| Field | Control | Req | Options |
 |---|---|---|---|
-| Year of first secondary-exam completion | dropdown | yes | — |
-| School has 3 or 4 terms | choice | yes | — |
-| Grade 11 at same school as grade 12? | yes/no | yes | — |
-| Grade 12 school in RSA? | yes/no | yes | — |
-| School name | search | yes | **Find School** button → search |
-| Qualification | dropdown | yes | → **NSC** |
-| Grade 11 final results | dropdown+mark | yes | subject dropdown + mark each |
-| Grade 12 April/June results | dropdown+mark | yes | subject dropdown + mark each |
+| Level of Qualification | dropdown | * | Undergraduate |
+| Faculty | dropdown | * | Commerce · Engineering/Built Environment · Humanities · Law · Science |
+| Academic Qualification | dropdown | * | (e.g. Bachelor of Science, Bachelor of Laws) |
+| Specialisation or Major | dropdown | * | (Applied Mathematics, AI, Biochemistry, Biology, Computer Engineering, Computer Science, Genetics, Mathematics, …) |
+| Second Specialisation or Major | dropdown | cond. | |
 
-### Step 8 — Programme choices
-Level of qualification (Undergraduate) · Faculty · Academic qualification (e.g. BSc) · Specialization/major. Two choices: one compulsory, one optional.
+### Step 9 — Referees & Supervisors
+"Your Programme Choices do not require a referee or supervisor" → **Save** (skipped for undergrad).
 
-### Step 10 — NBT information **(UCT-specific)**
-NBT registration number · Year written/to-be-written · NBT exam date. **[VERIFY: is NBT mandatory for all faculties or only some?]**
+### Step 10 — NBT Information
+Consumes the **NBT Reference number** obtained from the separate `nbtests.uct.ac.za` portal (+ year/exam date). See anti-automation note — NBT is its own registration + booking flow.
 
-### Step 11 — Funding
-"Received funding from another institution?" · "Require financial assistance for the programme?"
+### Step 11 — Funding Information
+"Have you received NSFAS funding from another Institution?" (checkbox) · "Do you need financial assistance for this programme?" (checkbox). + NSFAS info.
 
-### Step 13 — Redress & disadvantage factors (all dropdowns, each with an "I do not know" option)
-Father's racial classification during apartheid · Mother's racial classification · Mother's first language · Highest education level of father/male guardian · Highest education of any grandparent · Family relies on state social pension? · Family receives a child-support grant on your behalf?
-- Racial-classification options: Black, Chinese, Coloured, Indian, prefer-not-to-answer, do-not-know, "parents not resident during apartheid", White.
+### Step 12 — Housing Information
+_(fields TBD — step exists, marked Complete in video.)_
+
+### Step 13 — Redress and Disadvantage Factor Information
+All dropdowns (used to compute redress category + disadvantage factor → Weighted Points Score):
+- Mother's racial classification under apartheid · Father's racial classification under apartheid — options: Black, Chinese, Coloured, Indian, White, "I choose not to answer", "I do not know", "My parents did not reside in SA during apartheid".
+- Mother's first language.
+- Highest education of mother/female guardian · of father/male guardian (e.g. Matric / Grade 12 / Senior certificate) · by any grandparent.
+- Does/did your family receive a child-support grant on your behalf? (incl. "I do not know").
+- Does/did your family rely on a social pension from the State?
+
+### Step 14 — Document Uploads
+- Rules: one file per document; combine multiples first; permitted types **.doc .docx .htm .jpeg .jpg .odt .pdf .rtf .tif .xls .xlsx**.
+- Shows the Choice 1 / Choice 2 summary, then an upload grid (Document · Choice Number · File · Upload).
+- **Required: `*SA Identity Document` (Choice Number = All).** Upload via "File Attachment" modal (My Device).
+- → **Corrects UJ contrast: UCT *does* require an ID upload in-portal.** (Other supporting docs may follow by email per Step 1.)
+
+### Step 15 — Review Application
+Collapsible review of every section; confirm dialog: *"Do you confirm that all the information provided has been reviewed and is correct?"* → Yes/No.
+
+### Step 16 — Agreement and Submission
+**Terms and Conditions** page (captured via screenshot): *"Please read the Terms and Conditions agreement below. By submitting your application you agree to these Terms and Conditions."* Followed by an **Agreement / declarations list**: abide by the University's rules · responsible for payment of all fees & arrears (per the fee booklet) · confirm having read the **Privacy Notice** · if currently completing secondary school, UCT may communicate with the school about the application · waive claims against UCT for damage/loss · not expelled/rusticated/excluded from another university · if a minor, parent/guardian consent · information is complete & accurate (non-disclosure / false declaration can lead to cancellation). Footer: *"I confirm the above declaration and hereby submit my application."* Buttons (top-right): **Submit** / **Do not Accept**.
 
 ## File uploads
-| Field | Accepted types | Size limit | Naming | Notes |
-|---|---|---|---|---|
-| SA ID document | _TBD_ | _TBD_ | _TBD_ | Confirmed in walkthrough |
-| Other docs (grade 11/12 results?) | _TBD_ | _TBD_ | _TBD_ | **[VERIFY — narrative only named the ID]** |
+| Field | Required | Accepted types | Notes |
+|---|---|---|---|
+| SA Identity Document | **yes** | .doc .docx .htm .jpeg .jpg .odt .pdf .rtf .tif .xls .xlsx | one file; combine multiples |
+| Other supporting docs | varies | same | some handled later via the post-submission email (Step 1) |
 
 ## Submission confirmation
-- Confirmation URL: _TBD_ **[VERIFY]**
-- DOM markers / confirmation text: _TBD_ **[VERIFY — capture exact page for `verify_submission()`]**
-- Final step is **Review application**; no payment step appeared in the UCT walkthrough (contrast Wits/UP). **[VERIFY whether UCT charges an application fee.]**
+- Sequence: Step 15 Review (confirm the "reviewed and correct" dialog) → **Step 16 Agreement and Submission** → click **Submit** (decline = **Do not Accept**).
+- The submit control is the **Submit** button on the Step 16 Terms & Conditions page.
+- Post-submit **success** page (URL + DOM markers): still **[VERIFY]** — the submit *screen* is captured but not the page shown after clicking Submit. Reliable success signals: the application status flips from "In Progress", and UCT **emails an acknowledgement with the applicant number** (out-of-band).
 
-## Uniflo profile mapping & app gaps
-Recurring "add this to the app" notes from research:
-- **Preferred name** — student-controlled (printed on student card).
-- **Disability support detail** — capture the type *and* the current/required support, not just a yes/no.
-- **Parent/guardian address** — may differ from the student's; store separately.
-- Confirm every mapping above against the actual `student_profiles` / `academic_records` columns before adapter work. **[VERIFY against schema]**
+## Uniflo mapping & app gaps
+- **Preferred name** (prints on student card), **disability support detail**, **guardian address** — capture in the app.
+- **Marks granularity:** UCT wants Grade 11 final %, Grade 12 April %, Grade 12 June % per subject — richer than other portals. Store enough to populate all three.
+- **NBT reference** — needs to exist before Step 10; treat NBT as a separate prerequisite/flow.
+- **Fee payer** vs funder distinction — fee payer is the person responsible, not a bursary/NSFAS.
+- Cross-check every mapping against `student_profiles` / `academic_records` columns. **[VERIFY against schema]**
 
 ## Screenshots
-- Source: Notion → *Uni Research / UCT* (presigned image links expire). 
-- TODO: export PNGs to `docs/phase-3/portal-research/screenshots/uct/` and reference them here.
+- Frames extracted from `uct.mp4` (1 per ~45s) to a local scratch folder — **not committed**. TODO: export key page shots to `screenshots/uct/`.
 
 ## Open questions / to verify
-- [ ] Step 7 and steps 14–15 content (walkthrough skipped them).
-- [ ] Whether email OTP recurs on every login or only at signup.
-- [ ] Full document-upload list, formats, and size limits.
-- [ ] Submission-confirmation URL + DOM markers.
-- [ ] Whether NBT is required for the target faculties.
-- [ ] Application fee (if any).
+- [x] Step 16 (Agreement & Submission) content — **captured** (Terms & Conditions + Submit / Do not Accept).
+- [ ] Post-submit **success** page (URL + markers) shown after clicking Submit.
+- [x] Navigation — **confirmed: Previous button works, flow is navigable** (2026-06-03); the "one-way" note was a mistake.
+- [ ] Step 6 (Tertiary) and Step 12 (Housing) exact fields.
+- [ ] Whether email OTP recurs at login or only at signup.
+- [ ] NBT: confirm whether automation attempts NBT registration or leaves it to the student.
 
 ---
 
 ## Appendix — raw dictated walkthrough
-> Original unedited notes, kept as the source of truth for the structured sections above.
+> Original unedited notes, kept as the source for anything the video doesn't show.
 
 So when you log in to the portal, There's gonna be a bunch of options. You're gonna click create account because you don't have one yet. So information needed here is first name as per your SAID or whatever document you're using, last name, your date of birth, which there's gonna be a button to press to select, your South African national ID slash your passport number, your email address, then you have to repeat your email address, then you have to form a username. The username has some requirements. It must be at least ten characters in length. Usernames are case sensitive, can only contain numbers, letters, hyphens, underscores and full stops. An email address may not be used as the username. And then you're gonna put in your password and confirm your password. Your password must be at least sixteen characters in length, contain one special character at least, at least one numeric character, one lowercase character, and one uppercase character. After create... present create, you're gonna present an OTP to your email. You're gonna go to your email, get the OTP, and then click verify OTP. After everything, you'll be redirected to to the login page. We're gonna use whatever username you had, plus your password to log in. after you log in, there's gonna be options to choose from. Below, you click undergraduate because that's what we'll be applying for at this stage and time. verify year u are applying for and then click start application
 

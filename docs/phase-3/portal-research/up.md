@@ -1,122 +1,163 @@
 # UP — Portal Research
 
-> **Status: Draft.** Reformatted from the dictated walkthrough + Notion screenshots (research dated 2026-05-25). DOM selectors, exact required/optional flags, validation rules, and the submission-confirmation markers still need a verification pass against the live portal. Unknowns are marked `_TBD_` or **[VERIFY]**. Raw dictation preserved in the appendix.
+> **Status: Draft v2 — verified from screen recording.** Rebuilt from `up.mp4` (20:39) frame-by-frame. New-application creation, the case-sensitive captcha, the emailed Application-ID login, and all 12 sections (through the "Apply" confirmation) are confirmed from video. **Not** captured: the page shown *after* clicking "Apply" (post-submit confirmation). Sample data shown in the video is intentionally omitted (PII).
+>
+> **Drive mechanism: accessibility-tree primary (approach C).** "Control / target" names the visible label + control type, not a CSS selector.
 
 ## Portal URL
-- Login: <https://upnet.up.ac.za/psc/upapply/EMPLOYEE/SA/c/UP_OAP_MENU.UP_OAP_LOGIN_FL.GBL?&>
-- Engine: PeopleSoft / Oracle (same family as UCT and Wits).
+- Login / apply: `upnet.up.ac.za/psc/upapply/EMPLOYEE/SA/c/UP_OAP_MENU.UP_OAP_LOGIN_FL.GBL`
+- Engine: **PeopleSoft-based UP Online Application Portal (OAP)** (`UP_UG_MENU` / `UP_OAP`). Left-nav with named sections; a per-page toolbar of icons (first / prev / next / **save** / email / help / cancel). Header on every page: *Name (Application ID) · 2027 Undergraduate · Overall Application Status: Must still verify & apply*.
+
+### Interaction pattern (for the adapter — approach C)
+Mostly **native `<select>` dropdowns** (target by label). Several modal/search pickers:
+- **Select Postcode** modal (Contact Details): type city/suburb/postcode → Search → results grid (name · town · postcode · province · Street Code) → **Select** row.
+- **Select school** modal (Secondary Education): type school → search; or **"Enter School Manually"** link. (Shows "No matches have been found" if absent.)
+- **Select your study choice** modal: "Open Plans only?" toggle + Study programme keyword → Search → results grid (programme name · code · Open) → click row. **Row is unselectable if its closing date has passed.**
+- **Disability Detail** modal: Category → Type → Require assistance? → Done.
+- **File Attachment** modal (Documentation/Payment): My Device → file → Uploading… → Upload Complete → Done.
 
 ## Application window
-- Opens: **1 April**
-- Closes: **31 May** (earliest-closing of the four target portals — flag for scheduling)
+- Opens 1 April; closes **31 May** (earliest-closing target). Video applied for the **2027** intake.
 
-## Test account
-- Credentials live in **Bitwarden** per Phase 3 plan §3 — _TBD: link Bitwarden entry._ (Deliberately not committed.)
-- UP issues a **system-generated application ID + password** by email after the first form; applicant then confirms email and sets a new password.
+## Account / login
+- Credentials live in **Bitwarden** per Phase 3 plan §3 — _TBD: link entry._
+- UP **emails a system-generated Application ID + password** after the first form; applicant then confirms email + sets a new password.
 
 ## Anti-automation measures ⚠️
-- **Security code (image)** on the new-application form — requires OCR/computer vision to solve headlessly. Flag as a **blocker candidate** — raise in the Sunday sync before week 10 if vision solve is unreliable.
-- **Email delivery of login credentials** — automation needs inbox access to read the application ID + password.
+- **Security Code (case-sensitive 6-char image captcha)** on the new-application form — requires OCR/vision. **Blocker candidate** — raise in the Sunday sync before week 10.
+- **Email delivery of Application ID + password** — automation needs inbox access.
+- No other captcha in the application steps.
 
-## Application flow (pages in order)
+## Pre-application: new application → emailed login → set password
+1. **"I want to"** dropdown → **start new application**.
+2. **New study application:** Career of Study (Undergraduate) · First Year of Study (dropdown, 2027) · Student Number (if previously studied at UP — blank) · Last Name · First Name · Middle Name(s) · Email Address · Confirm Email Address · Date of Birth (date picker, `mm/dd/yyyy`) · **Identify me by** (dropdown: SA ID Number / Passport Number) → reveals **South African National ID** field · **Security Code (case sensitive)** image. → submit; login details emailed.
+3. **"I want to"** → **login to continue / view study application** → Application ID (e.g. `T…`) + Password.
+4. **Confirm email and change password** modal: Email · Application ID (read-only) · Password (supplied) · New Password · Confirm New Password → **OK**.
 
-### Create application (pre-login)
-1. **"I want to…"** dropdown → **New application**.
-2. New window: Career of study (dropdown → Undergraduate) · First year of study (dropdown → year applying) · Student number (leave blank if none) · Last name · First name · Middle names · Email · Confirm email · Date of birth (date-picker button) · **Identify me by** (SAID number / Passport number) → value entered next step.
-3. **Security code** (see anti-automation) → continue. Login details emailed.
-
-### Log in & set password
-1. **"I want to…"** → *Log in to continue / view study application* → enter emailed **application ID + password**.
-2. Prompted to **confirm email + change password**: old/supplied password → new password → confirm new → OK.
-
-### The application
-| Step | Page | Notes |
-|---|---|---|
-| 1 | Personal information | see fields |
-| 2 | Contact details | address + phones |
-| 3 | Demographic details | see fields |
-| 4 | Tertiary education | "Previously enrolled tertiary?" → **No** |
-| 5 | Secondary education | see fields — **UP-specific subject-order constraint** |
-| 6 | Programme choices | first + second choice; backend eligibility check |
-| 7 | General details | residence / NSFAS / UP financial aid |
-| 8 | School results uploads | grade 11 final **OR** grade 12 certificate |
-| 9 | Declaration → Verify application → Payments | see confirmation |
+## Page flow — 12 sections
+Personal Information → Contact Details → Demographic Details → Tertiary Education → Secondary Education → Study Choice → General Details → Documentation → Declaration → Verify → Payment → Apply.
 
 ## Form fields
 
-### Step 1 — Personal information
-| Field | Type | Required | Notes | Uniflo mapping |
+### Personal Information
+Title · Preferred first name (→ **app gap**) · Citizenship (SA citizen) · SA National ID. _(Detail per dictation; not all shown on video.)_
+
+### Contact Details
+| Field | Control | Req | Notes | Uniflo mapping |
 |---|---|---|---|---|
-| Title | dropdown | yes | — | profile title |
-| Preferred first name | text | _TBD_ | → **app gap: ask the student** | **app gap** |
-| Citizenship | — | yes | SA citizen | profile citizenship |
-| SA national ID | text | yes | — | profile national ID |
+| Country | dropdown | * | South Africa | country |
+| Address Line 1 | text | * | | address line 1 |
+| Address Line 2–4 | text | _TBD_ | (likely optional) **[VERIFY]** | address lines 2–4 |
+| City / Suburb | **Select Postcode modal** | * | search → grid (name·town·postcode·province·Street Code) → Select; auto-fills Postal Code + Province | city/suburb |
+| Postal Code | auto | * | from postcode lookup | postal code |
+| Province / State | auto | * | from postcode lookup | province |
+| Mobile Number | text | * | | phone |
 
-### Step 2 — Contact details
-| Field | Type | Required | Notes | Uniflo mapping |
-|---|---|---|---|---|
-| Country | dropdown | yes | — | profile country |
-| Address line 1 | text | **yes (assumed)** | **[VERIFY — UP doesn't mark it]** | profile address line 1 |
-| Address line 2–4 | text | _TBD_ | — | profile address lines 2–4 |
-| City / suburb | search | yes | **Search button** → autofills postal code + province | profile city/suburb |
-| Mobile number | text | yes | — | profile phone |
-| Alternative mobile | text | optional | — | profile alt phone |
-| Email | text | prefilled | from earlier step | profile email |
+### Demographic Details
+| Field | Control | Options | Uniflo mapping |
+|---|---|---|---|
+| Gender | dropdown | Male / Female **[VERIFY restricted set]** | gender |
+| Home Language | dropdown | (Setswana, …) | home language |
+| Population Group | dropdown | (African, …) | population group |
+| Tell us more | dropdown | "I am currently still in high school" / … | app: current status |
+| Do you have a disability? | toggle | No / Yes | disability |
+| ↳ Disability Detail (modal) | Category + Type + Require assistance? | Category: Hearing / Medical / Neurodevelopmental / Neurological / Physical / Psychological-Psychiatric / Visual Disability (Type depends on category, e.g. Neurological → Epilepsy / Traumatic Brain Injury) | **app gap: disability + required assistance** |
 
-### Step 3 — Demographic details
-Gender (dropdown) · Home language (dropdown) · Population group (dropdown) · **"Tell us about yourself"** status (dropdown) · Disability (slider → "+" to add by category → **required-assistance** field).
-- Status options: currently in high school / post-school technical / college student / university-of-technology student / university student / repeating / unemployed & never studied tertiary / working & never studied tertiary.
-- → **app gap: capture disability + required assistance** so it maps to the support the programme requires.
-- Note (Notion): gender — **[VERIFY whether UP restricts to male/female like UJ]**.
+### Tertiary Education
+"Were you prev enrolled at a University, a Univ of Technology or a Post School Technical College?" — dropdown **No / Yes** (No for matriculants; falsely answering No → admission cancelled).
 
-### Step 5 — Secondary education
-Final school year (dropdown) · Examining authority (dropdown: Limpopo DOE, …, IEB, IEB ISC / exam board for Christian Ed, Cambridge, foreign country, etc.) · School name (search button) · School grade type (NSC / IEB) · Highest completed grade · Examination number (if grade 12 completed, else blank) · Exemption type (→ "currently busy with schooling") · **Subjects**.
-- **⚠️ UP-specific constraint:** subjects must be entered in the **same order as the school report**. No other target portal requires this. → **app gap / constraint: preserve subject order for UP.**
-- Per subject: subject (dropdown) · mark (dropdown — NSC achievement level 1–7, e.g. 7 = 80%+) · percentage (actual %). The adapter/AI must map percentage → NSC level.
+### Secondary Education
+| Field | Control | Notes | Uniflo mapping |
+|---|---|---|---|
+| Final School Year | dropdown | (e.g. 2026) | matric year |
+| Examining Authority | dropdown | Limpopo DoE, … | — |
+| School Name | search ("Select school" modal) | or "Enter School Manually" | school |
+| School Grades Type | dropdown | Nat Senior Cert or IEB | — |
+| Highest grade completed | dropdown | Grade 11 (for current matric) | — |
+| Examination Number | text | | exam number |
+| Exemption Type | dropdown | Currently busy with schooling | — |
 
-### Step 6 — Programme choices
-First choice + second choice. Search button → view programmes → select study programme (type + search + select). UP's backend **verifies qualification eligibility** from the entered marks ("matching service" data). An **"open only"** toggle filters programmes still open.
+**Completed School Grades** — ⚠️ *"IMPORTANT: Grades must be entered in the same order as your school report."* (**UP-specific constraint**). Per subject row:
+| Column | Control | Notes |
+|---|---|---|
+| Subject | dropdown (name + **code**) | e.g. `Xitsonga Home Language 13810`, `Accounting 03410`, `English 1st Add Language 01310`, `Physical Science 02610`, `Life Orientation 90510`, `Life Sciences 02710`, `Mathematics 02510`, `Mathematics Paper 3 34310`, … |
+| Mark | dropdown | **NSC achievement level 1–7** |
+| Percent | dropdown | **actual percentage** |
+| − | remove | |
 
-### Step 7 — General details
-Residence consideration (No/Yes dropdown) + preferred residence · NSFAS application? · UP financial aid application?
+→ store both the **NSC level (1–7)** and the **percentage** per subject; preserve **subject order**.
+
+### Study Choice
+First Choice + Second Choice (each via the **Select your study choice** modal: "Open Plans only?" toggle + Study programme keyword → Search → results grid with programme name · code · Open status; e.g. `BEng in Computer Engineering 12136019 Open`, `BEng in Electrical Engineering 12136013 Open`, …).
+- ⚠️ **Real-time minimum-admission check:** selecting a programme you don't qualify for pops *"Minimum admissions requirements not met — You do not meet the minimum admission requirements for this study choice"* (links to up.ac.za/programmes). So the entered marks gate which programmes can be chosen — **the AI must pick programmes the student actually qualifies for** (e.g. BEng requires English 65% / Maths 65% / Physical Sciences 65% / APS 33).
+
+### General Details
+| Field | Control | Notes |
+|---|---|---|
+| Do you wish to be considered for a residence place? | dropdown | Yes / No |
+| Preferred Residence | dropdown | (e.g. TuksVillage M) |
+| Have you / will you apply for NSFAS? | toggle | Yes / No (+ NSFAS Application link) |
+| Will you apply for UP Funding? | toggle | Yes / No (+ UP Financial Aid link) |
+
+### Documentation
+Two mandatory groups, each with **[+] / [−]** + File Attachment modal (My Device):
+- **Mandatory: Identity Document** — SA ID.
+- **Mandatory: School Results** — *"upload either your Grade 12 certificate or copy of your Grade 11 final results"* (Grade 11 Results / Gr 12 Results rows).
+→ Confirms required uploads: **SA ID + (Grade 11 final results OR Grade 12 certificate)**. (Matriculants → Grade 11 results.)
+
+### Declaration
+Accept the declaration. _(Detail not shown on video.)_
+
+### Verify
+**Verify application** button — checks every page; lists outstanding items in a *Page · Error Message* table (e.g. "You must upload at least 1 document(s) in the 'Mandatory: Identity Document' group"). Must pass (all sections show a ✓ in the left nav) before completing.
+
+### Payment
+- **Amount Due: R300** (non-refundable). Payment Status: Not Paid · Reference · Confirmed Date.
+- **UP Bank Account:** Standard Bank · Hatfield Branch (011545) · Swift (international) SBZAZAJJ · Account 012602604.
+- **Methods (tabs):** **Online Credit Card Payment** · **Upload My Proof of Payment** ("I have already paid using a different channel… upload my proof of payment") · **Upload My Parent's Payslip**.
+- **Online Credit Card Payment:** "Make Online Payment" → transfers to a **third-party payment gateway** → on success a printable **receipt** → click **RETURN** to come back to the application.
+- → Payment sits **inside** the flow (before Apply), unlike Wits (post-submission). We don't process payments — relay the R300 + EFT details to the student, or have them pay via card; capture proof-of-payment upload.
+
+### Apply (final submit)
+*"Please confirm that you wish to complete your application. Once you apply, further changes are not possible. Your application will first be verified. If errors or omissions are found, you must address them before continuing. If no errors are found, your application will be submitted to the University."* → **Apply** button.
 
 ## File uploads
-| Field | Accepted types | Size | Naming | Notes |
-|---|---|---|---|---|
-| SA ID | _TBD_ | _TBD_ | _TBD_ | — |
-| Grade 11 final results **OR** grade 12 certificate | _TBD_ | _TBD_ | _TBD_ | **Exactly one, not both.** Grade 12 cert only exists post-finals, so matriculants almost always upload grade 11 final. |
-| Academic transcript | — | — | — | **Not required** for matric students |
-| Sporting accomplishments | _TBD_ | _TBD_ | _TBD_ | Optional |
+| Field | Required | Notes |
+|---|---|---|
+| SA Identity Document | yes | "Mandatory: Identity Document" group |
+| Grade 11 final results **or** Grade 12 certificate | yes (one of) | "Mandatory: School Results" group |
+
+_TBD: accepted formats + size limits (not stated on the upload modal)._
 
 ## Submission confirmation
-- Flow ends: **Declaration → Verify application → Payments**.
-- Confirmation URL / DOM markers: _TBD_ **[VERIFY — capture for `verify_submission()`]**
-- **Payment gate:** we do not process payments. Set the automation to stop at/after *Verify application*; surface the payment link to the student (proof-of-payment upload or online card). **Decide exact stop point with Partner A.**
+- Sequence: Verify (all ✓) → Payment → **Apply** → confirm (Apply screen captured via screenshot — "Once you apply, further changes to your application are not possible… your application will be submitted to the University").
+- Post-submit **success** page (URL + markers): still **[VERIFY]** — the **Apply** *screen* is captured but not the page shown after clicking Apply. Reliable success signal: the "Overall Application Status" flips from **"Must still verify & apply"**.
 
-## Uniflo profile mapping & app gaps
-- **Preferred first name** — ask the student explicitly.
-- **Disability + required assistance** — capture in enough detail to map to programme support.
-- **Subject order** — UP requires subjects in school-report order; consider preserving subject order in the profile (UP-only, but harmless elsewhere).
-- **Mark mapping** — store both the NSC level (1–7) and the actual percentage; UP asks for both.
-- Confirm all mappings against `student_profiles` / `academic_records` before adapter work. **[VERIFY against schema]**
+## Uniflo mapping & app gaps (confirmed/added from video)
+- **Preferred first name** — ask the student.
+- **Disability + required assistance** — capture (category/type/assistance).
+- **Subject order** — UP requires school-report order; preserve subject order.
+- **Marks** — store NSC level (1–7) **and** percentage per subject (UP asks for both).
+- **Eligibility is enforced at selection** — feed real marks so the AI only picks qualifying programmes.
+- **Payment** — R300 inside the flow; card or EFT+proof; relay to student.
+- Cross-check every mapping against `student_profiles` / `academic_records`. **[VERIFY against schema]**
 
 ## Screenshots
-- Source: Notion → *Uni Research / UP* (presigned links expire).
-- TODO: export PNGs to `docs/phase-3/portal-research/screenshots/up/` and reference them here.
+- Frames extracted from `up.mp4` (1 per ~25s) to a local scratch folder — **not committed**. TODO: export key page shots to `screenshots/up/`.
 
 ## Open questions / to verify
-- [ ] Whether address line 1 is the only required address field.
-- [ ] Whether gender is restricted to male/female.
-- [ ] OCR reliability on the security code — **blocker check**.
-- [ ] Full document formats + size limits.
-- [ ] Submission-confirmation URL + DOM markers, and exact payment stop point.
-- [ ] The NSC level ↔ percentage mapping table the adapter will need.
+- [x] Apply (submit) screen + full Payment methods — **captured**.
+- [ ] Post-"Apply" **success** page (URL + markers) shown after the button click.
+- [ ] Whether address lines 2–4 are required.
+- [ ] Whether gender is restricted to Male/Female.
+- [ ] Document formats + size limits.
+- [ ] OCR reliability on the case-sensitive security code — **blocker check**.
 
 ---
 
 ## Appendix — raw dictated walkthrough
-> Original unedited notes, kept as the source of truth for the structured sections above.
+> Original unedited notes, kept as the source for anything the video doesn't show.
 
-First thing that'll happen is she'll be prompted with an I want to, then I'll be a drop down, and we're gonna select a new application. After that, new shows will pop up. We're gonna have to enter career of study and first year of study. These will be drop downs. Currently, you're gonna choose undergraduate, first year of studies can be whatever year we are applying to. Student number, first year applied to a UP is gonna be last blank if they don't have it. Last name, first name, middle names. Then you put in your email address, then you repeat on confirm email address, and then date of birth, which you're gonna click the button to actually select the date of birth. There is a show called Identify Me by: Gonna Choose Between SAID Number or Password Number and then you're gonna put in the actual value in the next step. And then much like the one in UCT, there's going to be a security code put in, and you have to enter it in order to continue. So you have to use computer vision for that for you to see the code, recognize it, and then enter. After that, login details will be sent to the supplied email. You can go back to the i one two, and instead now, we're going to log in to continue or view study application. We're gonna input whatever application ID was sent along with the password that was supplied. After entering all that, you'll be prompted to confirm your email and change your password. So you're gonna put here whatever old positive or supplied, the new positive, and then confirm the new positive and then click okay. Okay. Cool. After all of that, we'll move on to personal information. Let's select the title. We're gonna enter a preferred first name, which we should ask the student for in the app so to make note of that. Citizenship should be a safe citizen, and then African national ID should still be there for more than fourteen previous contact details, gonna put in the address. So countries are drop down address... this address line, one two three four. You only have to fill in address one, I assume. They don't indicate on the side, but I assume yes. And then for city server, we actually have to click a button to actually search for the city. After a few chews around a city or suburbia, the postal code in the province will automatically be put in for you. You then have to enter your mobile number and an alternative mobile number, if applicable. Email address should already be there from previous steps. Moving on to demographic details, the vast array of agenda which will be a drop down, home language is also going to be a drop down, population group which is basically just your ethnicity group, and then there's gonna be a telesmaul part with a drop down. Options, I'm currently still in a high school. I was... I am or was post school, technical, college student, university of technology student. I am or was a university student. I'm repeating. I am unemployed, and I haven't studied before at a tertiary institution. I am working and haven't studied before at a tertiary institution. Yeah. Also be prompted to see if you have a disability or not. If you do, just click the slider at the name and click the plus button to add your disabilities by category, then they'll retire, but then they'll be a part where they ask you for your required assistance We should ensure we cover this in good detail in our app so we can map it regarding or to the degree required.
+First thing that'll happen is she'll be prompted with an I want to, then I'll be a drop down, and we're gonna select a new application. After that, new shows will pop up. We're gonna have to enter career of study and first year of study. These will be drop downs. Currently, you're gonna choose undergraduate, first year of studies can be whatever year we are applying to. Student number, first year applied to a UP is gonna be last blank if they don't have it. Last name, first name, middle names. Then you put in your email address, then you repeat on confirm email address, and then date of birth, which you're gonna click the button to actually select the date of birth. There is a show called Identify Me by: Gonna Choose Between SAID Number or Password Number and then you're gonna put in the actual value in the next step. And then much like the one in UCT, there's going to be a security code put in, and you have to enter it in order to continue. So you have to use computer vision for that for you to see the code, recognize it, and then enter. After that, login details will be sent to the supplied email. You can go back to the i one two, and instead now, we're going to log in to continue or view study application. We're gonna input whatever application ID was sent along with the password that was supplied. After entering all that, you'll be prompted to confirm your email and change your password. So you're gonna put here whatever old positive or supplied, the new positive, and then confirm the new positive and then click okay. Okay. Cool. After all of that, we'll move on to personal information. Let's select the title. We're gonna enter a preferred first name, which we should ask the student for in the app so to make note of that. Citizenship should be a safe citizen, and then African national ID should still be there. previous contact details, gonna put in the address. So countries are drop down address... this address line, one two three four. You only have to fill in address one, I assume. And then for city server, we actually have to click a button to actually search for the city. After a few chews around a city or suburbia, the postal code in the province will automatically be put in for you. You then have to enter your mobile number and an alternative mobile number, if applicable. Email address should already be there from previous steps. Moving on to demographic details, the gender which will be a drop down, home language is also going to be a drop down, population group which is basically just your ethnicity group, and then there's gonna be a tell us more part with a drop down. Options, I'm currently still in a high school. I am or was post school, technical, college student, university of technology student. I am or was a university student. I'm repeating. I am unemployed and haven't studied before at a tertiary institution. I am working and haven't studied before at a tertiary institution. Also be prompted to see if you have a disability or not. If you do, just click the slider and click the plus button to add your disabilities by category, then there'll be a part where they ask you for your required assistance. We should ensure we cover this in good detail in our app so we can map it to the degree required.
 
-Move on to tertiary education. They ask if you were previously enrolled in anything tertiary related. We are going to say no. Why is that? Because you're dealing with high school students. They're gonna move on to secondary education, and they ask for the final school year, which will be a drop down. Examining authority is going to depend on whether student was Options include Limpopo, DOE, Cosmetal, DOE, IAB independent exam board, IAB ISC, exam board for Christian Ed, Cambridge, foreign country, etcetera, etcetera. And then gonna be asked for your school name, click the search button, and actually search for it to have it be put in the school grade types. We remain looking for a national senior certificate or IEB. I don't specify your highest completed grade. If you downgrade twelve, you'll have to put in your examination number. If not, leave it blank. And then on exemption type, you'd say that currently busy with schooling, which will be a drop down option. Here, we're adding in the actual subjects. They specifically say that they must be ordered the same way in which they are in their school report. So maybe we can make that a constraint in the app to overall because no other university had this constraint, but it'll just be good to follow. So just so it can work around for UP. But then, yeah, it's it's gonna be a drop down where you choose the subject, drop down for the mark, and then you fill it in. Basically, how it works is usually in the subject, mark is basically the ranking seven in the South African learning system is usually eighty percent plus and whatnot. So you must learn those mappings. Subject is just a full subject name. Mark refers to those values, and then percent is the actual percentage mark for whatever subject you are learning. So you feel that you have two choices. The first choice and the second choice. So you click, um, search button to actually start viewing the choices they offer. Then they... you... there's a tab where you're gonna have to select your study program. You type something, and then you press search, and then you're gonna select it. The UP system in the back end will verify whether or not you qualify for the specific qualification you choose using the MogSave service data in the previous section. A name that selects the retry section on top, there's an open plant only, so it allows you to sort out programs that are still open or not. Other than that, you wanna view them. Move on to general details, sir, that asked you whether you want to be considered for a residence place. It's a drop down of no and yes, and then there'll be financial... and then does your preferred residence that you want. And then they ask you if you are going to apply for Naspers and if you want to apply for UP financial aid. After that, I wanna ask you for your SAID, and then your grade twelve, grade eleven final results, and grade twelve results. In the mandatory school results, the required are the eleven final or the grade twelve actual certificate, which can only be submitted by people virtually until their final exam, which most people would have not. So it's either one of the two and not both, which is a good thing to keep track of. There's other school results you could do as in if you have been admitted not grade twelve results, you don't put them there. You staff certificate grade eleven extra marks or SAT grades. Yeah since we dealing with matric students, then you don't have to upload your academic transcript. Let's just scroll down. Additionally, there's also a place to upload your sporting accomplishments if applicable to the specific student. After that there will be a declaration, and then you can verify your application. Then you can move on to payments. And then after all of that, it's fine. We can actually apply. Seeing as how we do not process payments, first thing we do with , we have to set up the link up until here so that we can handle the payment, either upload the proof of payment or do an online credit card payment. Whatever will float the about.
+Move on to tertiary education. They ask if you were previously enrolled in anything tertiary related. We are going to say no. Why is that? Because you're dealing with high school students. They're gonna move on to secondary education, and they ask for the final school year, which will be a drop down. Examining authority is going to depend on whether student was Options include Limpopo DOE, etcetera. And then gonna be asked for your school name, click the search button, and actually search for it. school grade types, looking for a national senior certificate or IEB. your highest completed grade. If you completed grade twelve, you'll have to put in your examination number. If not, leave it blank. And then on exemption type, you'd say that currently busy with schooling, which will be a drop down option. Here, we're adding in the actual subjects. They specifically say that they must be ordered the same way in which they are in their school report. So maybe we can make that a constraint in the app. it's gonna be a drop down where you choose the subject, drop down for the mark, and then you fill it in the percent. mark is basically the ranking — seven in the South African learning system is usually eighty percent plus. Subject is just a full subject name. Mark refers to those values, and then percent is the actual percentage mark. So you have two choices. The first choice and the second choice. you click search button to actually start viewing the choices they offer. The UP system in the back end will verify whether or not you qualify for the specific qualification you choose using the marks in the previous section. there's an open plant only, so it allows you to sort out programs that are still open or not. Move on to general details, that asks you whether you want to be considered for a residence place. It's a drop down of no and yes, and then preferred residence. And then they ask you if you are going to apply for Nasfas and if you want to apply for UP financial aid. After that, your SAID, and then your grade twelve, grade eleven final results, and grade twelve results. the required are the grade eleven final or the grade twelve certificate, which can only be submitted by people after their final exam. So it's either one of the two and not both. since we dealing with matric students, then you don't have to upload your academic transcript. Additionally, there's also a place to upload your sporting accomplishments if applicable. After that there will be a declaration, and then you can verify your application. Then you can move on to payments. Seeing as how we do not process payments, we have to set up the link up until here so that we can handle the payment, either upload the proof of payment or do an online credit card payment.
