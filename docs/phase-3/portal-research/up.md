@@ -24,7 +24,7 @@ Mostly **native `<select>` dropdowns** (target by label). Several modal/search p
 - UP **emails a system-generated Application ID + password** after the first form; applicant then confirms email + sets a new password.
 
 ## Anti-automation measures ⚠️
-- **Security Code (case-sensitive 6-char image captcha)** on the new-application form — requires OCR/vision. **Blocker candidate** — raise in the Sunday sync before week 10.
+- **Security Code (case-sensitive 6-char image captcha)** on the new-application form — requires OCR/vision (case-sensitive, so the OCR must preserve case). **Kept in MVP (2026-06-03)** — the runtime must ship image OCR; not a drop candidate.
 - **Email delivery of Application ID + password** — automation needs inbox access.
 - No other captcha in the application steps.
 
@@ -106,7 +106,7 @@ Two mandatory groups, each with **[+] / [−]** + File Attachment modal (My Devi
 → Confirms required uploads: **SA ID + (Grade 11 final results OR Grade 12 certificate)**. (Matriculants → Grade 11 results.)
 
 ### Declaration
-Accept the declaration. _(Detail not shown on video.)_
+Accept the declaration. → **Decision (2026-06-03): surface to the student — show the declaration and record explicit acceptance before the bot accepts it.** _(Exact wording not shown on video.)_
 
 ### Verify
 **Verify application** button — checks every page; lists outstanding items in a *Page · Error Message* table (e.g. "You must upload at least 1 document(s) in the 'Mandatory: Identity Document' group"). Must pass (all sections show a ✓ in the left nav) before completing.
@@ -133,25 +133,27 @@ _TBD: accepted formats + size limits (not stated on the upload modal)._
 - Sequence: Verify (all ✓) → Payment → **Apply** → confirm (Apply screen captured via screenshot — "Once you apply, further changes to your application are not possible… your application will be submitted to the University").
 - Post-submit **success** page (URL + markers): still **[VERIFY]** — the **Apply** *screen* is captured but not the page shown after clicking Apply. Reliable success signal: the "Overall Application Status" flips from **"Must still verify & apply"**.
 
-## Uniflo mapping & app gaps (confirmed/added from video)
-- **Preferred first name** — ask the student.
-- **Disability + required assistance** — capture (category/type/assistance).
-- **Subject order** — UP requires school-report order; preserve subject order.
-- **Marks** — store NSC level (1–7) **and** percentage per subject (UP asks for both).
-- **Eligibility is enforced at selection** — feed real marks so the AI only picks qualifying programmes.
+## Uniflo mapping & app gaps — schema-checked 2026-06-03
+Full schema cross-check + status: **[data-model-gaps.md](data-model-gaps.md)** (gaps now implemented in migration `e7f6a5b4c3d2`). UP-specific portal fields & where they live:
+- **Title, preferred first name** — not stored (ask the student for the preferred name).
+- **Marks (key gap):** UP wants **NSC level 1–7 AND percentage** per subject, but `subjects[].mark` holds **one int** — extend the subject shape to carry both.
+- **Subject order** — UP requires school-report order; `subjects` is a JSONB list, so preserve write order.
+- **Disability detail** (category + type + required assistance) — we store a single `disability` enum value.
+- **Residence interest** (+ preferred residence) + **funding (NSFAS / UP) intent** — not stored.
+- **Exam number** — not stored. **Grade 11 results document** — UP accepts Gr11 results OR Gr12 cert, but `documents` has no Gr11-results type (ID_COPY covers the SA ID).
+- **Eligibility enforced at selection** — feed real marks so the AI only picks qualifying programmes; needs **multi-choice applications** (we store one `programme` string).
 - **Payment** — R300 inside the flow; card or EFT+proof; relay to student.
-- Cross-check every mapping against `student_profiles` / `academic_records`. **[VERIFY against schema]**
+- Maps cleanly: names, `id_number`, `date_of_birth`, `phone`, address block, `gender` (Male/Female ✓), `home_language`, population group → `ethnicity`; school → `academic_records.institution`.
 
 ## Screenshots
 - Frames extracted from `up.mp4` (1 per ~25s) to a local scratch folder — **not committed**. TODO: export key page shots to `screenshots/up/`.
 
 ## Open questions / to verify
 - [x] Apply (submit) screen + full Payment methods — **captured**.
-- [ ] Post-"Apply" **success** page (URL + markers) shown after the button click.
-- [ ] Whether address lines 2–4 are required.
-- [ ] Whether gender is restricted to Male/Female.
-- [ ] Document formats + size limits.
-- [ ] OCR reliability on the case-sensitive security code — **blocker check**.
+- [~] Post-"Apply" **success** page — **on hold (2026-06-03): can't capture without a real submission**; confirm at first live adapter run (use the "Must still verify & apply" status flip meanwhile).
+- [~] Whether address lines 2–4 are required + document formats/size limits — **login-gated; deferred until test-account access** (the wizard sits behind the emailed Application-ID login; only the public "I want to" landing is reachable, confirmed live 2026-06-03).
+- [x] Gender set — Male/Female on the portal; matches our Male/Female-only enum (HEMIS).
+- [x] Captcha — **kept in MVP (2026-06-03)**; runtime must ship case-preserving OCR for the security code (no longer a drop candidate).
 
 ---
 

@@ -17,17 +17,37 @@ Almost every coded field is an **ITS "List of Values" (LOV) search popup**, not 
 The adapter should have one generic helper — `select_from_lov(field_label, target_text)` — driven off the **row text** (accessible link/cell), not CSS. Fields using LOV: Citizenship Code, Postal Code, school-leaving endorsement, School Leaving Subject, Grade, Final Gr11 Symbol, school attended, Faculty/College, Programme, Year of study, Mode of study. Plain text / native dropdown / checkbox fields are targeted by their visible label.
 
 ## Application window
-- Opens: **1 April** · Closes: **31 October**
+- Opens: **1 April** · Closes: **31 October @ 12:00**
 
-## Test account / login
-- Credentials live in **Bitwarden** per Phase 3 plan §3 — _TBD: link entry._
-- The video starts **after** the applicant-type choice (New / Returning / Internal) and login — those are from dictation (see appendix). UJ issues a student number; a 5-digit PIN is set at the end (see Page G).
+## Entry points & account model
+- **Public landing page:** <https://www.uj.ac.za/admission-aid/new/> ("Undergraduate"). Not part of the automated flow, but it's where the **New Applicant** vs **Returning/Internal** choice actually lives — two separate "Apply Here" buttons:
+  - **New Applicant** → the portal entry URL above (`gw1startup?x_processcode=ITS_OAP`).
+  - **Returning OR Internal Applicant (existing UJ student number)** → a login page (`w99pkg.mi_login`).
+  - → The dictation's "new / returning / internal" choice is **this page's buttons**, not an in-portal dropdown.
+  - Useful rules stated here: applying online is **free**; **two study choices** per academic year and **no changes once submitted**; pre-application references are the **APS Calculator** (gostudy.net) and the **UJ Undergraduate Prospectus** (PDF) — both feed UJ's portal-side eligibility tagging (see Page E). Window restated as **1 April → 31 October @ 12:00**.
+- **No separate login for new applicants.** The New-Applicant button goes straight to the entry/POPI gate (Page 0), then into the biographical form. UJ issues the **student number** and the applicant sets a **5-digit PIN** only at the end (see Page G). Test-account credentials live in **Bitwarden** per Phase 3 plan §3 — _TBD: link entry._
 
 ## Anti-automation measures ✅
-- **None observed across the entire 14-minute recording — no captcha, no OTP, no image challenge.** Confirms UJ as the strongest **first-adapter** candidate (Task 4).
+- **None observed across the entire 14-minute recording — no captcha, no OTP, no image challenge.** The entry/POPI gate is likewise captcha-free (re-checked live, 2026-06-03). Confirms UJ as the strongest **first-adapter** candidate (Task 4).
 
 ## Page flow
 Breadcrumb ("Quick Link") builds up as: **Biographical → Next of Kin → Matric → Previous Studies → Qualifications → (Check application details) → Accept Agreement (Submit).** Each data page ends with **Back / Save and Continue**.
+
+---
+
+### Page 0 — Entry / POPI gate (verified live, 2026-06-03)
+The New-Applicant URL lands on a short gate page (heading "Comprehensive Web Application Process" → "Academic Application Process"). Fields appear progressively as each is answered:
+
+| Field (label) | Control | Req | Options / behaviour | Notes |
+|---|---|---|---|---|
+| Do you already have a student number? | dropdown | * | --- Please select --- / Yes / No | New applicants → **No**. ("Yes" is the existing-student route — handled via the `w99pkg.mi_login` page, not here.) |
+| Are you returning to finalise an incomplete application? | dropdown | * | Yes / No | Revealed after Q1. New application → **No**; "Yes" resumes a saved application. |
+| Enter qualification token (if applicable)? | dropdown | * | No (default) / Yes | Leave **No** for the standard undergraduate flow. |
+| POPI Act acceptance | **Download Rules** link + two checkboxes | * | **Download Rules** → `/itsdocs/UJ_POPI_Act.pdf`; tick **I Accept** or **I do not Accept** | **Next stays disabled until "I Accept" is ticked.** |
+
+- **Next** (enabled only after I Accept) proceeds into the biographical form (Page A). _Stopped at the gate on the live walk — did not submit — so the exact transition into Page A isn't re-screenshotted, but there is no login step in between for new applicants._
+- **POPI is gated up-front**, separate from the final Application Agreement (Page G). So a UJ application has **two consent surfaces** to relay to the student: the POPI Act PDF here and the Application Agreement PDF at submit.
+- Screenshots (live, 2026-06-03): [`entry-1-student-number.png`](screenshots/uj/entry-1-student-number.png) (first dropdown) · [`entry-2-popi-gate.png`](screenshots/uj/entry-2-popi-gate.png) (all three dropdowns + POPI accept + the disabled **Next**). These are the only visual record of the entry gate — it isn't in the video.
 
 ---
 
@@ -138,6 +158,7 @@ Read-only review of everything captured: personal/contact, subjects table, previ
 - Buttons: **Back** · **Submit Application** · **Quit Application**. **Submit Application stays disabled until the PIN is entered and I Accept is ticked.**
 - **Quit Application deletes all captured information** — never click it in automation.
 - Note: the test PIN `12123` was accepted, so "no repeating characters" appears to mean **no consecutive identical digits** (e.g. `11`), not globally-unique digits. **[VERIFY]**
+- **Consent handling (decision 2026-06-03): surface both consent surfaces to the student** — the POPI Act PDF at the entry gate (Page 0) and this Application Agreement PDF — and record explicit acceptance before the bot ticks **I Accept** / clicks **Submit Application**.
 
 ## Submission confirmation
 - Sequence: Page F summary → **Continue** → Page G agreement (enter 5-digit PIN + tick **I Accept**) → **Submit Application** (agreement screen captured via screenshot).
@@ -146,24 +167,27 @@ Read-only review of everything captured: personal/contact, subjects table, previ
 ## File uploads
 - **None for the initial application — confirmed (2026-06-03).** No document-upload step appears anywhere in the flow (Qualifications → summary → agreement → submit), and ID/results are **not** required to submit the initial application. Any document submission, if needed, happens later/out of band.
 
-## Uniflo mapping & app gaps (confirmed/added from video)
-- **Payer (account) address + email** — no "same as student"; store separately.
-- **5-digit PIN** — generated at submit; store as a per-applicant portal secret (Bitwarden/secrets), not in the profile DB.
-- **Residence interest**, **disability + remarks**, **current activity** ("GRADE 12 PUPIL") — capture in the app.
-- **Subject marks** — UJ takes the Gr11 final mark as a **percentage via LOV** now; subject names must match the LOV's `(NSC/NCV/ISC/DR)`-qualified entries.
-- **Eligibility is portal-side** — feed real marks so the right programmes show "ELIGIBLE TO APPLY-Y".
-- Cross-check every mapping against actual `student_profiles` / `academic_records` columns. **[VERIFY against schema]**
+## Uniflo mapping & app gaps — schema-checked 2026-06-03
+Full schema cross-check + status: **[data-model-gaps.md](data-model-gaps.md)** (gaps now implemented in migration `e7f6a5b4c3d2`). UJ-specific portal fields & where they live:
+- **Title, initials, maiden name** — not stored (initials derivable from names).
+- **Next of kin** (name, mobile) + **account/fee payer** (name, address, email) — no contacts table; UJ requires the **payer's full address re-entered** (no "same as student").
+- **5-digit PIN** — generated at submit; store as a per-applicant **portal secret** (Bitwarden/secrets), not in the profile DB.
+- **Residence interest**, **disability + remarks**, **current activity** ("GRADE 12 PUPIL") — not stored.
+- **Subject marks** — UJ takes the Gr11 final mark as a **percentage via LOV** (fits `subjects[].mark`); subject names must map to the LOV's `(NSC/NCV/ISC/DR)`-qualified entries (qualifier not stored).
+- **Eligibility is portal-side** — feed real marks so the right programmes show "ELIGIBLE TO APPLY-Y"; needs **multi-choice applications** (UJ allows 2; we store one `programme` string).
+- **Consent** — POPI (entry) + Agreement (submit) both **surfaced to the student** (decision 2026-06-03).
+- Maps cleanly: names, `id_number`, `date_of_birth`, `phone`, street-address block, `postal_code`, `nationality`, `marital_status`, `home_language`, `ethnicity`; school → `academic_records.institution`.
 
 ## Screenshots
-- Frames extracted from `uj.mp4` (1 per ~18s) to a local scratch folder — **not committed**. TODO: export the key page shots to `screenshots/uj/`.
+- **Committed:** the entry/POPI gate (`screenshots/uj/entry-1-student-number.png`, `entry-2-popi-gate.png`) — captured live, the only record of Page 0.
+- Video frames from `uj.mp4` (1 per ~18s) stay in a local scratch folder — **not committed**.
 
 ## Open questions / to verify
 - [x] Agreement/submit screen — **captured** (PIN + I Accept/I do not Accept + Submit Application/Quit Application).
-- [ ] Post-submit **success** page (URL + markers) shown after Submit Application.
+- [~] Post-submit **success** page — **on hold (2026-06-03): can't capture without submitting a real application**; confirm at the first live adapter run.
 - [x] Document uploads — **confirmed not required for the initial application** (2026-06-03).
-- [ ] "What are you currently doing?" control type + option list.
-- [ ] "Add Qualification" behaviour for the 2nd choice (does it reset the form?).
-- [ ] Applicant-type + login first screen (from dictation; capture on a re-walk).
+- [~] "What are you currently doing?" option list + "Add Qualification" reset behaviour — **deferred**: both are mid-wizard, so capturing them means filling the live form with PII (no login wall, but it creates a real in-progress application); left until a test-account walk.
+- [x] Applicant-type + entry/POPI gate first screen — **captured live (2026-06-03)**: see Page 0 (no separate login for new applicants; POPI accept gate up-front; landing-page entry points noted).
 
 ---
 

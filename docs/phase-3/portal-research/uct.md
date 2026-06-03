@@ -25,8 +25,8 @@ Mostly **native `<select>` dropdowns** (target by visible label — good for acc
 - **Self-created account** (username + password chosen by applicant), separate from the application login host.
 
 ## Anti-automation measures ⚠️
-- **Email OTP at account creation** — after "Create", a "Confirm Email Address" modal requires an **OTP emailed to the applicant (valid 15 minutes)** → Verify OTP. Headless automation needs inbox access. (No OTP seen at subsequent logins — _verify_.)
-- **NBT registration is a separate portal** (`nbtests.uct.ac.za`, "National Benchmark Tests project" / CETAP) with its **own account, contact-info, test/venue booking, fee agreements**, producing an **NBT Reference number** that Step 10 consumes. Required for all SA-resident undergrad applicants (and mandatory for Commerce & Health Sciences). **Flag: this is a second, independent automation surface — likely out of MVP scope; the student may need to complete NBT themselves.**
+- **Email OTP at account creation** — after "Create", a "Confirm Email Address" modal requires an **OTP emailed to the applicant (valid 15 minutes)** → Verify OTP. Headless automation needs inbox access. (No OTP seen at subsequent logins — _verify_.) **Kept in MVP (2026-06-03): the runtime must read the applicant's inbox for the OTP** — not a drop candidate.
+- **NBT registration is a separate portal** (`nbtests.uct.ac.za`, "National Benchmark Tests project" / CETAP) with its **own account, contact-info, test/venue booking, fee agreements**, producing an **NBT Reference number** that Step 10 consumes. Required for all SA-resident undergrad applicants (and mandatory for Commerce & Health Sciences). **Decision (2026-06-03): NBT is out of automation scope — the student registers for and writes it themselves; Uniflo only captures the NBT reference (+ year/date) and feeds it into Step 10.** No bot account on the NBT portal.
 - No captcha/image challenge observed.
 
 ## Page flow — Online Application, 16 steps
@@ -108,9 +108,9 @@ Year of first secondary exam · School has 3 or 4 terms (dropdown) · Grade 11 a
 | Tab | Modal fields | Table columns |
 |---|---|---|
 | Grade 11 | Subject (large dropdown) · **Grade 11 Final %** | Subject |
-| Grade 12 | Subject · **April Results %** · **June Results %** | Subject · April Results % · June Results % |
+| Grade 12 | Subject · **April Results %** | Subject · April Results % |
 
-→ UCT captures **Grade 11 final %, Grade 12 April %, and Grade 12 June %** per subject. Subject dropdown is a native list (Accounting, Advance Program English/Maths, Afrikaans/English 1st/2nd/Home Lang, Electrical Technology, Engineering Graphics & Design, Geography, Life Orientation, Life Sciences, Mathematics, Physical Sciences, Xitsonga, "Exempted: Mathematics", …).
+→ UCT captures **Grade 11 final % and Grade 12 April %** per subject (corrected 2026-06-03 — April, not June). Subject dropdown is a native list (Accounting, Advance Program English/Maths, Afrikaans/English 1st/2nd/Home Lang, Electrical Technology, Engineering Graphics & Design, Geography, Life Orientation, Life Sciences, Mathematics, Physical Sciences, Xitsonga, "Exempted: Mathematics", …).
 
 ### Step 6 — Tertiary Information
 "Applied to UCT before?" / prior tertiary — minimal/blank for matriculants. _(fields TBD)_
@@ -160,6 +160,8 @@ Collapsible review of every section; confirm dialog: *"Do you confirm that all t
 ### Step 16 — Agreement and Submission
 **Terms and Conditions** page (captured via screenshot): *"Please read the Terms and Conditions agreement below. By submitting your application you agree to these Terms and Conditions."* Followed by an **Agreement / declarations list**: abide by the University's rules · responsible for payment of all fees & arrears (per the fee booklet) · confirm having read the **Privacy Notice** · if currently completing secondary school, UCT may communicate with the school about the application · waive claims against UCT for damage/loss · not expelled/rusticated/excluded from another university · if a minor, parent/guardian consent · information is complete & accurate (non-disclosure / false declaration can lead to cancellation). Footer: *"I confirm the above declaration and hereby submit my application."* Buttons (top-right): **Submit** / **Do not Accept**.
 
+> **Consent handling (decision 2026-06-03): surface to the student, don't auto-accept** — show the Terms & Conditions + Privacy Notice, record the student's explicit acceptance, then let the bot click **Submit**.
+
 ## File uploads
 | Field | Required | Accepted types | Notes |
 |---|---|---|---|
@@ -171,23 +173,26 @@ Collapsible review of every section; confirm dialog: *"Do you confirm that all t
 - The submit control is the **Submit** button on the Step 16 Terms & Conditions page.
 - Post-submit **success** page (URL + DOM markers): still **[VERIFY]** — the submit *screen* is captured but not the page shown after clicking Submit. Reliable success signals: the application status flips from "In Progress", and UCT **emails an acknowledgement with the applicant number** (out-of-band).
 
-## Uniflo mapping & app gaps
-- **Preferred name** (prints on student card), **disability support detail**, **guardian address** — capture in the app.
-- **Marks granularity:** UCT wants Grade 11 final %, Grade 12 April %, Grade 12 June % per subject — richer than other portals. Store enough to populate all three.
-- **NBT reference** — needs to exist before Step 10; treat NBT as a separate prerequisite/flow.
-- **Fee payer** vs funder distinction — fee payer is the person responsible, not a bursary/NSFAS.
-- Cross-check every mapping against `student_profiles` / `academic_records` columns. **[VERIFY against schema]**
+## Uniflo mapping & app gaps — schema-checked 2026-06-03
+Full schema cross-check + status: **[data-model-gaps.md](data-model-gaps.md)** (gaps now implemented in migration `e7f6a5b4c3d2`). UCT-specific portal fields & where they live:
+- **Title, preferred name, middle name(s), maiden name** — not stored (preferred name prints on the student card → ask the student).
+- **Parent/Guardian + fee payer** (name, ID, relationship, email, phone, address) — no contacts table; fee payer is the person responsible, **not** a bursary/NSFAS funder.
+- **Marks:** UCT wants Gr11 final % + Gr12 April % per subject — **covered** by our existing `grade_11_final` + `grade_12_april` record types (April, not June — corrected 2026-06-03).
+- **NBT reference (+ year/date)** — student-supplied (NBT out of scope); needs capture fields.
+- **Redress factors** (parents' apartheid classification, parents'/grandparents' education, child-support grant, social pension, mother's first language) — UCT-only; not stored.
+- **Disability support detail**, **funding (NSFAS) intent**, **residence/housing interest** — not stored.
+- Maps cleanly: names, `id_number`, `date_of_birth`, address block, `nationality`, `gender`, `home_language`, `ethnicity`; school → `academic_records.institution`; SA ID upload → `documents` ID_COPY.
 
 ## Screenshots
 - Frames extracted from `uct.mp4` (1 per ~45s) to a local scratch folder — **not committed**. TODO: export key page shots to `screenshots/uct/`.
 
 ## Open questions / to verify
 - [x] Step 16 (Agreement & Submission) content — **captured** (Terms & Conditions + Submit / Do not Accept).
-- [ ] Post-submit **success** page (URL + markers) shown after clicking Submit.
+- [~] Post-submit **success** page — **on hold (2026-06-03): can't capture without submitting a real application**; confirm at the first live adapter run (use the emailed applicant number / status flip meanwhile).
 - [x] Navigation — **confirmed: Previous button works, flow is navigable** (2026-06-03); the "one-way" note was a mistake.
-- [ ] Step 6 (Tertiary) and Step 12 (Housing) exact fields.
-- [ ] Whether email OTP recurs at login or only at signup.
-- [ ] NBT: confirm whether automation attempts NBT registration or leaves it to the student.
+- [~] Step 6 (Tertiary) + Step 12 (Housing) fields, and whether the OTP recurs at login — **login-gated; deferred until test-account access** (checked live 2026-06-03: the create-account page returns "not authorized" without a session).
+- [x] NBT scope — **decided (2026-06-03): student completes NBT; Uniflo captures the reference only.**
+- [x] Captcha/OTP — **kept in MVP (2026-06-03)**; runtime needs inbox read for the email OTP.
 
 ---
 

@@ -25,7 +25,7 @@ Mostly **native `<select>` dropdowns** (target by label). A few modal/link picke
 - Wits emails a **system-generated Temporary ID + random password**; applicant then sets a permanent password (see flow).
 
 ## Anti-automation measures ⚠️
-- **Security Code (6-character image captcha)** on the "Create Application ID" page — must read the characters and type them. Requires OCR/vision to solve headlessly. **Blocker candidate** — raise in the Sunday sync before week 10.
+- **Security Code (6-character image captcha)** on the "Create Application ID" page — must read the characters and type them. Requires OCR/vision to solve headlessly. **Kept in MVP (2026-06-03)** — the runtime must ship image OCR; not a drop candidate.
 - **Email delivery of Temp ID + temp password** — automation needs inbox access.
 - No captcha at the application steps themselves (only at temp-ID creation).
 
@@ -122,7 +122,7 @@ Name Title (dropdown) · Initial · Surname · Country Code/Mobile Phone (+27) �
 "Use same details as Next of Kin" (toggle) · Relationship to Applicant (dropdown: Adult Child, Aunt, Brother, Brother-in-Law, Child, Cousin, Daughter, …, Father, Friend, …) · Contact Name · Country Code/Mobile Phone · Additional Emergency Contact Phone. → **app gap: emergency contact distinct from NOK.**
 
 ### Step 14 — Indemnity and Undertaking
-Accept the indemnity/undertaking. → **app gap / open design question: surface the indemnity to the student for transparency vs auto-accept (decide with Partner A; same question as UJ's POPIA).**
+Accept the indemnity/undertaking. → **Decision (2026-06-03): surface to the student — show the indemnity and record explicit acceptance before the bot ticks it (don't auto-accept).**
 
 ### Step 15 — Payment
 - **Application Fee Payable: R100.** Paid **after** the application is submitted and a person/student number is issued. Currently registered Wits students are exempt.
@@ -147,25 +147,26 @@ _TBD: accepted formats + size limits (upload UI not shown in detail)._
 - Final step is **Step 17 → "Submit Application to the University"** (confirmed via screenshot — single button, "Please see instructions below"). After submit, no further edits.
 - Post-submit **success** page (URL + markers): still **[VERIFY]** — the submit *screen* is captured but not the page shown after the button click. Reliable success signal: submission yields a **person/student number** (used as the payment reference) and the no-further-changes lock.
 
-## Uniflo mapping & app gaps (confirmed/added from video)
-- **Current-year activity** (School/Gap Year/Upgrading/Employed/University) + **sport**.
-- **Next-of-kin address** + **emergency contact distinct from NOK**; NOK email & mobile must differ from the applicant's.
-- **Disability** — detailed category capture (large toggle list).
-- **Indemnity/undertaking** — consent gate; surface to student (decide with Partner A).
-- **Payment** — R100, post-submission; not a submission blocker; relay EFT details to student.
-- **Marks** — Gr11 final marks now; Gr12 subjects via "Copy Grade 11 Subjects" (trial/none for current Gr12).
-- Cross-check every mapping against `student_profiles` / `academic_records`. **[VERIFY against schema]**
+## Uniflo mapping & app gaps — schema-checked 2026-06-03
+Full schema cross-check + status: **[data-model-gaps.md](data-model-gaps.md)** (gaps now implemented in migration `e7f6a5b4c3d2`). Wits-specific portal fields & where they live:
+- **Title** — not stored. **Next of kin** (name, mobile, relationship, email, address) + **emergency contact** (distinct from NOK) — no contacts table; Wits **enforces NOK email & mobile ≠ applicant**.
+- **Domicilium (legal-notices) address** + a **postal address differing** from residential — we store one address block only.
+- **Disability** — Wits wants a detailed toggle list; we store a single `disability` enum value.
+- **Current-year activity** (School/Gap Year/Upgrading/Employed/University) + **sport** + **residence interest** + **funding (NSFAS) intent** — not stored.
+- **Exam number** — not stored. School → `academic_records.institution`; Gr11 marks → `subjects[].mark`; Gr12 subjects via "Copy Grade 11 Subjects".
+- **Indemnity** — consent gate; **surface to the student (decision 2026-06-03)**, don't auto-accept.
+- **Payment** — R100, post-submission; not a submission blocker; relay EFT details.
+- Maps cleanly: names, `id_number`, `date_of_birth`, `phone`, address block, `gender`, `home_language`, `marital_status`, `ethnicity`; ID + matric uploads → `documents`.
 
 ## Screenshots
 - Frames extracted from `wits.mp4` (1 per ~16s) to a local scratch folder — **not committed**. TODO: export key page shots to `screenshots/wits/`.
 
 ## Open questions / to verify
 - [x] Submit screen (Step 17) — **captured** ("Submit Application to the University").
-- [ ] Post-submit **success** page (URL + markers) shown after the button click.
-- [ ] Document-upload step formats + size limits (Step 16).
-- [ ] Steps 8/9 (Residential/Postal) exact "same as" behaviour.
-- [ ] Indemnity acceptance approach (decide with Partner A).
-- [ ] OCR reliability on the 6-char security code — **blocker check**.
+- [~] Post-submit **success** page — **on hold (2026-06-03): can't capture without a real submission**; confirm at first live adapter run (use the issued person/student number meanwhile).
+- [~] Document-upload formats + size limits (Step 16) and Steps 8/9 "same as" behaviour — **login-gated; deferred until test-account access** (checked live 2026-06-03: portal returns "not authorized" without a session).
+- [x] Indemnity acceptance approach — **decided (2026-06-03): surface to the student, don't auto-accept.**
+- [x] Captcha — **kept in MVP (2026-06-03)**; runtime must ship OCR for the 6-char security code (no longer a drop candidate).
 
 ---
 
