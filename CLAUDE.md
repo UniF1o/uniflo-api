@@ -87,5 +87,6 @@ app.dependency_overrides.clear()  # always clean up
 ## Deployment
 
 - Render Web Service; CI (`.github/workflows/backend.yml`) runs tests + lint on push/PR and fires Render's deploy hook on `main`.
-- Migrations are **not** auto-applied by CI — run `alembic upgrade head` manually against production via Render shell before/after deploying schema changes.
-- Current migration head in production: `b4c3d2e1f0a9`. Branch `feature/student-profile-schema-update` adds `c5d4e3f2a1b0` (address split + demographics) then `d6e5f4a3b2c1` (academic records `record_type`) — neither applied to production yet.
+- ⚠️ **`DATABASE_URL` in `.env` is the PRODUCTION database** — there is no separate dev/staging DB. Any DB command run locally (`alembic upgrade/downgrade`, scripts, ad-hoc SQL) hits production directly. Treat destructive operations with extreme care; keep migrations additive + reversible; never run an untested downgrade or a manual `DROP`/`DELETE` against it without explicit confirmation.
+- Migrations are **not** auto-applied by CI. Because `.env` points at prod, `alembic upgrade head` applies to production directly (no separate Render-shell step needed).
+- **Migration head: `e7f6a5b4c3d2` (applied to prod 2026-06-03).** **Always run `alembic upgrade head` immediately after creating a migration or pulling/merging a schema change — never leave a migration unapplied** (an unapplied migration leaves the app and ORM models out of sync → 500s). Chain applied to prod: `b4c3d2e1f0a9` → `c5d4e3f2a1b0` (address split + demographics) → `d6e5f4a3b2c1` (academic_records `record_type`) → `e7f6a5b4c3d2` (Phase 3 portal gap-fill: ~24 `student_profiles` fields incl. mailing-address block, NBT block, `redress_factors` JSONB; new `contacts` + `application_choices` tables).

@@ -69,6 +69,18 @@ def make_mock_application():
     mock.updated_at = None
     mock.created_at = datetime.now(timezone.utc)
     mock.latest_job = make_mock_job()
+    mock.choices = [
+        _make_choice(1, "BSc Computer Science"),
+        _make_choice(2, "BEng Electrical"),
+    ]
+    return mock
+
+
+def _make_choice(choice_number, programme, eligible=None):
+    mock = MagicMock()
+    mock.choice_number = choice_number
+    mock.programme = programme
+    mock.eligible = eligible
     return mock
 
 
@@ -225,6 +237,48 @@ def test_create_application_programme_too_short():
             "/applications",
             json={**VALID_PAYLOAD, "programme": "AB"},
             headers=auth_headers()
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 422
+
+
+# POST /applications accepts additional_programmes and returns ordered choices
+def test_create_application_with_additional_programmes():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
+         patch("app.api.applications.service.create_application") as mock_create:
+        mock_auth(mock_decode)
+        mock_create.return_value = make_mock_application()
+        response = client.post(
+            "/applications",
+            json={**VALID_PAYLOAD, "additional_programmes": ["BEng Electrical"]},
+            headers=auth_headers(),
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 201
+    choices = response.json()["choices"]
+    assert [c["choice_number"] for c in choices] == [1, 2]
+    assert choices[0]["programme"] == "BSc Computer Science"
+
+
+# POST /applications rejects more than the allowed number of extra choices
+def test_create_application_too_many_choices():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
+        mock_auth(mock_decode)
+        response = client.post(
+            "/applications",
+            json={
+                **VALID_PAYLOAD,
+                "additional_programmes": ["Prog Two", "Prog Three", "Prog Four"],
+            },
+            headers=auth_headers(),
         )
 
     app.dependency_overrides.clear()

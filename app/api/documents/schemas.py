@@ -10,6 +10,8 @@ class DocumentType(str, Enum):
     MATRIC_RESULTS = "MATRIC_RESULTS"
     TRANSCRIPT = "TRANSCRIPT"
     GRADE12_APRIL = "GRADE12_APRIL"
+    # UP accepts Grade 11 final results in lieu of a Grade 12 certificate.
+    GRADE11_RESULTS = "GRADE11_RESULTS"
 
 
 class DocumentResponse(BaseModel):
