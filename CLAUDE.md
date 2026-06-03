@@ -88,4 +88,4 @@ app.dependency_overrides.clear()  # always clean up
 
 - Render Web Service; CI (`.github/workflows/backend.yml`) runs tests + lint on push/PR and fires Render's deploy hook on `main`.
 - Migrations are **not** auto-applied by CI — run `alembic upgrade head` manually against production via Render shell before/after deploying schema changes.
-- Current migration head in production: `b4c3d2e1f0a9`. Branch `feature/student-profile-schema-update` adds `c5d4e3f2a1b0` (address split + demographics) then `d6e5f4a3b2c1` (academic records `record_type`) — neither applied to production yet.
+- Current migration head in production: `b4c3d2e1f0a9`. Pending (not yet applied to production): `c5d4e3f2a1b0` (address split + demographics) → `d6e5f4a3b2c1` (academic records `record_type`) → `e7f6a5b4c3d2` (Phase 3 portal gap-fill: ~24 new `student_profiles` fields incl. a mailing-address block, NBT block, and `redress_factors` JSONB; new `contacts` and `application_choices` tables). Run `alembic upgrade head` to apply the chain.

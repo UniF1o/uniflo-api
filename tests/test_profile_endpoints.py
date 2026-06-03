@@ -63,6 +63,31 @@ def make_mock_profile():
     mock.disability = "None"
     mock.marital_status = "Single"
     mock.ethnicity = "African"
+    # Phase 3 gap-fill fields (all optional/nullable).
+    mock.title = None
+    mock.middle_names = None
+    mock.maiden_name = None
+    mock.preferred_name = None
+    mock.mailing_same_as_residential = None
+    mock.mailing_street_address = None
+    mock.mailing_suburb = None
+    mock.mailing_city = None
+    mock.mailing_province = None
+    mock.mailing_postal_code = None
+    mock.is_sa_citizen = None
+    mock.disability_detail = None
+    mock.disability_assistance = None
+    mock.current_activity = None
+    mock.exam_number = None
+    mock.sport = None
+    mock.wants_residence = None
+    mock.preferred_residence = None
+    mock.applying_nsfas = None
+    mock.applying_institutional_funding = None
+    mock.nbt_reference = None
+    mock.nbt_year = None
+    mock.nbt_date = None
+    mock.redress_factors = None
     mock.updated_at = None
     return mock
 
@@ -163,6 +188,63 @@ def test_update_profile_not_found():
 
     app.dependency_overrides.clear()
     assert response.status_code == 404
+
+
+# PATCH /profile accepts the Phase 3 gap-fill fields
+def test_update_profile_new_fields():
+    mock_session = MagicMock()
+    mock_session.exec.return_value.first.return_value = make_mock_profile()
+    mock_session.refresh.side_effect = lambda p: None
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    payload = {
+        "title": "Mr",
+        "preferred_name": "Jay",
+        "is_sa_citizen": True,
+        "current_activity": "Currently in Grade 12",
+        "wants_residence": True,
+        "applying_nsfas": True,
+        "nbt_reference": "NBT123456",
+        "nbt_year": 2026,
+        "mailing_same_as_residential": False,
+        "mailing_postal_code": "0002",
+    }
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
+        mock_auth(mock_decode)
+        response = client.patch("/profile", json=payload, headers=auth_headers())
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+
+
+# PATCH /profile rejects an out-of-range NBT year
+def test_update_profile_invalid_nbt_year():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
+        mock_auth(mock_decode)
+        response = client.patch(
+            "/profile", json={"nbt_year": 1999}, headers=auth_headers()
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 422
+
+
+# PATCH /profile rejects an invalid title (not in the enum)
+def test_update_profile_invalid_title():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
+        mock_auth(mock_decode)
+        response = client.patch(
+            "/profile", json={"title": "Captain"}, headers=auth_headers()
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 422
 
 
 # PATCH /profile returns 422 for invalid postal code

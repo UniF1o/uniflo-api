@@ -8,6 +8,7 @@ from sqlmodel import Session, select
 from app.api.applications.schemas import ApplicationCreate, ApplicationStatus
 from app.api.profiles.schemas import REQUIRED_PROFILE_FIELDS
 from app.models.application import Application
+from app.models.application_choice import ApplicationChoice
 from app.models.application_job import ApplicationJob
 from app.models.student_profile import StudentProfile
 from app.models.university import University
@@ -35,6 +36,17 @@ def get_latest_job(
         .limit(1)
     )
     return session.exec(statement).first()
+
+
+def get_choices(
+    session: Session, application_id: uuid.UUID
+) -> list[ApplicationChoice]:
+    statement = (
+        select(ApplicationChoice)
+        .where(ApplicationChoice.application_id == application_id)
+        .order_by(ApplicationChoice.choice_number)
+    )
+    return list(session.exec(statement).all())
 
 
 _REQUIRED_PROFILE_FIELDS = REQUIRED_PROFILE_FIELDS
@@ -70,7 +82,7 @@ def create_application(
             },
         )
 
-    # create application and job in same transaction
+    # create application, job, and programme choices in the same transaction
     application = Application(
         student_id=profile.id,
         university_id=data.university_id,
@@ -88,11 +100,24 @@ def create_application(
         attempts=0,
     )
     session.add(job)
+
+    # Choice 1 mirrors `programme`; 2+ come from additional_programmes.
+    programmes = [data.programme, *(data.additional_programmes or [])]
+    for choice_number, programme in enumerate(programmes, start=1):
+        session.add(
+            ApplicationChoice(
+                application_id=application.id,
+                choice_number=choice_number,
+                programme=programme,
+            )
+        )
+
     session.commit()
     session.refresh(application)
     session.refresh(job)
 
     application.latest_job = job
+    application.choices = get_choices(session, application.id)
     return application
 
 
@@ -106,9 +131,10 @@ def list_applications(session: Session, user_id: str) -> list[Application]:
     )
     applications = session.exec(statement).all()
 
-    # attach latest job to each application
+    # attach latest job + ordered choices to each application
     for app in applications:
         app.latest_job = get_latest_job(session, app.id)
+        app.choices = get_choices(session, app.id)
 
     return applications
 
@@ -124,4 +150,5 @@ def get_application(
         raise HTTPException(status_code=404, detail="application_not_found")
 
     application.latest_job = get_latest_job(session, application.id)
+    application.choices = get_choices(session, application.id)
     return application

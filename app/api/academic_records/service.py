@@ -64,13 +64,22 @@ def _validate_and_normalize(
         if not isinstance(subject.mark, int) or not 0 <= subject.mark <= 100:
             raise _bad(f"Mark for '{label}' must be between 0 and 100.")
 
+        nsc_level = subject.nsc_level
+        if nsc_level is not None and not 1 <= nsc_level <= 7:
+            raise _bad(f"NSC level for '{label}' must be between 1 and 7.")
+
         if name == OTHER:
             if not custom:
                 raise _bad(
                     "custom_name is required when subject name is 'Other'."
                 )
             normalized.append(
-                {"name": OTHER, "mark": subject.mark, "custom_name": custom}
+                {
+                    "name": OTHER,
+                    "mark": subject.mark,
+                    "nsc_level": nsc_level,
+                    "custom_name": custom,
+                }
             )
             continue
 
@@ -83,7 +92,14 @@ def _validate_and_normalize(
         if name in seen_names:
             raise _bad(f"Duplicate subject: '{name}'.")
         seen_names.add(name)
-        normalized.append({"name": name, "mark": subject.mark, "custom_name": None})
+        normalized.append(
+            {
+                "name": name,
+                "mark": subject.mark,
+                "nsc_level": nsc_level,
+                "custom_name": None,
+            }
+        )
 
     return institution, year, normalized
 

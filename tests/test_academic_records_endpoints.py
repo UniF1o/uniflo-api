@@ -170,6 +170,43 @@ def test_reject_mark_out_of_range():
     assert "between 0 and 100" in response.json()["detail"]
 
 
+def test_reject_nsc_level_out_of_range():
+    payload = {
+        **VALID_PAYLOAD,
+        "subjects": [{"name": "Mathematics", "mark": 70, "nsc_level": 9}],
+    }
+    response = _post_invalid(payload)
+    assert response.status_code == 422
+    assert "NSC level" in response.json()["detail"]
+
+
+# POST with an NSC level (1-7) alongside the percentage round-trips
+def test_create_record_with_nsc_level():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    record = make_mock_record()
+    record.subjects = [
+        {"name": "Mathematics", "mark": 78, "nsc_level": 6, "custom_name": None},
+    ]
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.academic_records.service.upsert_record"
+    ) as mock_upsert:
+        mock_auth(mock_decode)
+        mock_upsert.return_value = record
+        payload = {
+            **VALID_PAYLOAD,
+            "subjects": [{"name": "Mathematics", "mark": 78, "nsc_level": 6}],
+        }
+        response = client.post(
+            "/academic-records", json=payload, headers=auth_headers()
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 201
+    assert response.json()["subjects"][0]["nsc_level"] == 6
+
+
 def test_reject_year_out_of_range():
     response = _post_invalid({**VALID_PAYLOAD, "year": 1999})
     assert response.status_code == 422

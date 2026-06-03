@@ -18,7 +18,10 @@ class RecordType(str, Enum):
 
 class SubjectIn(BaseModel):
     name: str
-    mark: int
+    mark: int  # the percentage (0-100)
+    # NSC achievement level 1-7 — UP captures this alongside the percentage.
+    # Optional so existing percentage-only callers keep working.
+    nsc_level: Optional[int] = None
     custom_name: Optional[str] = None
 
 
@@ -40,6 +43,7 @@ class SubjectOut(BaseModel):
     # The key is kept stable (rather than omitted) for predictable FE codegen.
     name: str
     mark: int
+    nsc_level: Optional[int] = None
     custom_name: Optional[str] = None
 
 
