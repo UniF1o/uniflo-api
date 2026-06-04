@@ -24,6 +24,15 @@ class Settings(BaseSettings):
     CORS_ORIGIN_REGEX: Optional[str] = r"https://uniflo-web-[a-z0-9-]+\.vercel\.app"
     FAKE_AUTOMATION: bool = True
 
+    # AI field-mapping layer (Phase 3). Provider-agnostic; default Gemini Flash.
+    # All optional so the app still boots without a key.
+    AI_PROVIDER: str = "gemini"  # gemini | anthropic
+    AI_MODEL: Optional[str] = None  # overrides the provider's default model
+    GEMINI_API_KEY: Optional[str] = None
+    ANTHROPIC_API_KEY: Optional[str] = None
+    # Entries below this confidence are flagged for review on the frontend.
+    FIELD_CONFIDENCE_THRESHOLD: float = 0.85
+
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     @property

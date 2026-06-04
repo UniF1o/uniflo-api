@@ -195,6 +195,8 @@ Build the abstract `UniversityAdapter` and the runtime that drives it — no rea
 
 The AI layer turns "here's the student's profile and here's the university's form" into "here's the value for each field, and here's how sure I am". This is the brain of the automation layer.
 
+> **Progress (2026-06-04):** core landed on `feature/ai-mapping` (stacked on `feature/adapter-base`) — `app/ai/` provider-agnostic `AIClient`, `GeminiProvider` (default, native `response_schema`) + `ClaudeProvider` (parity, tool-use + prompt caching), shared retry/backoff, prompts, `schemas`, and the `map_application_to_portal()` orchestrator; synthetic fixtures (`tests/fixtures/synthetic_students.py`); 12 unit tests with the SDKs mocked; config (`AI_PROVIDER`/`AI_MODEL`/keys/`FIELD_CONFIDENCE_THRESHOLD`); contract doc `docs/phase-3/task-3-ai-mapping.md`. SDKs: `google-genai==2.8.0` (the current unified SDK, not the deprecated `google-generativeai`) + `anthropic==0.105.2`. **Deferred:** the `field_mappings` persistence table (Partner-A decision + prod migration), live integration/parity tests (need keys), per-university form-schema JSON (lands with each adapter), and live cost verification.
+
 Default provider: **Google Gemini 2.5 Flash**. The wrapper is built provider-agnostic so swapping to Claude Sonnet or GPT-4.1 Mini later is a config change.
 
 - [ ] Add `google-generativeai` to `pyproject.toml` as the primary provider SDK

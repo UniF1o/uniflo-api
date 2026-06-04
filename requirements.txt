@@ -31,3 +31,9 @@ sentry-sdk==2.57.0
 # Automation (Phase 3) — browser binaries are installed separately via
 # `playwright install --with-deps chromium` (not pulled in by pip).
 playwright==1.60.0
+
+# AI field-mapping (Phase 3) — provider-agnostic. Gemini is the default
+# provider; the Anthropic adapter is the parity/fallback. Both SDKs are
+# lazy-imported so the modules import even if a backend isn't installed.
+google-genai==2.8.0
+anthropic==0.105.2
