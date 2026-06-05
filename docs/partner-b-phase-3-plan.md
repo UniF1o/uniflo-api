@@ -127,6 +127,8 @@ Walk every target portal end-to-end, document everything, get sign-off before an
 
 Build the abstract `UniversityAdapter` and the runtime that drives it — no real portal yet. The first concrete adapter (Task 4) inherits from this without rewriting the runtime.
 
+> **Progress (2026-06-04):** scaffolding landed on `feature/adapter-base` — `app/automation/` (`base`/`runtime`/`exceptions`/`results`/`adapters`), `playwright==1.60.0` pinned in `requirements.txt`, a `FakeAdapter` unit suite (10 tests: success, each failure class, the 15-min timeout, and the pause→persist→resume cycle), and the contract doc `docs/phase-3/task-2-adapter-base.md`. Outstanding: `playwright install --with-deps chromium` on the deploy image (ops — confirm Render/Railway runs headless Chromium) and the DB-backed `paused_jobs` store (deferred to the human-in-the-loop UI). Captcha/OTP are **kept in the MVP** per the cross-cutting decision, so the pause path is scaffolding only (challenges are solved inline via OCR/inbox in Task 4/5).
+
 - [ ] Add `playwright` to `pyproject.toml` and pin to a specific version (Playwright changes fast — pinning prevents surprise breakage)
 - [ ] Add `playwright install --with-deps chromium` to the post-install / Docker steps. Confirm Render/Railway can run headed Playwright in headless mode within the deployment image
 - [ ] Create `automation/` module with this structure:
