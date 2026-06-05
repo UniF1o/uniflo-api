@@ -3,6 +3,8 @@
 > **Status: Draft v2 — verified from screen recording.** Rebuilt from `uj.mp4` (14:34) frame-by-frame, not just dictation. Field labels, control types, required flags, dropdown/LOV option lists, the page order, and the review/agreement pages are now confirmed from video. **Not** in the video: the applicant-type choice + login screen (recording starts already logged in — taken from dictation) and the post-submit confirmation page (recording ends at the agreement step). Sample data shown in the video is intentionally omitted (PII).
 >
 > **Drive mechanism: accessibility-tree primary (approach C).** The "Control / target" column names the visible label + control type the agent acts on, not a CSS selector.
+>
+> ⚠️ **Update (2026-06-05, from building the adapter):** approach C **does not work on this ITS portal** — its inputs have **no accessible names**, so the adapter targets by **stable element id** (`#oapSurname`, `#oapTitle`, `#oapNextBtn1`, …) instead. The labels below are still correct for AI mapping; the live-verified element ids live in `app/automation/adapters/uj.fields.json`. See `docs/phase-3/task-4-adapter-uj.md`.
 
 ## Portal URL
 - Login: <https://registration.uj.ac.za/pls/prodi41/gen.gw1pkg.gw1startup?x_processcode=ITS_OAP>
