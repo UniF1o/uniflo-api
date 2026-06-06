@@ -341,6 +341,39 @@ def test_get_application_not_found():
     assert response.json()["detail"] == "application_not_found"
 
 
+# GET /applications/{id}/field-mappings returns the review-screen mapping
+def test_field_mappings_endpoint_success():
+    from app.api.applications.schemas import FieldMappingEntryRead, FieldMappingRead
+
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+    mapping = FieldMappingRead(
+        application_id=VALID_APPLICATION_ID,
+        university_id=VALID_UNIVERSITY_ID,
+        overall_confidence=0.8,
+        confidence_threshold=0.85,
+        entries=[
+            FieldMappingEntryRead(field_id="surname", value="Doe", confidence=0.95, flagged=False),
+            FieldMappingEntryRead(field_id="programme", value="Civil", confidence=0.6, flagged=True),
+        ],
+        created_at=datetime.now(timezone.utc),
+    )
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
+         patch("app.api.applications.service.get_field_mapping") as mock_get:
+        mock_auth(mock_decode)
+        mock_get.return_value = mapping
+        response = client.get(
+            f"/applications/{VALID_APPLICATION_ID}/field-mappings",
+            headers=auth_headers(),
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    body = response.json()
+    flagged = {e["field_id"]: e["flagged"] for e in body["entries"]}
+    assert flagged == {"surname": False, "programme": True}
+
+
 # POST /applications/{id}/consent records acceptance and returns the application
 def test_consent_endpoint_success():
     mock_session = MagicMock()

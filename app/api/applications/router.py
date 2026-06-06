@@ -8,6 +8,7 @@ from app.api.applications.schemas import (
     ApplicationCreate,
     ApplicationRead,
     ConsentRequest,
+    FieldMappingRead,
 )
 from app.api.automation.background import process_application
 from app.db import get_session
@@ -47,6 +48,20 @@ def get_application(
 ):
     user_id = request.state.user["sub"]
     return service.get_application(session, user_id, application_id)
+
+
+@router.get(
+    "/{application_id}/field-mappings",
+    response_model=FieldMappingRead,
+    operation_id="applications_field_mappings",
+)
+def get_field_mapping(
+    application_id: uuid.UUID,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    user_id = request.state.user["sub"]
+    return service.get_field_mapping(session, user_id, application_id)
 
 
 @router.post(

@@ -67,6 +67,28 @@ def _validate_programme(v: str) -> str:
 MAX_ADDITIONAL_PROGRAMMES = 2
 
 
+class FieldMappingEntryRead(BaseModel):
+    """One mapped field for the review screen. `flagged` == low confidence
+    (below the threshold in force when the mapping was produced)."""
+
+    field_id: str
+    value: Optional[str] = None
+    confidence: float
+    flagged: bool
+    reasoning: str = ""
+    source_profile_field: Optional[str] = None
+
+
+class FieldMappingRead(BaseModel):
+    application_id: uuid.UUID
+    university_id: uuid.UUID
+    overall_confidence: float
+    confidence_threshold: float
+    entries: list[FieldMappingEntryRead]
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+
 class ConsentRequest(BaseModel):
     """Records the student's explicit acceptance after they've viewed the portal's
     POPI notice / application agreement (surfaced by the frontend). At least one

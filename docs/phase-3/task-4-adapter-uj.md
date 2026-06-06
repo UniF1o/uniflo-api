@@ -284,8 +284,21 @@ submitted or in-flight application.
   `AUTOMATION_ALLOW_SUBMIT` is on. The adapter still just ticks what it's told —
   the gate lives at the orchestration boundary (adapters never touch the DB).
 
+## field_mappings table ✅
+
+`field_mappings` (migration `a9b8c7d6e5f4`, one row per application, JSONB
+`entries`) stores the AI-proposed mapping for Partner-A's review screen.
+`app.ai.field_mapping.persist_field_mapping` upserts it; Partner-A reads it via
+`GET /applications/{id}/field-mappings` — each entry carries
+`flagged = confidence < confidence_threshold` (the threshold in force when the
+mapping was produced is stored on the row). The model is `FieldMappingRecord`
+(named to avoid clashing with the runtime's transient `FieldMapping`).
+
 ## Not done yet (next iterations)
-- **`field_mappings` table** (Partner-A's review screen reads it).
+- **Wire the AI mapping into a run** — `persist_field_mapping` + the read
+  endpoint exist, but a run currently fills from the deterministic
+  `build_field_mapping`; generating + persisting the AI mapping (for review
+  before/with a run) is the remaining integration.
 - **The one real supervised submit** — record consent, flip
   `AUTOMATION_ALLOW_SUBMIT=true`; confirms the Page-E Save-enable without force
   and pins the `verify_submission` success marker.

@@ -5,12 +5,18 @@ from typing import Optional
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
-from app.api.applications.schemas import ApplicationCreate, ApplicationStatus
+from app.api.applications.schemas import (
+    ApplicationCreate,
+    ApplicationStatus,
+    FieldMappingEntryRead,
+    FieldMappingRead,
+)
 from app.api.profiles.schemas import REQUIRED_PROFILE_FIELDS
 from app.automation.screenshots import create_signed_url, is_storage_path
 from app.models.application import Application
 from app.models.application_choice import ApplicationChoice
 from app.models.application_job import ApplicationJob
+from app.models.field_mapping import FieldMappingRecord
 from app.models.student_profile import StudentProfile
 from app.models.university import University
 
@@ -221,6 +227,47 @@ def list_applications(session: Session, user_id: str) -> list[Application]:
         app.choices = get_choices(session, app.id)
 
     return applications
+
+
+def get_field_mapping(
+    session: Session, user_id: str, application_id: uuid.UUID
+) -> FieldMappingRead:
+    """The AI-proposed mapping for Partner-A's review screen. 404 if the
+    application isn't the student's, or no mapping has been produced yet."""
+    profile = get_student_profile(session, user_id)
+    application = session.get(Application, application_id)
+    if not application or application.student_id != profile.id:
+        raise HTTPException(status_code=404, detail="application_not_found")
+
+    record = session.exec(
+        select(FieldMappingRecord).where(
+            FieldMappingRecord.application_id == application_id
+        )
+    ).first()
+    if record is None:
+        raise HTTPException(status_code=404, detail="field_mapping_not_found")
+
+    threshold = record.confidence_threshold
+    entries = [
+        FieldMappingEntryRead(
+            field_id=e.get("field_id"),
+            value=e.get("value"),
+            confidence=e.get("confidence", 0.0),
+            flagged=e.get("confidence", 0.0) < threshold,
+            reasoning=e.get("reasoning", ""),
+            source_profile_field=e.get("source_profile_field"),
+        )
+        for e in (record.entries or [])
+    ]
+    return FieldMappingRead(
+        application_id=record.application_id,
+        university_id=record.university_id,
+        overall_confidence=record.overall_confidence,
+        confidence_threshold=threshold,
+        entries=entries,
+        created_at=record.created_at,
+        updated_at=record.updated_at,
+    )
 
 
 def get_application(

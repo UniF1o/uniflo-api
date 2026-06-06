@@ -88,6 +88,6 @@ key is wired (Task 3 live test) and add a regression check before Task 5.
 
 ## Not in this task (follow-ups / coordination)
 - **Live integration tests** (Gemini real call behind `GEMINI_API_KEY`; Gemini↔Claude parity behind `RUN_LIVE_TESTS=1`) — need keys; gated, not run in CI by default.
-- **Persistence** — the plan's `field_mappings` table is a **Partner-A decision** (their review screen reads it) and a **production migration**, so it's deferred; `map_application_to_portal` returns the validated response and storage is wired in Task 4.
+- **Persistence** — DONE (Task 4): the `field_mappings` table (migration `a9b8c7d6e5f4`, one row per application) is written by `persist_field_mapping(session, response)` and read by Partner-A via `GET /applications/{id}/field-mappings` (each entry carries `flagged = confidence < confidence_threshold`).
 - **Per-university form schema JSON** — generated from each research doc as its adapter lands (Task 4/5). Task 3 ships only the `PortalFormSchema` shape + a synthetic fixture form.
 - **`AI_MODEL` / threshold sign-off** with Partner A (confidence threshold lives in shared config so it tunes without a deploy).
