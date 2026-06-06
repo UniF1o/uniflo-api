@@ -21,6 +21,11 @@ from uuid import UUID
 
 from playwright.async_api import Page
 
+from app.automation.adapters.uj_programmes import (
+    best_programme_match,
+    faculty_search_term,
+    resolve_faculty,
+)
 from app.automation.base import (
     DocumentRef,
     FieldMapping,
@@ -292,13 +297,18 @@ class UJAdapter(UniversityAdapter):
         await self._select_label_or_js(
             page, _E_APPLYING_FOR, mapping.get("applying_for", "Curricular Courses")
         )
-        faculty = mapping.get("faculty")
-        await self.select_from_lov(page, _E_FACULTY, faculty, search_term=faculty)
         programme = mapping.get("programme")
-        if programme:
-            await self.select_from_lov_row(
-                page, _E_PROGRAMME, programme, search_term="%"
+        faculty = mapping.get("faculty") or resolve_faculty(programme or "")
+        if not faculty:
+            raise PortalChangedError(
+                f"could not resolve a UJ faculty for programme {programme!r}",
+                selector=_E_FACULTY,
             )
+        await self.select_from_lov(
+            page, _E_FACULTY, faculty, search_term=faculty_search_term(faculty)
+        )
+        if programme:
+            await self.select_programme_from_lov(page, programme)
         year = mapping.get("year_of_study", "FIRST YEAR")
         await self.select_from_lov(page, _E_STUDY_PERIOD, year, search_term=year)
         # offering type + block auto-populate from the programme; only override
@@ -348,6 +358,57 @@ class UJAdapter(UniversityAdapter):
             raise PortalChangedError(
                 f"no LOV row contains {row_contains!r}", selector=code_selector
             )
+
+    async def select_programme_from_lov(
+        self, page: Page, programme_text: str
+    ) -> None:
+        """Pick the programme (Page E) from the code-keyed LOV. Reads the live
+        rows, scores the free-text request against the **eligible** descriptions
+        (`app.automation.adapters.uj_programmes.best_programme_match`), and clicks
+        the chosen row's anchor. Raises PortalChangedError if no eligible
+        programme confidently matches — never submits an ineligible/guessed one."""
+        lov = await self._open_lov(page, _E_PROGRAMME)
+        try:
+            await lov.wait_for_load_state("domcontentloaded")
+            await lov.fill("input[name=x_thefilter]", "%")
+            await lov.get_by_role("button", name="Search").click()
+            rows = await lov.evaluate(
+                "()=>[...document.querySelectorAll('tr')]"
+                ".map(tr=>(tr.innerText||'').replace(/\\s+/g,' ').trim())"
+                ".filter(t=>t.length>4 && t.length<160)"
+            )
+        except Exception as exc:  # noqa: BLE001
+            raise PortalChangedError(
+                f"programme LOV failed for {programme_text!r}", selector=_E_PROGRAMME
+            ) from exc
+        chosen = best_programme_match(programme_text, rows or [])
+        if not chosen:
+            raise PortalChangedError(
+                f"no eligible UJ programme matched {programme_text!r}",
+                selector=_E_PROGRAMME,
+            )
+        try:
+            clicked = await lov.evaluate(
+                """(rowtext) => {
+                  for (const tr of document.querySelectorAll('tr')) {
+                    if ((tr.innerText || '').replace(/\\s+/g,' ').trim() === rowtext) {
+                      const a = tr.querySelector('a');
+                      if (a) { a.click(); return true; }
+                    }
+                  }
+                  return false;
+                }""",
+                chosen,
+            )
+        except Exception as exc:  # noqa: BLE001
+            raise PortalChangedError(
+                f"could not select programme {chosen!r}", selector=_E_PROGRAMME
+            ) from exc
+        if not clicked:
+            raise PortalChangedError(
+                f"programme row vanished: {chosen!r}", selector=_E_PROGRAMME
+            )
+        await page.wait_for_timeout(800)
 
     async def select_subject_from_lov(self, page: Page, subject_name: str) -> None:
         """Pick the school-leaving subject. The student's name is free-form and

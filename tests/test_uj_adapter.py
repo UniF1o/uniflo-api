@@ -46,12 +46,25 @@ _UJ_SUBJECT_ROWS = [
     "LIFE ORIENTATION (NSC/NCV/DR)",
 ]
 
+# Real harvested UJ programme-LOV rows (code-keyed; incl. an ineligible -N row).
+_UJ_PROGRAMME_ROWS = [
+    "Choose a programme Description",
+    "B6CS0Q (ELIGIBLE TO APPLY-Y) - B ENG IN CIVIL ENGINEERING",
+    "B6CV3Q (ELIGIBLE TO APPLY-Y) - B ENG TECH IN CIVIL ENGINEERING",
+    "B6CX3Q (ELIGIBLE TO APPLY-N) - B ENG TECH IN CIVIL ENGINEERING EXTENDED",
+    "B2I02Q (ELIGIBLE TO APPLY-Y) - BSC COMPUTER SCIENCE & INFORMATICS",
+]
+
+# Subject + programme rows; the subject/programme matchers each ignore the other
+# kind, so a single fake popup serves both Page-C and Page-E reads.
+_UJ_LOV_ROWS = _UJ_SUBJECT_ROWS + _UJ_PROGRAMME_ROWS
+
 
 class FakeLovPopup:
     def __init__(self, *, fail=None, rows=None):
         self.calls = []
         self.fail = fail or set()
-        self.rows = rows if rows is not None else list(_UJ_SUBJECT_ROWS)
+        self.rows = rows if rows is not None else list(_UJ_LOV_ROWS)
 
     async def wait_for_load_state(self, *a, **k):
         pass
@@ -496,36 +509,49 @@ async def test_run_application_walks_to_page_g_without_submitting():
 async def test_run_application_submits_when_requested():
     popup = FakeLovPopup()
     a, page = _adapter_with_pin("13579"), FakePage(next_popup=popup)
-    await a.run_application(page, FieldMapping(values={"subjects": []}), do_submit=True)
+    # a programme so Page E resolves a faculty + an eligible programme
+    mapping = FieldMapping(values={"programme": "Civil Engineering", "subjects": []})
+    await a.run_application(page, mapping, do_submit=True)
     # do_submit=True runs the Page-G submit with the real ids
     assert ("fill", "#oapLoginPin", "13579") in page.calls
     assert ("check", "#oapAcceptApplRAR", None) in page.calls
     assert ("click", "#oapNextBtn8", None) in page.calls
 
 
-async def test_fill_qualifications_page():
+async def test_fill_qualifications_page_resolves_faculty_and_programme():
     popup = FakeLovPopup()
     a, page = UJAdapter(), FakePage(next_popup=popup)
+    # free-text programme — adapter resolves the faculty + the eligible LOV entry
     mapping = FieldMapping(
         values={
             "academic_year": "2027",
             "applying_for": "Curricular Courses",
-            "faculty": "ENGINEERING&BUILT ENVIRONMENT",
-            "programme": "B ENG IN CIVIL ENGINEERING",
+            "programme": "Civil Engineering",
             "year_of_study": "FIRST YEAR",
         }
     )
     await a.fill_qualifications_page(page, mapping)
     assert ("select", "#oapAcademicYear", "2027") in page.calls
-    # the gate that populates the faculty LOV
     assert ("select", "#oapECSLP", "Curricular Courses") in page.calls
+    # "Civil Engineering" → ENGINEERING&BUILT ENVIRONMENT faculty
     assert ("click", "a[href*=oapFaculty]", None) in page.calls
     assert ("link", "ENGINEERING&BUILT ENVIRONMENT") in popup.calls
-    # programme is code-keyed -> picked by row text
+    # programme matched to the eligible row (not the -N extended one)
     assert ("click", "a[href*=oapQualification]", None) in page.calls
-    assert ("rowpick", "B ENG IN CIVIL ENGINEERING") in popup.calls
+    assert ("rowpick", "B6CS0Q (ELIGIBLE TO APPLY-Y) - B ENG IN CIVIL ENGINEERING") in popup.calls
     assert ("click", "a[href*=oapStudyPeriod]", None) in page.calls
     assert ("link", "FIRST YEAR") in popup.calls
+
+
+async def test_select_programme_skips_ineligible_and_raises():
+    # only an ineligible (-N) match available → raise, never submit it
+    popup = FakeLovPopup(rows=[
+        "Choose a programme Description",
+        "B6CX3Q (ELIGIBLE TO APPLY-N) - B ENG TECH IN CIVIL ENGINEERING EXTENDED",
+    ])
+    a, page = UJAdapter(), FakePage(next_popup=popup)
+    with pytest.raises(PortalChangedError):
+        await a.select_programme_from_lov(page, "Civil Engineering Extended")
 
 
 async def test_fill_simple_skips_conditional_field_when_not_actionable():

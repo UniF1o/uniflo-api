@@ -2,15 +2,15 @@
 
 This is the deterministic bridge between our DB (StudentProfile, Contact,
 AcademicRecord, Application) and an adapter's `field_id`s. It maps the
-straightforward fields directly. Subject names are passed through as-is —
-`academic_records.subjects` stores plain NSC names (e.g. "Mathematics") and the
-adapter resolves them to UJ's qualifier-tagged LOV entries at fill time (see
-`app.automation.subjects`). One area still needs a resolution layer:
+straightforward fields directly. Two free-text fields are passed through as-is
+and resolved by the adapter against the live LOV at fill time:
 
-  * **faculty / programme** — `application.programme` is free text; UJ wants a
-    faculty + an `(ELIGIBLE TO APPLY-Y)` programme from its LOV. Left as
-    pass-through (`faculty` unset) until a per-portal programme catalogue / AI
-    resolver exists; a real run will currently stall on Page E.
+  * **subject names** — `academic_records.subjects` stores plain NSC names
+    ("Mathematics") → resolved to UJ's qualifier-tagged LOV entries by
+    `app.automation.subjects`.
+  * **faculty / programme** — `application.programme` is free text →
+    `app.automation.adapters.uj_programmes` resolves the faculty + an
+    `(ELIGIBLE TO APPLY-Y)` programme from the live LOV (never an ineligible one).
 
 Pure + side-effect free so it unit-tests without a DB.
 """

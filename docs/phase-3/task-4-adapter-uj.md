@@ -243,12 +243,30 @@ the LOV by the name's first word, reads the live rows, and clicks the best match
 2026-06-06:** plain names (`"Mathematics"`, `"Afrikaans First Additional
 Language"`, …) all resolved correctly and the run reached Page G.
 
+## Faculty / programme resolution ✅ (live-verified)
+
+`app.automation.adapters.uj_programmes` resolves a free-text
+`application.programme` → a UJ faculty + an eligible LOV programme:
+`resolve_faculty` keyword-maps to one of the 8 harvested faculties (word-boundary
+matches so "ba"/"law" don't fire inside other words); the adapter selects it,
+then `select_programme_from_lov` reads the live programme rows
+(`CODE (ELIGIBLE TO APPLY-Y/N) - DESCRIPTION`) and `best_programme_match` scores
+the request against the **eligible** descriptions — preferring an exact
+token-set, then the tightest superset, and **never** an `-N` row (raises for
+review instead). **Verified live 2026-06-06:** free-text "Civil Engineering"
+(no faculty given) → ENGINEERING&BUILT ENVIRONMENT + the eligible "B ENG IN CIVIL
+ENGINEERING", run reached Page G. The mapping is now complete A→E from real
+profile data.
+
 ## Not done yet (next iterations)
-- **Faculty / programme resolution** — the remaining mapping gap: free-text
-  `application.programme` → a UJ faculty + an `(ELIGIBLE TO APPLY-Y)` LOV
-  programme. Needs the UJ faculty list (one harvest) + a keyword→faculty map and
-  the same best-match picker within the faculty's (code-keyed) programme LOV. A
-  real run stalls on Page E until this lands.
+- **Screenshots → Storage** — `run_job` captures per-step PNGs; upload them and
+  set `application_jobs.screenshot_url` (TODO in `background.py`).
+- **`field_mappings` table** (Partner-A) + `POST /applications/{id}/retry` (still
+  `501`); persist + reuse the generated PIN as a portal secret.
+- **Consent recording gate** (POPI + agreement) before any real submit.
+- **The one real supervised submit** — flip `AUTOMATION_ALLOW_SUBMIT=true` for a
+  consenting student; confirms the Page-E Save-enable without force and pins the
+  `verify_submission` success marker.
 - **Screenshots → Storage** — `run_job` captures per-step PNGs; upload them and
   set `application_jobs.screenshot_url` (currently a TODO in `background.py`).
 - **`field_mappings` table** (Partner-A) + the `POST /applications/{id}/retry`
