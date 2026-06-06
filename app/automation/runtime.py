@@ -51,6 +51,11 @@ STEPS: tuple[str, ...] = (
     "verify_submission",
 )
 
+# The pipeline with the final submit gated off (the no-submit safety mode): fill
+# everything and stop on the portal's final/agreement page. Used while building +
+# verifying adapters, before a real consenting student is ready to submit.
+STEPS_NO_SUBMIT: tuple[str, ...] = ("login", "fill_form", "upload_documents")
+
 
 def _next_step(step: str) -> Optional[str]:
     i = STEPS.index(step)
@@ -129,12 +134,14 @@ async def _run_steps(
     documents: list[DocumentRef],
     pause_store: Optional[PauseStore],
     start_at: str = "login",
+    pipeline: tuple[str, ...] = STEPS,
 ) -> SubmissionResult:
     screenshots: list[Screenshot] = []
     confirmation = None
     step = start_at
+    submitted = "submit" in pipeline
     try:
-        for step in STEPS[STEPS.index(start_at):]:
+        for step in pipeline[pipeline.index(start_at):]:
             result = await _call_step(
                 adapter, step, page, credentials, mapping, documents
             )
@@ -142,7 +149,8 @@ async def _run_steps(
                 confirmation = result
             await _safe_screenshot(page, step, screenshots)
         return SubmissionResult(
-            outcome=RunOutcome.SUBMITTED,
+            # Stopped before submit (no-submit gate) → FILLED, not SUBMITTED.
+            outcome=RunOutcome.SUBMITTED if submitted else RunOutcome.FILLED,
             confirmation=confirmation,
             screenshots=screenshots,
         )
@@ -199,10 +207,15 @@ async def drive(
     documents: Optional[list[DocumentRef]] = None,
     pause_store: Optional[PauseStore] = None,
     start_at: str = "login",
+    allow_submit: bool = True,
     timeout_s: float = DEFAULT_TIMEOUT_S,
 ) -> SubmissionResult:
     """Run the pipeline against an existing page under a hard timeout. Never
-    raises — returns a `SubmissionResult` describing the outcome."""
+    raises — returns a `SubmissionResult` describing the outcome. With
+    `allow_submit=False` the final submit/verify steps are skipped (the outcome
+    is `FILLED`) — the safety gate that lets us drive real portals end-to-end
+    without submitting until a consenting student is ready."""
+    pipeline = STEPS if allow_submit else STEPS_NO_SUBMIT
     try:
         return await asyncio.wait_for(
             _run_steps(
@@ -213,6 +226,7 @@ async def drive(
                 documents=documents or [],
                 pause_store=pause_store,
                 start_at=start_at,
+                pipeline=pipeline,
             ),
             timeout=timeout_s,
         )
@@ -236,10 +250,12 @@ async def run_job(
     documents: Optional[list[DocumentRef]] = None,
     pause_store: Optional[PauseStore] = None,
     headless: bool = True,
+    allow_submit: bool = True,
     timeout_s: float = DEFAULT_TIMEOUT_S,
 ) -> SubmissionResult:
     """Production entry: spin up a fresh Chromium context, drive the adapter,
-    tear the browser down cleanly even on failure."""
+    tear the browser down cleanly even on failure. `allow_submit=False` runs the
+    no-submit safety gate (fills the form, stops before submit)."""
     async with async_playwright() as pw:
         browser = await pw.chromium.launch(headless=headless)
         context = await browser.new_context()
@@ -252,6 +268,7 @@ async def run_job(
                 mapping=mapping,
                 documents=documents,
                 pause_store=pause_store,
+                allow_submit=allow_submit,
                 timeout_s=timeout_s,
             )
         finally:

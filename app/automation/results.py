@@ -15,6 +15,10 @@ class RunOutcome(str, Enum):
     FAILED = "failed"
     # Maps to the application_jobs."paused_human_action" status the plan adds.
     PAUSED = "paused_human_action"
+    # Ran login→fill_form→upload but stopped **before** submit (the global
+    # no-submit safety gate, `allow_submit=False`). The form is filled and sitting
+    # on the portal's final/agreement page; nothing was submitted.
+    FILLED = "filled"
 
 
 @dataclass

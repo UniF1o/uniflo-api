@@ -105,6 +105,26 @@ async def test_full_run_succeeds():
     assert page.shots == len(STEPS)
 
 
+# --- no-submit safety gate -----------------------------------------------------
+
+async def test_no_submit_gate_stops_before_submit():
+    adapter = FakeAdapter()
+    result = await _drive(adapter, allow_submit=False)
+    assert result.outcome is RunOutcome.FILLED
+    assert adapter.calls == ["login", "fill_form", "upload_documents"]
+    assert "submit" not in adapter.calls
+    assert result.confirmation is None
+
+
+async def test_allow_submit_runs_full_pipeline():
+    adapter = FakeAdapter()
+    result = await _drive(adapter, allow_submit=True)
+    assert result.outcome is RunOutcome.SUBMITTED
+    assert adapter.calls == [
+        "login", "fill_form", "upload_documents", "submit", "verify_submission",
+    ]
+
+
 # --- failures map to structured JobFailure -------------------------------------
 
 async def test_auth_failure_stops_at_login():

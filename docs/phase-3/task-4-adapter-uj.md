@@ -217,13 +217,33 @@ fields), `_select_label_or_js` (JS fallback for the hidden `#oapECSLP`),
 `_save_and_continue` (optional `force` for Page E's disabled Save),
 `_continue_summary` (id-less Page-F Continue).
 
+## Runtime wiring ✅ (submit-gated dispatch)
+
+`POST /applications` → `process_application` now routes to the **real runtime**
+when `FAKE_AUTOMATION=false` (else the Phase-2 simulation, the dev default):
+resolve the adapter by `university_id` (`adapters.get_adapter_for_university`),
+build the `FieldMapping` from the profile/contacts/academic-record/application
+(`automation.mapping.build_field_mapping`), generate a UJ-valid 5-digit PIN, and
+call `runtime.run_job(..., allow_submit=settings.AUTOMATION_ALLOW_SUBMIT)`. The
+`SubmissionResult` is persisted to `application_jobs` / `applications` (status +
+canonical `last_error`). **Safety gate:** `AUTOMATION_ALLOW_SUBMIT` defaults
+**False** → the runtime fills the whole form and stops before Submit
+(`RunOutcome.FILLED` → application stays `processing`); it can never submit until
+the flag is flipped for the supervised first live run.
+
 ## Not done yet (next iterations)
-- **The one real supervised submit** (a consenting student) — call
-  `run_application(..., do_submit=True)`; confirms the Page-E Save-enable
-  behaviour without force, and pins the `verify_submission` success marker.
-- **AI mapping + end-to-end runtime wiring** (build the `FieldMapping` from the
-  profile via `AIClient`; replace the Phase-2 `process_application` stub; persist
-  results to `application_jobs`; screenshots; `field_mappings` table; retry).
+- **Mapping completeness** — `build_field_mapping` maps the direct fields, but
+  two need a resolver before a real run clears Page C/E: **subject names**
+  (`"Mathematics"` → `"MATHEMATICS (NSC/NCV/ISC)"`) and **faculty/programme**
+  (free-text `application.programme` → a UJ faculty + an eligible LOV entry).
+  This is the AI-mapping / programme-catalogue item.
+- **Screenshots → Storage** — `run_job` captures per-step PNGs; upload them and
+  set `application_jobs.screenshot_url` (currently a TODO in `background.py`).
+- **`field_mappings` table** (Partner-A) + the `POST /applications/{id}/retry`
+  endpoint (still `501`); persist + reuse the generated PIN as a portal secret.
+- **The one real supervised submit** — flip `AUTOMATION_ALLOW_SUBMIT=true` for a
+  consenting student; confirms the Page-E Save-enable without force and pins the
+  `verify_submission` success marker.
 - **AI mapping integration** — run Jane Doe + the field schema through `AIClient`
   to produce the `FieldMapping` (currently tested with hand-built mappings).
 - **End-to-end wiring** (plan Task 4): replace the Phase 2 `process_application`

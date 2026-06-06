@@ -23,6 +23,11 @@ class Settings(BaseSettings):
     # ahead of time; allow them via regex in addition to the exact origins.
     CORS_ORIGIN_REGEX: Optional[str] = r"https://uniflo-web-[a-z0-9-]+\.vercel\.app"
     FAKE_AUTOMATION: bool = True
+    # Real-automation safety gate. When False (default), the runtime fills the
+    # whole portal form but STOPS before the final submit (RunOutcome.FILLED) —
+    # so a real run never submits an application until a consenting student is
+    # ready. Flip to True only for the supervised first live submit.
+    AUTOMATION_ALLOW_SUBMIT: bool = False
 
     # AI field-mapping layer (Phase 3). Provider-agnostic; default Gemini Flash.
     # All optional so the app still boots without a key.
