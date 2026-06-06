@@ -231,12 +231,24 @@ canonical `last_error`). **Safety gate:** `AUTOMATION_ALLOW_SUBMIT` defaults
 (`RunOutcome.FILLED` → application stays `processing`); it can never submit until
 the flag is flipped for the supervised first live run.
 
+## Subject-name resolution ✅ (live-verified)
+
+`app.automation.subjects` resolves a student's free-form subject name to the UJ
+LOV entry: it canonicalises both sides to token lists (expanding UJ's
+abbreviations — `1ST AD LAN` → first/additional/language, `MATHS` → mathematics —
+and dropping the `(NSC/NCV/ISC/DR)` qualifier) and scores candidates, so it
+tolerates the portal's spelling. The adapter's `select_subject_from_lov` filters
+the LOV by the name's first word, reads the live rows, and clicks the best match
+(or raises for review if none is confident — never guesses). **Verified live
+2026-06-06:** plain names (`"Mathematics"`, `"Afrikaans First Additional
+Language"`, …) all resolved correctly and the run reached Page G.
+
 ## Not done yet (next iterations)
-- **Mapping completeness** — `build_field_mapping` maps the direct fields, but
-  two need a resolver before a real run clears Page C/E: **subject names**
-  (`"Mathematics"` → `"MATHEMATICS (NSC/NCV/ISC)"`) and **faculty/programme**
-  (free-text `application.programme` → a UJ faculty + an eligible LOV entry).
-  This is the AI-mapping / programme-catalogue item.
+- **Faculty / programme resolution** — the remaining mapping gap: free-text
+  `application.programme` → a UJ faculty + an `(ELIGIBLE TO APPLY-Y)` LOV
+  programme. Needs the UJ faculty list (one harvest) + a keyword→faculty map and
+  the same best-match picker within the faculty's (code-keyed) programme LOV. A
+  real run stalls on Page E until this lands.
 - **Screenshots → Storage** — `run_job` captures per-step PNGs; upload them and
   set `application_jobs.screenshot_url` (currently a TODO in `background.py`).
 - **`field_mappings` table** (Partner-A) + the `POST /applications/{id}/retry`

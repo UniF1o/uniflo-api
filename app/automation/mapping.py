@@ -2,13 +2,11 @@
 
 This is the deterministic bridge between our DB (StudentProfile, Contact,
 AcademicRecord, Application) and an adapter's `field_id`s. It maps the
-straightforward fields directly; two areas need a resolution layer that isn't
-built yet (tracked as the AI-mapping item):
+straightforward fields directly. Subject names are passed through as-is —
+`academic_records.subjects` stores plain NSC names (e.g. "Mathematics") and the
+adapter resolves them to UJ's qualifier-tagged LOV entries at fill time (see
+`app.automation.subjects`). One area still needs a resolution layer:
 
-  * **subject names** — `academic_records.subjects` stores plain NSC names
-    (e.g. "Mathematics"); UJ's LOV wants its qualifier-tagged variant
-    ("MATHEMATICS (NSC/NCV/ISC)"). We pass the upper-cased name as a best-effort
-    search term.
   * **faculty / programme** — `application.programme` is free text; UJ wants a
     faculty + an `(ELIGIBLE TO APPLY-Y)` programme from its LOV. Left as
     pass-through (`faculty` unset) until a per-portal programme catalogue / AI

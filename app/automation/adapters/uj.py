@@ -29,6 +29,7 @@ from app.automation.base import (
 )
 from app.automation.exceptions import AuthFailedError, PortalChangedError
 from app.automation.results import SubmissionConfirmation
+from app.automation.subjects import best_subject_match, subject_search_term
 
 logger = logging.getLogger(__name__)
 
@@ -243,9 +244,7 @@ class UJAdapter(UniversityAdapter):
         """Add one row to the Page-C subjects table via the LOVs + Add Subject.
         Grade is always 'NSC' for an SA matric; the Gr11 percentage lives in the
         mislabelled 'symbol' field. Re-asserts matric-type first as a guard."""
-        await self.select_from_lov(
-            page, _C_SUBJECT, subject_name, search_term=subject_name
-        )
+        await self.select_subject_from_lov(page, subject_name)
         await self.select_from_lov(page, _C_GRADE, "NSC")
         await self.select_from_lov(
             page, _C_PERCENT, str(percentage), search_term=str(percentage)
@@ -349,6 +348,40 @@ class UJAdapter(UniversityAdapter):
             raise PortalChangedError(
                 f"no LOV row contains {row_contains!r}", selector=code_selector
             )
+
+    async def select_subject_from_lov(self, page: Page, subject_name: str) -> None:
+        """Pick the school-leaving subject. The student's name is free-form and
+        UJ's LOV is abbreviated/qualifier-tagged, so filter the popup by the
+        name's first word, read the candidate rows, and click the best match
+        (see `app.automation.subjects`). Raises PortalChangedError if no row is a
+        confident match — better surfaced for review than guessing a subject."""
+        lov = await self._open_lov(page, _C_SUBJECT)
+        try:
+            await lov.wait_for_load_state("domcontentloaded")
+            term = subject_search_term(subject_name)
+            if term:
+                await lov.fill("input[name=x_thefilter]", term)
+                await lov.get_by_role("button", name="Search").click()
+            rows = await lov.evaluate(
+                "()=>[...document.querySelectorAll('a')]"
+                ".map(a=>(a.innerText||'').trim()).filter(t=>t && t.length<70)"
+            )
+        except Exception as exc:  # noqa: BLE001
+            raise PortalChangedError(
+                f"subject LOV failed for {subject_name!r}", selector=_C_SUBJECT
+            ) from exc
+        target = best_subject_match(subject_name, rows or [])
+        if not target:
+            raise PortalChangedError(
+                f"no LOV subject matched {subject_name!r}", selector=_C_SUBJECT
+            )
+        try:
+            await lov.get_by_role("link", name=target, exact=True).first.click()
+            await page.wait_for_timeout(400)
+        except Exception as exc:  # noqa: BLE001
+            raise PortalChangedError(
+                f"could not select subject {target!r}", selector=_C_SUBJECT
+            ) from exc
 
     async def _is_visible(self, page: Page, selector: str) -> bool:
         try:

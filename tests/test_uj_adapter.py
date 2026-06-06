@@ -29,10 +29,29 @@ class _Clickable:
         self.popup.calls.append((self.kind, self.name))
 
 
+# Real harvested UJ subject-LOV rows — the subject reader returns these so the
+# resolver (app.automation.subjects) is exercised against true portal spelling.
+_UJ_SUBJECT_ROWS = [
+    "ENGLISH HOME LANG. (NSC/NCV)",
+    "ENGLISH 1ST ADD LANG (NSC/NCV)",
+    "AFRIKAANS 1ST AD LAN (NSC/NCV)",
+    "AFRIKAANS HOME LANG.(NSC/NCV)",
+    "MATHEMATICS (NSC/NCV/ISC)",
+    "MATHEMATICAL LIT. (NSC/NCV)",
+    "ABITUR MATHEMATICS (NSC)",
+    "PHYSICAL SCIENCES(NSC/NCV/ISC)",
+    "PHYSICAL EDUCATION (NSC/NCV)",
+    "LIFE SCIENCES (NSC)",
+    "GEOGRAPHY (NSC/NCV/ ISC)",
+    "LIFE ORIENTATION (NSC/NCV/DR)",
+]
+
+
 class FakeLovPopup:
-    def __init__(self, *, fail=None):
+    def __init__(self, *, fail=None, rows=None):
         self.calls = []
         self.fail = fail or set()
+        self.rows = rows if rows is not None else list(_UJ_SUBJECT_ROWS)
 
     async def wait_for_load_state(self, *a, **k):
         pass
@@ -44,7 +63,10 @@ class FakeLovPopup:
         return _Clickable(self, role, name)
 
     async def evaluate(self, js, arg=None):
-        # select_from_lov_row passes the row-match substring as `arg`.
+        # With an arg → select_from_lov_row's row-picker (clicks; returns bool).
+        # Without → the subject reader, returns the candidate row texts.
+        if arg is None:
+            return list(self.rows)
         self.calls.append(("rowpick", arg))
         return True
 
@@ -381,6 +403,23 @@ async def test_fill_matric_page_reveals_and_loops_subjects():
     assert ("link", "72") in popup.calls and ("link", "75") in popup.calls
     # one Add Subject click per subject
     assert sum(c == ("click", "#oapAddMatric", None) for c in page.calls) == 2
+
+
+async def test_select_subject_resolves_freeform_name():
+    # free-form "Mathematics" must resolve to the NSC row, not ABITUR/3rd-paper
+    popup = FakeLovPopup()
+    a, page = UJAdapter(), FakePage(next_popup=popup)
+    await a.select_subject_from_lov(page, "Mathematics")
+    assert ("click", "a[href*=oapMSubj]", None) in page.calls
+    assert ("fill", "input[name=x_thefilter]", "MATHEMATICS") in popup.calls
+    assert ("link", "MATHEMATICS (NSC/NCV/ISC)") in popup.calls
+
+
+async def test_select_subject_no_match_raises():
+    popup = FakeLovPopup(rows=["ACCOUNTING (NSC/NCV)", "BIOLOGY (NSC)"])
+    a, page = UJAdapter(), FakePage(next_popup=popup)
+    with pytest.raises(PortalChangedError):
+        await a.select_subject_from_lov(page, "Mathematics")
 
 
 async def test_add_subject_drives_lovs_and_clicks_add():
