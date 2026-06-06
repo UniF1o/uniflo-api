@@ -126,7 +126,10 @@ class UJAdapter(UniversityAdapter):
             if value.strip().lower() in ("true", "yes", "1"):
                 await self._check(page, selector)
         elif ftype == "lov":
-            await self.select_from_lov(page, selector, value)
+            # short lists (citizenship) click the row directly; long lists
+            # (postal codes) filter first via `lov_search`.
+            search = value if field.get("lov_search") else None
+            await self.select_from_lov(page, selector, value, search_term=search)
 
     async def upload_documents(
         self, page: Page, documents: list[DocumentRef]
@@ -204,13 +207,49 @@ class UJAdapter(UniversityAdapter):
             ) from exc
 
     async def select_from_lov(
-        self, page: Page, code_selector: str, target_text: str
+        self,
+        page: Page,
+        code_selector: str,
+        target_text: str,
+        *,
+        search_term: str | None = None,
     ) -> None:
-        """ITS "List of Values" handler. The field is a code input
-        (`code_selector`) paired with a `<id>_desc` description and opened by a
-        search trigger. **[VERIFY LIVE]:** the trigger id + modal structure
-        aren't captured yet, so this raises until the next walk pins them down."""
-        raise PortalChangedError(
-            f"LOV not wired yet for {code_selector} (needs live trigger id)",
-            selector=code_selector,
-        )
+        """ITS "List of Values" handler (verified for the citizenship list,
+        2026-06-05). The code field (`#oapCitzCode`) is readonly; a sibling
+        anchor `a[href*=<fieldId>]` calls `runWizardLov(...)` which opens a
+        **popup window** (`gw1lovbind`) with an `x_thefilter` search box, a
+        Search button, and result rows as `<a onclick="resetDependant(...)">`.
+        Short option lists load in full (click the row directly); long lists
+        (e.g. postal codes) need `search_term` first."""
+        lov = await self._open_lov(page, code_selector)
+        await self._pick_from_lov(lov, code_selector, target_text, search_term)
+
+    async def _open_lov(self, page: Page, code_selector: str):
+        field_id = code_selector.lstrip("#")
+        try:
+            async with page.expect_popup() as info:
+                await page.click(f"a[href*={field_id}]")
+            return await info.value
+        except Exception as exc:  # noqa: BLE001
+            raise PortalChangedError(
+                f"LOV popup did not open for {field_id}", selector=code_selector
+            ) from exc
+
+    async def _pick_from_lov(
+        self, lov, code_selector: str, target_text: str, search_term: str | None
+    ) -> None:
+        try:
+            await lov.wait_for_load_state("domcontentloaded")
+            if search_term:
+                await lov.fill("input[name=x_thefilter]", search_term)
+                await lov.get_by_role("button", name="Search").click()
+                await lov.get_by_role("link", name=target_text).first.click()
+            else:
+                await lov.get_by_role(
+                    "link", name=target_text, exact=True
+                ).first.click()
+        except Exception as exc:  # noqa: BLE001
+            raise PortalChangedError(
+                f"LOV row {target_text!r} not selectable for {code_selector}",
+                selector=code_selector,
+            ) from exc

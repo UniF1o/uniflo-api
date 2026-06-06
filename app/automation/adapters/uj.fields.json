@@ -5,7 +5,7 @@
   "fields": [
     {"field_id": "sa_citizen", "page": "A", "label": "Are you a SA Citizen in possession of a valid SA ID/Birth Certificate?", "type": "select", "required": true, "selector": "#oapCitizenType", "options": ["Yes", "No"]},
     {"field_id": "id_number", "page": "A", "label": "ID Number", "type": "text", "required": true, "selector": "#oapIDnumber"},
-    {"field_id": "citizenship_code", "page": "A", "label": "Citizenship Code", "type": "lov", "required": true, "selector": "#oapCitzCode", "help_text": "ITS LOV: code field #oapCitzCode + #oapCitzCode_desc; opened via a search popup (trigger id [VERIFY LIVE])"},
+    {"field_id": "citizenship_code", "page": "A", "label": "Citizenship Code", "type": "lov", "required": true, "selector": "#oapCitzCode", "lov_search": false, "help_text": "ITS LOV popup (gw1lovbind) — full country list loads; click the row by name. Verified live 2026-06-05 ('South Africa')."},
     {"field_id": "gender", "page": "A", "label": "Gender", "type": "select", "required": true, "selector": "#oapGender", "options": ["F Female", "M Male"], "conditional": true, "help_text": "auto-derived from the SA ID number in ITS — usually hidden/read-only, so the adapter skips it if not actionable"},
     {"field_id": "date_of_birth", "page": "A", "label": "Date of birth (DD-MON-YYYY)", "type": "date", "required": true, "selector": "#oapBirthdate", "help_text": "format DD-MON-YYYY, e.g. 12-MAR-2008"},
     {"field_id": "title", "page": "A", "label": "Title", "type": "select", "required": true, "selector": "#oapTitle", "options": ["ADV", "DR", "MISS", "MR", "MRS", "PAST", "PROF"]},
@@ -21,7 +21,7 @@
     {"field_id": "street_address_2", "page": "A", "label": "Street Address Line 2 (e.g. Suburb Name)", "type": "text", "required": true, "selector": "#oapStreetAddr2"},
     {"field_id": "street_address_3", "page": "A", "label": "Street Address Line 3 (e.g. Town Name)", "type": "text", "required": false, "selector": "#oapStreetAddr3"},
     {"field_id": "street_address_4", "page": "A", "label": "Street Address Line 4 (e.g. Province Name)", "type": "text", "required": false, "selector": "#oapStreetAddr4"},
-    {"field_id": "postal_code", "page": "A", "label": "Postal Code", "type": "lov", "required": true, "selector": "#oapStreetAddrPCodeRq", "help_text": "ITS LOV: #oapStreetAddrPCodeRq + _desc; search popup (trigger id [VERIFY LIVE])"},
+    {"field_id": "postal_code", "page": "A", "label": "Postal Code", "type": "lov", "required": true, "selector": "#oapStreetAddrPCodeRq", "lov_search": true, "help_text": "ITS LOV popup; searching the raw code ('0152') returned no results — filter format [VERIFY LIVE]"},
     {"field_id": "has_sa_cell", "page": "A", "label": "Do you have a South African Cell Phone Number?", "type": "select", "required": true, "selector": "#oapCellInd", "options": ["Yes", "No"], "conditional": true, "help_text": "conditionally shown; ordering [VERIFY LIVE]"},
     {"field_id": "sa_cell", "page": "A", "label": "South African Cell Phone Number", "type": "text", "required": true, "selector": "#oapSACell"},
     {"field_id": "email", "page": "A", "label": "Email", "type": "text", "required": true, "selector": "#itsEmail"},

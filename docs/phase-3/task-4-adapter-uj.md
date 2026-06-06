@@ -56,25 +56,61 @@ flagged `"conditional": true` in the schema; `fill_form` **skips** a conditional
 field that isn't actionable rather than failing the whole run. The next walk
 should pin the correct ordering (enter the ID first so gender/DOB populate).
 
-## LOV (List of Values) — pending
+## LOV (List of Values) — wired ✅ (verified for citizenship)
 
-ITS coded fields are a code input (`#oapCitzCode`) + a `<id>_desc` description +
-a **search popup**. The popup's trigger id and modal structure aren't captured
-yet, so `select_from_lov()` currently raises `PortalChangedError` and `fill_form`
-surfaces it. LOV fields: `citizenship_code`, `postal_code` (Page A), plus
-endorsement / school / faculty / programme / year / mode (later pages).
+Each coded field is a **readonly** code input (`#oapCitzCode`) + a `_desc` mirror,
+with a sibling anchor `a[href*=<fieldId>]` whose href calls
+`runWizardLov('frmOne', '<fieldId>', …)`. That opens a **popup window**
+(`…/gen.gw1pkg.gw1lovbind?…&x_item_name=<fieldId>…`) titled "List of Values:
+…", containing:
+- a filter text box `input[name=x_thefilter]` (default `%`),
+- a **Search** button (`Find_OnClick()`),
+- result rows as `<a onclick="resetDependant(<fieldId>)…">` links whose text is
+  the value; clicking one sets the code + `_desc` and closes the popup.
+
+`select_from_lov()` drives this via `page.expect_popup()`. Short lists (the
+country list) load in full → it clicks the row by name directly
+(**verified: "South Africa" → `oapCitzCode_desc` = "South Africa"`, 2026-06-05**).
+Long lists set `lov_search` in the schema → it filters first.
+
+**Open:** the **postal-code** LOV (`#oapStreetAddrPCodeRq`) — searching the raw
+code `"0152"` returned no results, so its filter matches a different column
+(area name? code prefix?). Format **[VERIFY LIVE]**. Later-page LOVs (endorsement
+/ school / faculty / programme / year / mode) reuse the same mechanism.
+
+## Page A — clean SAVE not yet achieved (next live walk)
+
+Individual fields fill in-page and the citizenship LOV works, but clicking **Save
+and Continue** (`#oapNextBtn2`) re-renders Page A with validation errors rather
+than advancing — ITS leans on `onchange`/`onblur`/`eventRun` handlers and
+conditional show/hide that need the right ordering. Open blockers found
+2026-06-05:
+- **DOB** (`#oapBirthdate`) is a **calendar-widget** field (readonly text +
+  `showCalendar(...)`); `fill` doesn't stick → age unknown → the form then
+  demands the **Parent/Guardian** block (`#oapGuardName/Cell/Email` + an under-age
+  I-Accept). Need to set the date via the calendar (or a value+event that ITS
+  accepts).
+- **Gender** (`#oapGender`) is a **hidden** select (not auto-derived from the ID,
+  as first assumed) — find what reveals it.
+- **Citizenship "Yes"** isn't suppressing the passport / study-permit fields, so
+  `oapCitizenType`'s onchange/eventRun conditional isn't firing as the form
+  expects — sequence: set citizenship → let it settle → then dependent fields.
+- **Postal LOV** filter format (above).
+Until Page A saves, pages B–G can't be reached to harvest their ids.
 
 ## Not done yet (next iterations)
-- **LOV** trigger ids + modal flow → wire `select_from_lov`.
+- **Page A save** — the conditional/event-ordering work above.
 - **Pages B–G** (Next of Kin + Account, Matric + subjects loop, Previous
   Studies, Qualifications, Check, Agreement) — ids + the **Save and Continue**
-  (`#oapNextBtn2`, …) page transitions, and the repeating Add-Subject rows.
+  page transitions and the repeating Add-Subject rows (gated behind Page A save).
 - **Submit page (G)** ids: PIN field, I Accept, Submit Application (never Quit).
-- **verify_submission** success marker (no fake submissions — pin during the one
-  supervised live submit).
+- **verify_submission** success marker — only on the one real submit (we agreed:
+  build/verify up to submit only, never fake-submit).
+- **AI mapping integration** — run Jane Doe + the field schema through `AIClient`
+  to produce the `FieldMapping` (currently tested with hand-built mappings).
 - **End-to-end wiring** (plan Task 4): replace the Phase 2 `process_application`
   stub, persist `SubmissionResult` → `application_jobs`, screenshot upload to
-  Storage, the `field_mappings` table (Partner-A decision I'm taking: a separate
+  Storage, the `field_mappings` table (Partner-A decision taken: a separate
   table), and the `POST /applications/{id}/retry` endpoint.
 
 ## Tests
