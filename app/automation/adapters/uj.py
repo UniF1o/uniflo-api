@@ -71,6 +71,22 @@ _D_SCHOOL = "#oapSchool"  # LOV
 _D_PRESENT_ACTIVITY = "#oapPact"  # LOV ("GRADE 12 PUPIL")
 _D_STUDIED_BEFORE = "#oapPrevQualInd"  # select Yes/No
 
+# Page E (Qualifications) ids — verified live 2026-06-06.
+_E_ACADEMIC_YEAR = "#oapAcademicYear"  # select (2027/2026)
+_E_APPLYING_FOR = "#oapECSLP"  # select — GATES the faculty LOV (Curricular Courses)
+_E_FACULTY = "#oapFaculty"  # LOV
+_E_PROGRAMME = "#oapQualification"  # LOV — code-keyed rows; desc has (ELIGIBLE TO APPLY-Y/N)
+_E_STUDY_PERIOD = "#oapStudyPeriod"  # LOV (FIRST YEAR)
+_E_OFFERING = "#oapOfferingType"  # LOV — auto-populates from the programme
+_E_BLOCK = "#oapBlock"  # LOV — auto-populates from the programme
+_PAGE_E_NEXT = "#oapNextBtn6"
+
+# Page G (Rules and Agreement) ids — INSPECTED 2026-06-06 (never submitted).
+_G_PIN = "#oapLoginPin"  # 5-digit PIN
+_G_ACCEPT = "#oapAcceptApplRAR"  # "I Accept"
+_G_SUBMIT = "#oapNextBtn8"  # "Submit Application"
+_G_QUIT = "#oapExitBtn8"  # "Quit Application" — NEVER click (deletes all data)
+
 _FIELDS_PATH = Path(__file__).with_name("uj.fields.json")
 
 
@@ -217,6 +233,85 @@ class UJAdapter(UniversityAdapter):
             page, _D_STUDIED_BEFORE, mapping.get("studied_before", "No")
         )
 
+    async def fill_qualifications_page(
+        self, page: Page, mapping: FieldMapping
+    ) -> None:
+        """Page E (Qualifications). Gating found live 2026-06-06:
+        - the faculty LOV is **empty until** "Are you applying for" (`#oapECSLP`)
+          is set to "Curricular Courses" (its server query filters on that);
+        - the programme LOV (`#oapQualification`) is **code-keyed** — the row's
+          link text is a code (e.g. `B6CS0Q`), the readable name + an
+          `(ELIGIBLE TO APPLY-Y/N)` tag are in the description cell, so pick by
+          row text (`select_from_lov_row`);
+        - choosing the study period **auto-populates** offering type + block.
+
+        **[VERIFY]** In a headless walk `#oapECSLP` rendered hidden and the Save
+        button (`#oapNextBtn6`) stayed disabled until force-enabled; re-confirm a
+        real (visible) selection fires ITS's enable routine in the live run.
+        """
+        await self._select_label(
+            page, _E_ACADEMIC_YEAR, str(mapping.get("academic_year", "2027"))
+        )
+        await self._select_label(
+            page, _E_APPLYING_FOR, mapping.get("applying_for", "Curricular Courses")
+        )
+        faculty = mapping.get("faculty")
+        await self.select_from_lov(page, _E_FACULTY, faculty, search_term=faculty)
+        programme = mapping.get("programme")
+        if programme:
+            await self.select_from_lov_row(
+                page, _E_PROGRAMME, programme, search_term="%"
+            )
+        year = mapping.get("year_of_study", "FIRST YEAR")
+        await self.select_from_lov(page, _E_STUDY_PERIOD, year, search_term=year)
+        # offering type + block auto-populate from the programme; only override
+        # them if the mapping explicitly supplies a value.
+        if mapping.get("mode_of_study"):
+            await self.select_from_lov(
+                page, _E_OFFERING, mapping["mode_of_study"],
+                search_term=mapping["mode_of_study"],
+            )
+
+    async def select_from_lov_row(
+        self,
+        page: Page,
+        code_selector: str,
+        row_contains: str,
+        *,
+        search_term: str | None = "%",
+    ) -> None:
+        """Variant of `select_from_lov` for **code+description** LOVs (the UJ
+        programme list): the clickable `<a>` carries an opaque code, so match on
+        the *row* text instead and click the anchor inside it. Verified live for
+        `#oapQualification` (picks an `(ELIGIBLE TO APPLY-Y)` programme)."""
+        lov = await self._open_lov(page, code_selector)
+        try:
+            await lov.wait_for_load_state("domcontentloaded")
+            if search_term:
+                await lov.fill("input[name=x_thefilter]", search_term)
+                await lov.get_by_role("button", name="Search").click()
+            clicked = await lov.evaluate(
+                """(c) => {
+                  for (const tr of document.querySelectorAll('tr')) {
+                    if ((tr.innerText || '').toUpperCase().includes(c.toUpperCase())) {
+                      const a = tr.querySelector('a');
+                      if (a) { a.click(); return true; }
+                    }
+                  }
+                  return false;
+                }""",
+                row_contains,
+            )
+        except Exception as exc:  # noqa: BLE001
+            raise PortalChangedError(
+                f"LOV row {row_contains!r} not selectable for {code_selector}",
+                selector=code_selector,
+            ) from exc
+        if not clicked:
+            raise PortalChangedError(
+                f"no LOV row contains {row_contains!r}", selector=code_selector
+            )
+
     async def _fire(self, page: Page, selector: str, *events: str) -> None:
         """Dispatch DOM events so ITS's inline `eventRun(...)` reveal handlers
         fire (e.g. matric year's onchange that reveals the UG block)."""
@@ -240,17 +335,18 @@ class UJAdapter(UniversityAdapter):
         return
 
     async def submit(self, page: Page) -> None:
-        """Page G: enter the 5-digit PIN, tick I Accept, click Submit
-        Application. **Never** click Quit Application (it deletes all data).
-        **[VERIFY LIVE]:** the Page G element ids aren't captured yet."""
+        """Page G (Rules and Agreement): enter the 5-digit PIN, tick I Accept,
+        click Submit Application. **Never** click Quit Application
+        (`#oapExitBtn8` — it deletes all captured data). Ids inspected live
+        2026-06-06 (the page itself was never submitted)."""
         pin = self._credentials.extra.get("pin") if self._credentials else None
         if not pin:
             raise AuthFailedError(
                 "UJ submit needs a 5-digit PIN in credentials.extra['pin']"
             )
-        await self._fill(page, "#oapLoginPin", pin)
-        await self._check(page, "#oapAcceptAgreement")
-        await self._click(page, "#oapSubmitBtn")
+        await self._fill(page, _G_PIN, pin)
+        await self._check(page, _G_ACCEPT)
+        await self._click(page, _G_SUBMIT)
 
     async def verify_submission(self, page: Page) -> SubmissionConfirmation:
         """**[VERIFY LIVE]:** the post-submit success page wasn't captured (no

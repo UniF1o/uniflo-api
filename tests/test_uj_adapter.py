@@ -43,6 +43,11 @@ class FakeLovPopup:
     def get_by_role(self, role, name=None, exact=False):
         return _Clickable(self, role, name)
 
+    async def evaluate(self, js, arg=None):
+        # select_from_lov_row passes the row-match substring as `arg`.
+        self.calls.append(("rowpick", arg))
+        return True
+
 
 class _PopupInfo:
     def __init__(self, popup):
@@ -249,8 +254,10 @@ async def test_submit_enters_pin_and_never_quits():
     a, page = _adapter_with_pin("13579"), FakePage()
     await a.submit(page)
     assert ("fill", "#oapLoginPin", "13579") in page.calls
-    assert ("check", "#oapAcceptAgreement", None) in page.calls
-    assert ("click", "#oapSubmitBtn", None) in page.calls
+    assert ("check", "#oapAcceptApplRAR", None) in page.calls  # "I Accept"
+    assert ("click", "#oapNextBtn8", None) in page.calls  # "Submit Application"
+    # never touch Quit Application (#oapExitBtn8 deletes all data)
+    assert not any("oapExitBtn8" in str(c) for c in page.calls)
     assert not any("quit" in str(c).lower() for c in page.calls)
 
 
@@ -383,6 +390,44 @@ async def test_fill_previous_studies_page():
     assert ("click", "a[href*=oapPact]", None) in page.calls
     assert ("link", "GRADE 12 PUPIL") in popup.calls
     assert ("select", "#oapPrevQualInd", "No") in page.calls
+
+
+async def test_select_from_lov_row_picks_by_row_text():
+    popup = FakeLovPopup()
+    a, page = UJAdapter(), FakePage(next_popup=popup)
+    await a.select_from_lov_row(
+        page, "#oapQualification", "B ENG IN CIVIL ENGINEERING", search_term="%"
+    )
+    assert ("click", "a[href*=oapQualification]", None) in page.calls
+    assert ("fill", "input[name=x_thefilter]", "%") in popup.calls
+    assert ("button", "Search") in popup.calls
+    # the row substring is handed to the popup's evaluate (clicks the row's <a>)
+    assert ("rowpick", "B ENG IN CIVIL ENGINEERING") in popup.calls
+
+
+async def test_fill_qualifications_page():
+    popup = FakeLovPopup()
+    a, page = UJAdapter(), FakePage(next_popup=popup)
+    mapping = FieldMapping(
+        values={
+            "academic_year": "2027",
+            "applying_for": "Curricular Courses",
+            "faculty": "ENGINEERING&BUILT ENVIRONMENT",
+            "programme": "B ENG IN CIVIL ENGINEERING",
+            "year_of_study": "FIRST YEAR",
+        }
+    )
+    await a.fill_qualifications_page(page, mapping)
+    assert ("select", "#oapAcademicYear", "2027") in page.calls
+    # the gate that populates the faculty LOV
+    assert ("select", "#oapECSLP", "Curricular Courses") in page.calls
+    assert ("click", "a[href*=oapFaculty]", None) in page.calls
+    assert ("link", "ENGINEERING&BUILT ENVIRONMENT") in popup.calls
+    # programme is code-keyed -> picked by row text
+    assert ("click", "a[href*=oapQualification]", None) in page.calls
+    assert ("rowpick", "B ENG IN CIVIL ENGINEERING") in popup.calls
+    assert ("click", "a[href*=oapStudyPeriod]", None) in page.calls
+    assert ("link", "FIRST YEAR") in popup.calls
 
 
 async def test_fill_form_skips_conditional_field_when_not_actionable():

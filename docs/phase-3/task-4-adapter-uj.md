@@ -5,12 +5,20 @@ simplest target: no captcha, and a new applicant doesn't log in — the entry/PO
 gate leads straight into the form; a student number + 5-digit PIN are issued at
 submit.
 
-Status (2026-06-06, verify-only — no submit): **Pages A (Biographical), B (Next
-of Kin + Account) and C (Matric/Results) are SOLVED end-to-end — fills + Save
-advance A→B→C→D.** The LOV popup handler is verified (citizenship, postal,
-endorsement, subjects, school). **Page D (Previous Studies) ids + LOV
-vocabularies are harvested.** Pages E–G + the submit page are pending the next
-walk.
+> **Before live-probing a page, watch it first.** Walkthrough video + frames:
+> `C:\Users\fulum\Videos\Uniflo\uj.mp4` / `uj_frames\` (see this file's
+> "Screenshots / video" section in `portal-research/uj.md` for landmark frames),
+> plus the dictation appendix there. Going in blind wastes tokens + creates PROD
+> footprints.
+
+Status (2026-06-06, verify-only — **never submitted**): **the entire flow A→G is
+mapped and driven end-to-end.** Pages A (Biographical), B (Next of Kin +
+Account), C (Matric/Results), D (Previous Studies) and E (Qualifications) are
+SOLVED — fills + Save advance all the way to **F (summary)** → **G (Rules and
+Agreement)**, which was reached and inspected but **not** submitted. The LOV
+handler is verified for every list type (citizenship, postal, endorsement,
+subjects, school, faculty, programme [code-keyed], study period). Remaining: page
+orchestration, AI mapping, end-to-end wiring, and the one real supervised submit.
 
 ## ⚠️ Selector strategy — id, not the accessibility tree
 
@@ -141,22 +149,58 @@ encoded in `fill_matric_page()`:
 Verified live: all 7 of Jane Doe's subjects added cleanly (table 1→7) and Save
 (`#oapNextBtn3`) advanced to Page D.
 
-## Page D — harvested (Previous Studies)
+## Page D — SOLVED ✅ (Previous Studies → advances to Page E)
 
 `#oapSchool` (LOV — full SA school list, search e.g. "SOSHANGUVE" →
 `SOSHANGUVE SECONDARY SCHOOL`), `#oapPact` (present-activity LOV — single option
 `GRADE 12 PUPIL`), `#oapPrevQualInd` (select Yes/No — "No" for school leavers).
 Nav `#oapBackBtn4` / `#oapNextBtn4`. Encoded in `fill_previous_studies_page()`.
 
+## Page E — SOLVED ✅ (Qualifications → advances to Page F)
+
+Filled live + Saved → Page F (2026-06-06), in `fill_qualifications_page()`. Two
+gotchas:
+1. **The faculty LOV is empty until the gate is set.** `#oapECSLP` ("Are you
+   applying for") must = "Curricular Courses" first — the faculty list's server
+   query filters on it (open it earlier and the popup says *"No data could be
+   found"*). Then `#oapFaculty` (LOV, e.g. `ENGINEERING&BUILT ENVIRONMENT`)
+   populates.
+2. **The programme LOV is code-keyed.** `#oapQualification` rows show an opaque
+   code (`B6CS0Q`) as the link; the readable name + an `(ELIGIBLE TO APPLY-Y/N)`
+   tag live in the description cell. So pick by **row text**
+   (`select_from_lov_row`), choosing an `…-Y` (eligible) row — UJ precomputes
+   eligibility from the captured marks.
+
+`#oapAcademicYear` (2027), then study period `#oapStudyPeriod` ("FIRST YEAR")
+**auto-populates** offering type `#oapOfferingType` ("APK CAMPUS FULL-TIME") +
+`#oapBlock` ("YEAR BLOCK"). `#oapApplType/Desc` + `#oapNumAppl` (= 2 choices,
+`#oapAddQual` adds the 2nd) are read-only. Save = `#oapNextBtn6`.
+**[VERIFY]** in a headless walk `#oapECSLP` rendered hidden and `#oapNextBtn6`
+stayed disabled until force-enabled (server then accepted) — re-confirm a real
+visible selection fires ITS's enable routine on the live run.
+
+## Page F — mapped (Check / summary)
+
+Read-only summary (title flips to "Wizard application process", `gw1view`-style).
+No form controls; an **id-less `Continue`** button (+ "Printer Friendly Format")
+advances to Page G — click it by text/role, not id.
+
+## Page G — INSPECTED ✅ (Rules and Agreement) — never submitted
+
+`#oapLoginPin` (create a 5-digit PIN), `#oapAcceptApplRAR` ("I Accept") /
+`#oapNotAcceptApplRAR` ("I do not Accept"), `#oapNextBtn8` ("Submit
+Application"), `#oapExitBtn8` ("Quit Application" — **never click**, deletes all),
+`#oapBackBtn8`. `submit()` now uses these real ids (earlier `#oapAcceptAgreement`
+/`#oapSubmitBtn` placeholders were wrong). The page was reached but **Submit was
+not clicked** (verify-only).
+
 ## Not done yet (next iterations)
-- **One complete walkthrough to harvest Pages E–G** (Qualifications, Check,
-  Agreement) — fill D live, then push through E (academic year, faculty LOV,
-  programme LOV tagged `(ELIGIBLE TO APPLY-Y)`, year/mode), F (summary →
-  Continue), G (PIN + I Accept + Submit — **inspect only, never click Submit**).
 - **Page orchestration** — wire `fill_form` (or a `run_application`) to call the
   per-page fills with the Save buttons between them
-  (`#oapNextBtn2` → `#oapNextBtn2_1` → `#oapNextBtn3` → `#oapNextBtn4` → …).
-- **verify_submission** success marker — only on the one real supervised submit.
+  (`#oapNextBtn2` → `#oapNextBtn2_1` → `#oapNextBtn3` → `#oapNextBtn4` →
+  `#oapNextBtn6` → F "Continue" → G).
+- **The one real supervised submit** (a consenting student) — confirms the Page-E
+  Save-enable behaviour and the `verify_submission` success marker.
 - **AI mapping integration** — run Jane Doe + the field schema through `AIClient`
   to produce the `FieldMapping` (currently tested with hand-built mappings).
 - **End-to-end wiring** (plan Task 4): replace the Phase 2 `process_application`
@@ -165,10 +209,11 @@ Nav `#oapBackBtn4` / `#oapNextBtn4`. Encoded in `fill_previous_studies_page()`.
   table), and the `POST /applications/{id}/retry` endpoint.
 
 ## Tests
-`tests/test_uj_adapter.py` (25) drives a faked `Page`: identity/schema shape,
-each id helper, the gate login sequence, submit (PIN required; never Quit),
-upload no-op, fill_form dispatch, skip-without-selector, skip-manual,
+`tests/test_uj_adapter.py` (27) drives a faked `Page`: identity/schema shape,
+each id helper, the gate login sequence, submit (PIN required; real Page-G ids;
+never Quit), upload no-op, fill_form dispatch, skip-without-selector, skip-manual,
 conditional-skip, the LOV popup (direct + search), the Page-C reveal + subject
-loop (`fill_matric_page`/`add_subject`), and the Page-D flow
-(`fill_previous_studies_page`). No real browser — live verification is manual
+loop (`fill_matric_page`/`add_subject`), the Page-D flow
+(`fill_previous_studies_page`), and the Page-E flow (`fill_qualifications_page` +
+the code-keyed `select_from_lov_row`). No real browser — live verification is manual
 (gated), per the plan.
