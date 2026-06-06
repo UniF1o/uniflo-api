@@ -302,8 +302,8 @@ async def test_fill_form_drives_lov_field():
 
 async def test_fill_form_skips_fields_without_selector():
     a, page = UJAdapter(), FakePage()
-    # matric_year (page C) still has no verified selector
-    await a.fill_form(page, FieldMapping(values={"matric_year": "2026"}))
+    # school_attended (page D) still has no verified selector
+    await a.fill_form(page, FieldMapping(values={"school_attended": "Some School"}))
     assert page.calls == []
 
 
