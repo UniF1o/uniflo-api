@@ -168,6 +168,42 @@ def retry_application(
     return application
 
 
+def record_consent(
+    session: Session,
+    user_id: str,
+    application_id: uuid.UUID,
+    *,
+    popi: bool,
+    agreement: bool,
+) -> Application:
+    """Record the student's explicit POPI / agreement acceptance (timestamps).
+    At least one flag must be true. The automation gate reads these before it
+    ticks POPI / submits on the student's behalf."""
+    if not (popi or agreement):
+        raise HTTPException(
+            status_code=422, detail={"code": "no_consent_specified"}
+        )
+    profile = get_student_profile(session, user_id)
+    application = session.get(Application, application_id)
+    if not application or application.student_id != profile.id:
+        raise HTTPException(status_code=404, detail="application_not_found")
+
+    now = datetime.now(timezone.utc)
+    if popi:
+        application.popi_consent_at = now
+    if agreement:
+        application.agreement_consent_at = now
+    application.updated_at = now
+    session.add(application)
+    session.commit()
+    session.refresh(application)
+
+    application.latest_job = get_latest_job(session, application.id)
+    _sign_job_screenshot(application.latest_job)
+    application.choices = get_choices(session, application.id)
+    return application
+
+
 def list_applications(session: Session, user_id: str) -> list[Application]:
     profile = get_student_profile(session, user_id)
 

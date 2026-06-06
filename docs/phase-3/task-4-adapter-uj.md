@@ -270,10 +270,25 @@ now creates a fresh `ApplicationJob` (preserving the failed one), resets the
 application to `pending`, and re-enqueues `process_application`; it 409s a
 submitted or in-flight application.
 
+## Consent gate ✅ + PIN persistence ✅
+
+- **PIN** — `derive_portal_pin(application_id)` HMACs the application id with a
+  server secret into a UJ-valid 5-digit PIN: deterministic, so retries/resumes
+  reuse the same PIN (it's the student's portal login after submit) without
+  storing it in the DB.
+- **Consent** — `applications.popi_consent_at` / `agreement_consent_at`
+  timestamps (migration `f8a7b6c5d4e3`); `POST /applications/{id}/consent`
+  records them. The dispatch `_consent_gate` refuses to run (POPI is ticked
+  during fill) without POPI consent → job `last_error="consent_required"`, and
+  only allows the final submit when the agreement consent is also recorded **and**
+  `AUTOMATION_ALLOW_SUBMIT` is on. The adapter still just ticks what it's told —
+  the gate lives at the orchestration boundary (adapters never touch the DB).
+
 ## Not done yet (next iterations)
-- **`field_mappings` table** (Partner-A) + persist/reuse the generated PIN as a
-  portal secret (so a retry/resume re-uses the same PIN).
-- **Consent recording gate** (POPI + agreement) before any real submit.
+- **`field_mappings` table** (Partner-A's review screen reads it).
+- **The one real supervised submit** — record consent, flip
+  `AUTOMATION_ALLOW_SUBMIT=true`; confirms the Page-E Save-enable without force
+  and pins the `verify_submission` success marker.
 - **The one real supervised submit** — flip `AUTOMATION_ALLOW_SUBMIT=true` for a
   consenting student; confirms the Page-E Save-enable without force and pins the
   `verify_submission` success marker.

@@ -26,6 +26,7 @@ JOB_ERROR_CODES = frozenset([
     "form_submit_failed",
     "timeout",
     "invalid_credentials",
+    "consent_required",
 ])
 
 
@@ -155,6 +156,19 @@ def _map_error_code(code: Optional[str]) -> str:
     return _ERROR_CODE_MAP.get(code or "", "internal_error")
 
 
+def _consent_gate(application) -> tuple[bool, bool]:
+    """(can_run, allow_submit) from the recorded consent + the submit setting.
+    The bot won't even fill the form (which ticks POPI) without POPI consent, and
+    won't submit without the application-agreement consent — both surfaced to and
+    accepted by the student upstream (the bot ticks only what it was told to)."""
+    can_run = application.popi_consent_at is not None
+    allow_submit = (
+        settings.AUTOMATION_ALLOW_SUBMIT
+        and application.agreement_consent_at is not None
+    )
+    return can_run, allow_submit
+
+
 def derive_portal_pin(application_id: uuid.UUID) -> str:
     """A UJ-valid 5-digit PIN (numeric, can't start with 0, no two consecutive
     identical digits) derived **deterministically** from the application id + a
@@ -247,6 +261,22 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
                 session.commit()
                 return
 
+            # Consent gate: don't tick POPI / fill the form without POPI consent;
+            # submit only when the agreement consent is also recorded.
+            can_run, allow_submit = _consent_gate(application)
+            if not can_run:
+                logger.info(
+                    "automation: %s blocked — POPI consent not recorded",
+                    application_id,
+                )
+                job.status = "failed"
+                job.last_error = "consent_required"
+                job.attempts += 1
+                application.status = "failed"
+                session.add_all([job, application])
+                session.commit()
+                return
+
             profile = session.get(StudentProfile, application.student_id)
             record = session.exec(
                 select(AcademicRecord)
@@ -287,7 +317,7 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
                     adapter,
                     credentials=credentials,
                     mapping=mapping,
-                    allow_submit=settings.AUTOMATION_ALLOW_SUBMIT,
+                    allow_submit=allow_submit,
                 )
             )
             _apply_result(application, job, result)

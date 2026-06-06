@@ -4,7 +4,11 @@ from fastapi import APIRouter, BackgroundTasks, Depends, Request
 from sqlmodel import Session
 
 from app.api.applications import service
-from app.api.applications.schemas import ApplicationCreate, ApplicationRead
+from app.api.applications.schemas import (
+    ApplicationCreate,
+    ApplicationRead,
+    ConsentRequest,
+)
 from app.api.automation.background import process_application
 from app.db import get_session
 
@@ -43,6 +47,23 @@ def get_application(
 ):
     user_id = request.state.user["sub"]
     return service.get_application(session, user_id, application_id)
+
+
+@router.post(
+    "/{application_id}/consent",
+    response_model=ApplicationRead,
+    operation_id="applications_consent",
+)
+def record_consent(
+    application_id: uuid.UUID,
+    data: ConsentRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    user_id = request.state.user["sub"]
+    return service.record_consent(
+        session, user_id, application_id, popi=data.popi, agreement=data.agreement
+    )
 
 
 @router.post(

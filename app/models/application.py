@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime, timezone
 from typing import Optional
 
+from sqlalchemy import Column, DateTime
 from sqlmodel import Field, SQLModel
 
 
@@ -17,6 +18,15 @@ class Application(SQLModel, table=True):
     programme: str
     application_year: int
     status: Optional[str]
+    # Consent timestamps — set when the student explicitly accepts the portal's
+    # POPI notice and its application agreement. The automation will not tick the
+    # POPI box / submit on their behalf until the relevant one is recorded.
+    popi_consent_at: Optional[datetime] = Field(
+        default=None, sa_column=Column(DateTime(timezone=True), nullable=True)
+    )
+    agreement_consent_at: Optional[datetime] = Field(
+        default=None, sa_column=Column(DateTime(timezone=True), nullable=True)
+    )
     submitted_at: Optional[datetime]
     updated_at: Optional[datetime]
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

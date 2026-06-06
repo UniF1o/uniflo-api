@@ -45,6 +45,10 @@ class ApplicationRead(BaseModel):
     submitted_at: Optional[datetime]
     updated_at: Optional[datetime]
     created_at: datetime
+    # When the student accepted the portal's POPI notice / application agreement
+    # (null = not yet — the automation won't tick POPI / submit without these).
+    popi_consent_at: Optional[datetime] = None
+    agreement_consent_at: Optional[datetime] = None
     latest_job: Optional[ApplicationJobRead] = None
     # Ordered programme choices (choice 1 == `programme`). Portals take 2-3.
     choices: list[ApplicationChoiceRead] = []
@@ -61,6 +65,15 @@ def _validate_programme(v: str) -> str:
 
 # Most choices any target portal accepts (Wits = 3): choice 1 + 2 extra.
 MAX_ADDITIONAL_PROGRAMMES = 2
+
+
+class ConsentRequest(BaseModel):
+    """Records the student's explicit acceptance after they've viewed the portal's
+    POPI notice / application agreement (surfaced by the frontend). At least one
+    must be true."""
+
+    popi: bool = False
+    agreement: bool = False
 
 
 class ApplicationCreate(BaseModel):

@@ -341,6 +341,57 @@ def test_get_application_not_found():
     assert response.json()["detail"] == "application_not_found"
 
 
+# POST /applications/{id}/consent records acceptance and returns the application
+def test_consent_endpoint_success():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
+         patch("app.api.applications.service.record_consent") as mock_consent:
+        mock_auth(mock_decode)
+        mock_consent.return_value = make_mock_application()
+        response = client.post(
+            f"/applications/{VALID_APPLICATION_ID}/consent",
+            json={"popi": True, "agreement": True},
+            headers=auth_headers(),
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+
+
+def test_record_consent_service_sets_timestamps():
+    from app.api.applications import service
+
+    mock_session = MagicMock()
+    mock_session.exec.return_value.first.return_value = make_mock_profile()
+    mock_session.exec.return_value.all.return_value = []
+    appn = make_mock_application()
+    appn.popi_consent_at = None
+    appn.agreement_consent_at = None
+    mock_session.get.return_value = appn
+
+    service.record_consent(
+        mock_session, VALID_USER_ID, VALID_APPLICATION_ID, popi=True, agreement=True
+    )
+    assert appn.popi_consent_at is not None
+    assert appn.agreement_consent_at is not None
+    mock_session.commit.assert_called_once()
+
+
+def test_record_consent_requires_a_flag():
+    import pytest
+    from fastapi import HTTPException
+
+    from app.api.applications import service
+    with pytest.raises(HTTPException) as exc:
+        service.record_consent(
+            MagicMock(), VALID_USER_ID, VALID_APPLICATION_ID,
+            popi=False, agreement=False,
+        )
+    assert exc.value.status_code == 422
+
+
 # POST /applications/{id}/retry re-enqueues automation and returns the application
 def test_retry_application_success():
     mock_session = MagicMock()

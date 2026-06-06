@@ -144,6 +144,34 @@ def test_derive_portal_pin_differs_by_application():
     assert derive_portal_pin(a) != derive_portal_pin(b)
 
 
+def test_consent_required_is_canonical():
+    assert "consent_required" in JOB_ERROR_CODES
+
+
+def test_consent_gate(monkeypatch):
+    from datetime import datetime, timezone
+
+    now = datetime.now(timezone.utc)
+    monkeypatch.setattr(bg.settings, "AUTOMATION_ALLOW_SUBMIT", True)
+    # no POPI consent -> can't even run (won't tick POPI / fill)
+    assert bg._consent_gate(
+        SimpleNamespace(popi_consent_at=None, agreement_consent_at=None)
+    ) == (False, False)
+    # POPI only -> runs, but no submit (agreement missing)
+    assert bg._consent_gate(
+        SimpleNamespace(popi_consent_at=now, agreement_consent_at=None)
+    ) == (True, False)
+    # both consented + setting on -> run + submit
+    assert bg._consent_gate(
+        SimpleNamespace(popi_consent_at=now, agreement_consent_at=now)
+    ) == (True, True)
+    # both consented but submit gate OFF -> run, never submit
+    monkeypatch.setattr(bg.settings, "AUTOMATION_ALLOW_SUBMIT", False)
+    assert bg._consent_gate(
+        SimpleNamespace(popi_consent_at=now, agreement_consent_at=now)
+    ) == (True, False)
+
+
 def test_map_error_code_stays_in_canonical_set():
     assert _map_error_code("timeout") == "timeout"
     assert _map_error_code("portal_changed") == "form_submit_failed"
