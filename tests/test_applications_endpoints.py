@@ -341,20 +341,63 @@ def test_get_application_not_found():
     assert response.json()["detail"] == "application_not_found"
 
 
-# POST /applications/{id}/retry returns 501
-def test_retry_application_not_implemented():
+# POST /applications/{id}/retry re-enqueues automation and returns the application
+def test_retry_application_success():
     mock_session = MagicMock()
     app.dependency_overrides[get_session] = lambda: mock_session
 
-    with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
+         patch("app.api.applications.service.retry_application") as mock_retry, \
+         patch("app.api.applications.router.process_application") as mock_proc:
         mock_auth(mock_decode)
+        mock_retry.return_value = make_mock_application()
         response = client.post(
             f"/applications/{VALID_APPLICATION_ID}/retry",
             headers=auth_headers()
         )
 
     app.dependency_overrides.clear()
-    assert response.status_code == 501
+    assert response.status_code == 200
+    mock_proc.assert_called_once()  # automation re-enqueued
+
+
+def test_retry_application_blocks_submitted():
+    from fastapi import HTTPException
+
+    from app.api.applications import service
+
+    mock_session = MagicMock()
+    mock_session.exec.return_value.first.return_value = make_mock_profile()
+    appn = make_mock_application()
+    appn.status = "submitted"
+    mock_session.get.return_value = appn
+
+    import pytest
+    with pytest.raises(HTTPException) as exc:
+        service.retry_application(mock_session, VALID_USER_ID, VALID_APPLICATION_ID)
+    assert exc.value.status_code == 409
+    assert exc.value.detail["code"] == "already_submitted"
+
+
+def test_retry_application_blocks_in_progress():
+    from fastapi import HTTPException
+
+    from app.api.applications import service
+
+    mock_session = MagicMock()
+    job = make_mock_job()
+    job.status = "processing"
+    # get_student_profile, then get_latest_job
+    mock_session.exec.return_value.first.side_effect = [make_mock_profile(), job]
+    appn = make_mock_application()
+    appn.status = "processing"
+    mock_session.get.return_value = appn
+
+    import pytest
+    with pytest.raises(HTTPException) as exc:
+        service.retry_application(mock_session, VALID_USER_ID, VALID_APPLICATION_ID)
+    assert exc.value.status_code == 409
+    assert exc.value.detail["code"] == "already_in_progress"
 
 
 # All application endpoints return 401 without a valid token

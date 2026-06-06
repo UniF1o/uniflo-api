@@ -258,11 +258,21 @@ review instead). **Verified live 2026-06-06:** free-text "Civil Engineering"
 ENGINEERING", run reached Page G. The mapping is now complete A→E from real
 profile data.
 
+## Screenshots → Storage ✅ + retry endpoint ✅
+
+`run_job`'s per-step PNGs are uploaded to the **private** documents bucket under
+`automation/<application_id>/<job_id>/NN-step.png` (`app.automation.screenshots`);
+the primary (final/failure) one's storage **path** is kept on
+`application_jobs.screenshot_url` and minted into a short-lived **signed URL on
+read** in the applications service (screenshots show the filled form = PII, so
+never public — mirrors the documents pattern). `POST /applications/{id}/retry`
+now creates a fresh `ApplicationJob` (preserving the failed one), resets the
+application to `pending`, and re-enqueues `process_application`; it 409s a
+submitted or in-flight application.
+
 ## Not done yet (next iterations)
-- **Screenshots → Storage** — `run_job` captures per-step PNGs; upload them and
-  set `application_jobs.screenshot_url` (TODO in `background.py`).
-- **`field_mappings` table** (Partner-A) + `POST /applications/{id}/retry` (still
-  `501`); persist + reuse the generated PIN as a portal secret.
+- **`field_mappings` table** (Partner-A) + persist/reuse the generated PIN as a
+  portal secret (so a retry/resume re-uses the same PIN).
 - **Consent recording gate** (POPI + agreement) before any real submit.
 - **The one real supervised submit** — flip `AUTOMATION_ALLOW_SUBMIT=true` for a
   consenting student; confirms the Page-E Save-enable without force and pins the

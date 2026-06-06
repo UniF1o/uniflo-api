@@ -7,11 +7,20 @@ from sqlmodel import Session, select
 
 from app.api.applications.schemas import ApplicationCreate, ApplicationStatus
 from app.api.profiles.schemas import REQUIRED_PROFILE_FIELDS
+from app.automation.screenshots import create_signed_url, is_storage_path
 from app.models.application import Application
 from app.models.application_choice import ApplicationChoice
 from app.models.application_job import ApplicationJob
 from app.models.student_profile import StudentProfile
 from app.models.university import University
+
+
+def _sign_job_screenshot(job: Optional[ApplicationJob]) -> None:
+    """Replace a job's stored screenshot *path* with a short-lived signed URL for
+    the response. In-memory only — read endpoints never commit, so the path stays
+    in the DB (do NOT call this on a code path that commits)."""
+    if job is not None and is_storage_path(job.screenshot_url):
+        job.screenshot_url = create_signed_url(job.screenshot_url)
 
 
 def get_student_profile(session: Session, user_id: str) -> StudentProfile:
@@ -121,6 +130,44 @@ def create_application(
     return application
 
 
+def retry_application(
+    session: Session, user_id: str, application_id: uuid.UUID
+) -> Application:
+    """Queue a fresh automation attempt for a failed application: a new
+    ApplicationJob (preserving the failed one) + status back to pending. The
+    router enqueues `process_application` after this returns."""
+    profile = get_student_profile(session, user_id)
+    application = session.get(Application, application_id)
+    if not application or application.student_id != profile.id:
+        raise HTTPException(status_code=404, detail="application_not_found")
+
+    if application.status == ApplicationStatus.SUBMITTED:
+        raise HTTPException(status_code=409, detail={"code": "already_submitted"})
+    latest = get_latest_job(session, application_id)
+    if latest and latest.status in (
+        ApplicationStatus.PENDING,
+        ApplicationStatus.PROCESSING,
+    ):
+        raise HTTPException(status_code=409, detail={"code": "already_in_progress"})
+
+    job = ApplicationJob(
+        application_id=application.id,
+        status=ApplicationStatus.PENDING,
+        attempts=0,
+    )
+    session.add(job)
+    application.status = ApplicationStatus.PENDING
+    application.updated_at = datetime.now(timezone.utc)
+    session.add(application)
+    session.commit()
+    session.refresh(application)
+    session.refresh(job)
+
+    application.latest_job = job
+    application.choices = get_choices(session, application.id)
+    return application
+
+
 def list_applications(session: Session, user_id: str) -> list[Application]:
     profile = get_student_profile(session, user_id)
 
@@ -134,6 +181,7 @@ def list_applications(session: Session, user_id: str) -> list[Application]:
     # attach latest job + ordered choices to each application
     for app in applications:
         app.latest_job = get_latest_job(session, app.id)
+        _sign_job_screenshot(app.latest_job)
         app.choices = get_choices(session, app.id)
 
     return applications

@@ -202,6 +202,7 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
     from app.automation.base import PortalCredentials
     from app.automation.mapping import build_field_mapping
     from app.automation.runtime import run_job
+    from app.automation.screenshots import upload_screenshots
     from app.models.academic_record import AcademicRecord
     from app.models.contact import Contact
     from app.models.student_profile import StudentProfile
@@ -275,8 +276,12 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
                     allow_submit=settings.AUTOMATION_ALLOW_SUBMIT,
                 )
             )
-            # TODO: upload result.screenshots to Storage and set job.screenshot_url.
             _apply_result(application, job, result)
+            # upload the per-step screenshots and keep the primary (final/failure)
+            # one's storage path on the job (signed for the dashboard on read).
+            primary = upload_screenshots(application_id, job.id, result.screenshots)
+            if primary:
+                job.screenshot_url = primary
             logger.info(
                 "automation: application %s -> %s (%d screenshots)",
                 application_id, result.outcome.value, len(result.screenshots),
