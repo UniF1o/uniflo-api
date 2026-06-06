@@ -288,9 +288,9 @@ async def test_upload_documents_is_noop():
     assert page.calls == []
 
 
-# --- fill_form dispatch --------------------------------------------------------
+# --- field dispatch via _fill_simple (fill_form now drives the full A→G walk) ---
 
-async def test_fill_form_dispatches_verified_fields():
+async def test_fill_simple_dispatches_verified_fields():
     a, page = UJAdapter(), FakePage()
     mapping = FieldMapping(
         values={
@@ -299,7 +299,7 @@ async def test_fill_form_dispatches_verified_fields():
             "has_disability": "No",  # checkbox No -> not ticked
         }
     )
-    await a.fill_form(page, mapping)
+    await a._fill_simple(page, mapping)
     assert ("fill", "#oapIDnumber", "0803124001089") in page.calls
     assert ("select", "#oapCitizenType", "Yes") in page.calls
     assert not any(c[0] == "check" for c in page.calls)
@@ -318,32 +318,32 @@ async def test_set_date_failure_raises_portal_changed():
         await a._set_date(page, "#oapBirthdate", "12-MAR-2008")
 
 
-async def test_fill_form_dispatches_date_via_set_date():
+async def test_fill_simple_dispatches_date_via_set_date():
     a, page = UJAdapter(), FakePage()
-    await a.fill_form(page, FieldMapping(values={"date_of_birth": "12-MAR-2008"}))
+    await a._fill_simple(page, FieldMapping(values={"date_of_birth": "12-MAR-2008"}))
     assert ("evaluate", ["#oapBirthdate", "12-MAR-2008"]) in page.calls
 
 
-async def test_fill_form_drives_lov_field():
+async def test_fill_simple_drives_lov_field():
     popup = FakeLovPopup()
     a, page = UJAdapter(), FakePage(next_popup=popup)
-    await a.fill_form(page, FieldMapping(values={"citizenship_code": "South Africa"}))
+    await a._fill_simple(page, FieldMapping(values={"citizenship_code": "South Africa"}))
     assert ("click", "a[href*=oapCitzCode]", None) in page.calls
     assert ("link", "South Africa") in popup.calls
 
 
-async def test_fill_form_skips_fields_without_selector():
+async def test_fill_simple_skips_page_e_manual_field():
     a, page = UJAdapter(), FakePage()
-    # academic_year (page E) still has no verified selector
-    await a.fill_form(page, FieldMapping(values={"academic_year": "2027"}))
+    # academic_year (page E) has a selector but is flagged manual -> not filled here
+    await a._fill_simple(page, FieldMapping(values={"academic_year": "2027"}))
     assert page.calls == []
 
 
-async def test_fill_form_skips_manual_fields():
+async def test_fill_simple_skips_manual_fields():
     a, page = UJAdapter(), FakePage()
     # matric_year (page C) has a selector but is flagged manual — driven by
-    # fill_matric_page, not the generic fill_form loop.
-    await a.fill_form(page, FieldMapping(values={"matric_year": "2026"}))
+    # fill_matric_page, not the generic _fill_simple loop.
+    await a._fill_simple(page, FieldMapping(values={"matric_year": "2026"}))
     assert page.calls == []
 
 
@@ -489,9 +489,9 @@ async def test_fill_qualifications_page():
     assert ("link", "FIRST YEAR") in popup.calls
 
 
-async def test_fill_form_skips_conditional_field_when_not_actionable():
+async def test_fill_simple_skips_conditional_field_when_not_actionable():
     a = UJAdapter()
     page = FakePage(fail={"#oapGender"})  # gender is flagged conditional in schema
-    await a.fill_form(page, FieldMapping(values={"gender": "F Female", "surname": "Doe"}))
+    await a._fill_simple(page, FieldMapping(values={"gender": "F Female", "surname": "Doe"}))
     assert ("fill", "#oapSurname", "Doe") in page.calls
     assert not any(c[1] == "#oapGender" for c in page.calls)

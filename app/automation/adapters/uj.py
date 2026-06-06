@@ -120,11 +120,29 @@ class UJAdapter(UniversityAdapter):
         await self._click(page, _GATE_NEXT)
 
     async def fill_form(self, page: Page, mapping: FieldMapping) -> None:
-        """Per-page generic filler: enter every non-`manual`, selector-backed
-        field from `mapping`. Pages C/D/E (reveal-ordering, the subject loop, LOV
-        gating) are flagged `manual` and driven by their dedicated methods; the
-        whole A→G walk is orchestrated by `run_application`."""
-        await self._fill_simple(page, mapping)
+        """Runtime contract method. UJ is multi-page, so this drives the **whole**
+        form after `login()`: Page A → Save → B → Save → C → Save → D → Save → E →
+        Save → F → Continue, landing on **Page G**. It never submits — the runtime
+        calls `submit()` as the next step (see `runtime.py`). Live-verified
+        end-to-end 2026-06-06.
+
+        Pages A/B are filled generically by `_fill_simple`; Pages C/D/E need
+        reveal-ordering, the subject loop, and LOV gating, so they have dedicated
+        methods. `_save_and_continue` clicks each page's Save (force-enabling Page
+        E's, which ITS leaves disabled after automated fills — the server still
+        validates)."""
+        await self._fill_simple(page, mapping, "A")           # Biographical
+        await self._save_and_continue(page, _PAGE_A_NEXT)
+        await self._fill_simple(page, mapping, "B")           # Next of Kin + Account
+        await self._save_and_continue(page, _PAGE_B_NEXT)
+        await self.fill_matric_page(page, mapping)            # Matric (C)
+        await self._save_and_continue(page, _PAGE_C_NEXT)
+        await self.fill_previous_studies_page(page, mapping)  # Previous Studies (D)
+        await self._save_and_continue(page, _PAGE_D_NEXT)
+        await self.fill_qualifications_page(page, mapping)    # Qualifications (E)
+        await self._save_and_continue(page, _PAGE_E_NEXT, force=True)
+        await self._continue_summary(page)                    # Summary (F) → Page G
+        logger.info("UJ fill_form: reached Page G (agreement) — awaiting submit()")
 
     async def _fill_simple(
         self, page: Page, mapping: FieldMapping, page_key: str | None = None
@@ -156,28 +174,18 @@ class UJAdapter(UniversityAdapter):
     async def run_application(
         self, page: Page, mapping: FieldMapping, *, do_submit: bool = False
     ) -> SubmissionConfirmation | None:
-        """Drive the whole multi-page UJ form A→G, clicking Save and Continue
-        between pages. Call **after** `login()` (which clears the entry/POPI gate
-        onto Page A). With `do_submit=False` (default) it fills everything and
-        stops **on Page G without clicking Submit** — the build/verify mode used
-        until a real consenting student is ready."""
-        await self._fill_simple(page, mapping, "A")          # Biographical
-        await self._save_and_continue(page, _PAGE_A_NEXT)
-        await self._fill_simple(page, mapping, "B")          # Next of Kin + Account
-        await self._save_and_continue(page, _PAGE_B_NEXT)
-        await self.fill_matric_page(page, mapping)           # Matric (C)
-        await self._save_and_continue(page, _PAGE_C_NEXT)
-        await self.fill_previous_studies_page(page, mapping)  # Previous Studies (D)
-        await self._save_and_continue(page, _PAGE_D_NEXT)
-        await self.fill_qualifications_page(page, mapping)    # Qualifications (E)
-        # ITS leaves Page E's Save disabled after automated fills; force-enable so
-        # the server validates (it accepts a complete page).
-        await self._save_and_continue(page, _PAGE_E_NEXT, force=True)
-        await self._continue_summary(page)                   # Summary (F) → G
+        """Standalone convenience for integration/smoke runs — the runtime instead
+        calls the pipeline steps (`fill_form` → `upload_documents` → `submit` →
+        `verify_submission`) individually. Assumes `login()` already cleared the
+        gate onto Page A. With `do_submit=False` (default) it fills the whole form
+        and stops **on Page G without clicking Submit**; with `do_submit=True` it
+        performs the final submit + reads the confirmation."""
+        await self.fill_form(page, mapping)
+        await self.upload_documents(page, [])
         if do_submit:
-            await self.submit(page)                          # Agreement (G)
+            await self.submit(page)
             return await self.verify_submission(page)
-        logger.info("UJ run_application: reached Page G — stopping before Submit")
+        logger.info("UJ run_application: stopped on Page G (do_submit=False)")
         return None
 
     async def _apply(

@@ -196,17 +196,21 @@ Application"), `#oapExitBtn8` ("Quit Application" — **never click**, deletes a
 /`#oapSubmitBtn` placeholders were wrong). The page was reached but **Submit was
 not clicked** (verify-only).
 
-## Orchestration — `run_application()` ✅ (live end-to-end, verify-only)
+## Orchestration ✅ (live end-to-end, verify-only)
 
-`run_application(page, mapping, *, do_submit=False)` drives the whole walk after
-`login()`: `_fill_simple` Page A → Save (`#oapNextBtn2`) → Page B → Save
-(`#oapNextBtn2_1`) → `fill_matric_page` → `#oapNextBtn3` → `fill_previous_studies_page`
-→ `#oapNextBtn4` → `fill_qualifications_page` → `#oapNextBtn6` (force-enabled) → F
-"Continue" → **Page G**. With `do_submit=False` (default) it **stops on Page G
-without clicking Submit**.
+The runtime (`runtime.py`) calls the five contract steps in order —
+`login → fill_form → upload_documents → submit → verify_submission`. Because UJ
+is multi-page, **`fill_form` drives the whole walk** after login: `_fill_simple`
+Page A → Save (`#oapNextBtn2`) → Page B → Save (`#oapNextBtn2_1`) →
+`fill_matric_page` → `#oapNextBtn3` → `fill_previous_studies_page` → `#oapNextBtn4`
+→ `fill_qualifications_page` → `#oapNextBtn6` (force-enabled) → F "Continue" →
+**Page G**. `fill_form` never submits — the runtime's next step (`submit()`) does
+Page G. `run_application(page, mapping, *, do_submit=False)` is a standalone
+convenience (`fill_form` + `upload` + optional `submit`/`verify`) for smoke runs;
+the runtime uses the individual steps.
 
 **Verified live 2026-06-06** with the real adapter (not the scratch walker) +
-Jane Doe data: `login → … → gw1view (agreement)`, with `oapLoginPin` /
+Jane Doe data: `login → fill_form → … → gw1view (agreement)`, with `oapLoginPin` /
 `oapAcceptApplRAR` / `oapNextBtn8` all present and **Submit not clicked**.
 Helpers added: `_fill_simple` (page-scoped generic fill, skips hidden conditional
 fields), `_select_label_or_js` (JS fallback for the hidden `#oapECSLP`),
