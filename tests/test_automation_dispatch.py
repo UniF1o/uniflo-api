@@ -13,8 +13,8 @@ import app.api.automation.background as bg
 from app.api.automation.background import (
     JOB_ERROR_CODES,
     _apply_result,
-    _generate_pin,
     _map_error_code,
+    derive_portal_pin,
 )
 from app.automation.adapters import (
     UJAdapter,
@@ -127,12 +127,21 @@ def test_build_field_mapping_unknown_slug():
 
 # --- background helpers --------------------------------------------------------
 
-def test_generate_pin_is_uj_valid():
+def test_derive_portal_pin_valid_and_deterministic():
     for _ in range(300):
-        pin = _generate_pin()
+        aid = uuid.uuid4()
+        pin = derive_portal_pin(aid)
         assert len(pin) == 5 and pin.isdigit()
         assert pin[0] != "0"  # cannot start with 0
         assert all(pin[i] != pin[i + 1] for i in range(4))  # no consecutive repeats
+        # deterministic: same application id -> same PIN (stable across retries)
+        assert derive_portal_pin(aid) == pin
+
+
+def test_derive_portal_pin_differs_by_application():
+    a, b = uuid.uuid4(), uuid.uuid4()
+    # overwhelmingly likely to differ; guards against a constant PIN
+    assert derive_portal_pin(a) != derive_portal_pin(b)
 
 
 def test_map_error_code_stays_in_canonical_set():

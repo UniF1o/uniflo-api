@@ -1,3 +1,5 @@
+import hashlib
+import hmac
 import logging
 import random
 import time
@@ -153,15 +155,27 @@ def _map_error_code(code: Optional[str]) -> str:
     return _ERROR_CODE_MAP.get(code or "", "internal_error")
 
 
-def _generate_pin() -> str:
-    """A UJ-valid 5-digit PIN: numeric, can't start with 0, no two consecutive
-    identical digits. (Stored per application as a portal secret once the submit
-    is enabled; unused while AUTOMATION_ALLOW_SUBMIT is off.)"""
-    digits = [str(random.randint(1, 9))]
-    while len(digits) < 5:
-        d = str(random.randint(0, 9))
-        if d != digits[-1]:
-            digits.append(d)
+def derive_portal_pin(application_id: uuid.UUID) -> str:
+    """A UJ-valid 5-digit PIN (numeric, can't start with 0, no two consecutive
+    identical digits) derived **deterministically** from the application id + a
+    server secret. Deterministic so a retry/resume reuses the same PIN (the PIN
+    is the student's portal login after submit) without persisting it in the DB;
+    recompute it any time from the same secret."""
+    secret = settings.AUTOMATION_PIN_SECRET or settings.SUPABASE_JWT_SECRET or "uniflo"
+    digest = hmac.new(
+        secret.encode(), str(application_id).encode(), hashlib.sha256
+    ).digest()
+    digits: list[str] = []
+    for byte in digest:
+        if len(digits) >= 5:
+            break
+        if not digits:
+            digits.append(str(byte % 9 + 1))  # 1-9 (can't start with 0)
+        else:
+            d = byte % 10
+            if str(d) == digits[-1]:  # no two consecutive identical digits
+                d = (d + 1) % 10
+            digits.append(str(d))
     return "".join(digits)
 
 
@@ -259,7 +273,7 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
                 email=email,
             )
             credentials = PortalCredentials(
-                username="", password="", extra={"pin": _generate_pin()}
+                username="", password="", extra={"pin": derive_portal_pin(application_id)}
             )
 
             # transition pending → processing before the (slow) browser run

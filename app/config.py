@@ -28,6 +28,10 @@ class Settings(BaseSettings):
     # so a real run never submits an application until a consenting student is
     # ready. Flip to True only for the supervised first live submit.
     AUTOMATION_ALLOW_SUBMIT: bool = False
+    # Server secret used to DERIVE each application's 5-digit portal PIN
+    # deterministically (so retries reuse the same PIN without storing it in the
+    # DB). Falls back to the JWT secret if unset.
+    AUTOMATION_PIN_SECRET: Optional[str] = None
 
     # AI field-mapping layer (Phase 3). Provider-agnostic; default Gemini Flash.
     # All optional so the app still boots without a key.
