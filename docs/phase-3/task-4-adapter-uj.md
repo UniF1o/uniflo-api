@@ -15,10 +15,12 @@ Status (2026-06-06, verify-only — **never submitted**): **the entire flow A→
 mapped and driven end-to-end.** Pages A (Biographical), B (Next of Kin +
 Account), C (Matric/Results), D (Previous Studies) and E (Qualifications) are
 SOLVED — fills + Save advance all the way to **F (summary)** → **G (Rules and
-Agreement)**, which was reached and inspected but **not** submitted. The LOV
-handler is verified for every list type (citizenship, postal, endorsement,
-subjects, school, faculty, programme [code-keyed], study period). Remaining: page
-orchestration, AI mapping, end-to-end wiring, and the one real supervised submit.
+Agreement)**, which was reached and inspected but **not** submitted. `login()` +
+`run_application(do_submit=False)` drives the **whole** walk with the real adapter
+(live-verified 2026-06-06 — lands on Page G, Submit untouched). The LOV handler is
+verified for every list type (citizenship, postal, endorsement, subjects, school,
+faculty, programme [code-keyed], study period). Remaining: AI mapping, end-to-end
+runtime wiring, and the one real supervised submit.
 
 ## ⚠️ Selector strategy — id, not the accessibility tree
 
@@ -194,13 +196,30 @@ Application"), `#oapExitBtn8` ("Quit Application" — **never click**, deletes a
 /`#oapSubmitBtn` placeholders were wrong). The page was reached but **Submit was
 not clicked** (verify-only).
 
+## Orchestration — `run_application()` ✅ (live end-to-end, verify-only)
+
+`run_application(page, mapping, *, do_submit=False)` drives the whole walk after
+`login()`: `_fill_simple` Page A → Save (`#oapNextBtn2`) → Page B → Save
+(`#oapNextBtn2_1`) → `fill_matric_page` → `#oapNextBtn3` → `fill_previous_studies_page`
+→ `#oapNextBtn4` → `fill_qualifications_page` → `#oapNextBtn6` (force-enabled) → F
+"Continue" → **Page G**. With `do_submit=False` (default) it **stops on Page G
+without clicking Submit**.
+
+**Verified live 2026-06-06** with the real adapter (not the scratch walker) +
+Jane Doe data: `login → … → gw1view (agreement)`, with `oapLoginPin` /
+`oapAcceptApplRAR` / `oapNextBtn8` all present and **Submit not clicked**.
+Helpers added: `_fill_simple` (page-scoped generic fill, skips hidden conditional
+fields), `_select_label_or_js` (JS fallback for the hidden `#oapECSLP`),
+`_save_and_continue` (optional `force` for Page E's disabled Save),
+`_continue_summary` (id-less Page-F Continue).
+
 ## Not done yet (next iterations)
-- **Page orchestration** — wire `fill_form` (or a `run_application`) to call the
-  per-page fills with the Save buttons between them
-  (`#oapNextBtn2` → `#oapNextBtn2_1` → `#oapNextBtn3` → `#oapNextBtn4` →
-  `#oapNextBtn6` → F "Continue" → G).
-- **The one real supervised submit** (a consenting student) — confirms the Page-E
-  Save-enable behaviour and the `verify_submission` success marker.
+- **The one real supervised submit** (a consenting student) — call
+  `run_application(..., do_submit=True)`; confirms the Page-E Save-enable
+  behaviour without force, and pins the `verify_submission` success marker.
+- **AI mapping + end-to-end runtime wiring** (build the `FieldMapping` from the
+  profile via `AIClient`; replace the Phase-2 `process_application` stub; persist
+  results to `application_jobs`; screenshots; `field_mappings` table; retry).
 - **AI mapping integration** — run Jane Doe + the field schema through `AIClient`
   to produce the `FieldMapping` (currently tested with hand-built mappings).
 - **End-to-end wiring** (plan Task 4): replace the Phase 2 `process_application`
@@ -209,11 +228,13 @@ not clicked** (verify-only).
   table), and the `POST /applications/{id}/retry` endpoint.
 
 ## Tests
-`tests/test_uj_adapter.py` (27) drives a faked `Page`: identity/schema shape,
+`tests/test_uj_adapter.py` (29) drives a faked `Page`: identity/schema shape,
 each id helper, the gate login sequence, submit (PIN required; real Page-G ids;
 never Quit), upload no-op, fill_form dispatch, skip-without-selector, skip-manual,
 conditional-skip, the LOV popup (direct + search), the Page-C reveal + subject
 loop (`fill_matric_page`/`add_subject`), the Page-D flow
-(`fill_previous_studies_page`), and the Page-E flow (`fill_qualifications_page` +
-the code-keyed `select_from_lov_row`). No real browser — live verification is manual
+(`fill_previous_studies_page`), the Page-E flow (`fill_qualifications_page` +
+the code-keyed `select_from_lov_row`), and the full `run_application` walk
+(reaches Page G without submitting; submits only when `do_submit=True`). No real
+browser — live verification is manual
 (gated), per the plan.

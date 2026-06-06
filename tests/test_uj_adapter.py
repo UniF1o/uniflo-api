@@ -105,7 +105,7 @@ class FakePage:
         self._maybe_fail(selector, "fill")
         self.calls.append(("fill", selector, value))
 
-    async def select_option(self, selector, label=None, value=None):
+    async def select_option(self, selector, label=None, value=None, **kwargs):
         self._maybe_fail(selector, "select")
         self.calls.append(
             ("select", selector, label if label is not None else f"val:{value}")
@@ -134,6 +134,27 @@ class FakePage:
     async def eval_on_selector(self, selector, js, arg=None):
         self._maybe_fail(selector, "eval_on_selector")
         self.calls.append(("fire", selector, arg))
+
+    async def wait_for_load_state(self, *a, **k):
+        pass
+
+    async def wait_for_timeout(self, *a, **k):
+        pass
+
+    def get_by_role(self, role, name=None, exact=False):
+        return _PageRoleClick(self, role, name)
+
+
+class _PageRoleClick:
+    def __init__(self, page, role, name):
+        self.page, self.role, self.name = page, role, name
+
+    @property
+    def first(self):
+        return self
+
+    async def click(self, **k):
+        self.page.calls.append(("click_role", self.role, self.name))
 
 
 def _adapter_with_pin(pin="13579"):
@@ -403,6 +424,44 @@ async def test_select_from_lov_row_picks_by_row_text():
     assert ("button", "Search") in popup.calls
     # the row substring is handed to the popup's evaluate (clicks the row's <a>)
     assert ("rowpick", "B ENG IN CIVIL ENGINEERING") in popup.calls
+
+
+async def test_run_application_walks_to_page_g_without_submitting():
+    popup = FakeLovPopup()
+    a, page = _adapter_with_pin(), FakePage(next_popup=popup)
+    mapping = FieldMapping(
+        values={
+            "id_number": "0803124001089",
+            "sa_citizen": "Yes",
+            "nok_name": "John Doe",
+            "matric_year": "2026",
+            "subjects": [{"name": "MATHEMATICS (NSC/NCV/ISC)", "percentage": 72}],
+            "school": "SOSHANGUVE SECONDARY SCHOOL",
+            "faculty": "ENGINEERING&BUILT ENVIRONMENT",
+            "programme": "B ENG IN CIVIL ENGINEERING",
+        }
+    )
+    await a.run_application(page, mapping, do_submit=False)
+    # Saved through every page A→E
+    for sel in ["#oapNextBtn2", "#oapNextBtn2_1", "#oapNextBtn3",
+                "#oapNextBtn4", "#oapNextBtn6"]:
+        assert ("click", sel, None) in page.calls
+    # Page F summary advanced via the id-less Continue
+    assert ("click_role", "button", "Continue") in page.calls
+    # NEVER submitted: no PIN entry, no Submit/Quit click
+    assert not any(c[:2] == ("fill", "#oapLoginPin") for c in page.calls)
+    assert ("click", "#oapNextBtn8", None) not in page.calls
+    assert not any("oapExitBtn8" in str(c) for c in page.calls)
+
+
+async def test_run_application_submits_when_requested():
+    popup = FakeLovPopup()
+    a, page = _adapter_with_pin("13579"), FakePage(next_popup=popup)
+    await a.run_application(page, FieldMapping(values={"subjects": []}), do_submit=True)
+    # do_submit=True runs the Page-G submit with the real ids
+    assert ("fill", "#oapLoginPin", "13579") in page.calls
+    assert ("check", "#oapAcceptApplRAR", None) in page.calls
+    assert ("click", "#oapNextBtn8", None) in page.calls
 
 
 async def test_fill_qualifications_page():

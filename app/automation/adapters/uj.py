@@ -120,38 +120,65 @@ class UJAdapter(UniversityAdapter):
         await self._click(page, _GATE_NEXT)
 
     async def fill_form(self, page: Page, mapping: FieldMapping) -> None:
-        """Enter each mapped value via its field's id. Acts only on fields with a
-        verified `selector`; the rest (pages B-G, LOV triggers) are skipped with a
-        log until the next live walk wires them. **[VERIFY LIVE]:** UJ is
-        multi-page, so the full flow must click **Save and Continue**
-        (#oapNextBtn2 …) between pages and loop the Add-Subject rows — wired next."""
+        """Per-page generic filler: enter every non-`manual`, selector-backed
+        field from `mapping`. Pages C/D/E (reveal-ordering, the subject loop, LOV
+        gating) are flagged `manual` and driven by their dedicated methods; the
+        whole A→G walk is orchestrated by `run_application`."""
+        await self._fill_simple(page, mapping)
+
+    async def _fill_simple(
+        self, page: Page, mapping: FieldMapping, page_key: str | None = None
+    ) -> None:
+        """Apply the simple fields (optionally scoped to one wizard page). Skips
+        `manual` fields, unmapped values, and conditional fields that aren't
+        currently visible (so a hidden auto-derived control doesn't stall)."""
         for field in load_field_schema()["fields"]:
+            if page_key is not None and field.get("page") != page_key:
+                continue
             selector = field.get("selector")
             value = mapping.get(field["field_id"])
-            if value is None:
-                continue  # unmapped / low-confidence — handled upstream
-            if field.get("manual"):
-                # Pages C/D need reveal-ordering, a re-assert, and the subject
-                # loop — driven by fill_matric_page / fill_previous_studies_page.
+            if value is None or field.get("manual"):
                 continue
             if not selector:
-                logger.info(
-                    "UJ fill_form: %s has no verified selector yet — skipping",
-                    field["field_id"],
-                )
+                logger.info("UJ fill: %s has no selector — skipping", field["field_id"])
+                continue
+            if field.get("conditional") and not await self._is_visible(page, selector):
                 continue
             try:
                 await self._apply(page, field, selector, str(value))
             except PortalChangedError:
-                # Conditionally-shown fields (e.g. gender auto-derived from the
-                # ID number) may not be actionable — skip rather than fail the run.
                 if field.get("conditional"):
-                    logger.info(
-                        "UJ fill_form: conditional %s not actionable — skipping",
-                        field["field_id"],
-                    )
+                    logger.info("UJ fill: conditional %s not actionable — skipping",
+                                field["field_id"])
                     continue
                 raise
+
+    async def run_application(
+        self, page: Page, mapping: FieldMapping, *, do_submit: bool = False
+    ) -> SubmissionConfirmation | None:
+        """Drive the whole multi-page UJ form A→G, clicking Save and Continue
+        between pages. Call **after** `login()` (which clears the entry/POPI gate
+        onto Page A). With `do_submit=False` (default) it fills everything and
+        stops **on Page G without clicking Submit** — the build/verify mode used
+        until a real consenting student is ready."""
+        await self._fill_simple(page, mapping, "A")          # Biographical
+        await self._save_and_continue(page, _PAGE_A_NEXT)
+        await self._fill_simple(page, mapping, "B")          # Next of Kin + Account
+        await self._save_and_continue(page, _PAGE_B_NEXT)
+        await self.fill_matric_page(page, mapping)           # Matric (C)
+        await self._save_and_continue(page, _PAGE_C_NEXT)
+        await self.fill_previous_studies_page(page, mapping)  # Previous Studies (D)
+        await self._save_and_continue(page, _PAGE_D_NEXT)
+        await self.fill_qualifications_page(page, mapping)    # Qualifications (E)
+        # ITS leaves Page E's Save disabled after automated fills; force-enable so
+        # the server validates (it accepts a complete page).
+        await self._save_and_continue(page, _PAGE_E_NEXT, force=True)
+        await self._continue_summary(page)                   # Summary (F) → G
+        if do_submit:
+            await self.submit(page)                          # Agreement (G)
+            return await self.verify_submission(page)
+        logger.info("UJ run_application: reached Page G — stopping before Submit")
+        return None
 
     async def _apply(
         self, page: Page, field: dict, selector: str, value: str
@@ -229,7 +256,10 @@ class UJAdapter(UniversityAdapter):
         await self.select_from_lov(
             page, _D_PRESENT_ACTIVITY, mapping.get("present_activity", "GRADE 12 PUPIL")
         )
-        await self._select_label(
+        # the two LOVs re-render the page (resetDependant), briefly detaching this
+        # select — let it settle, then use the JS-fallback selector.
+        await page.wait_for_timeout(800)
+        await self._select_label_or_js(
             page, _D_STUDIED_BEFORE, mapping.get("studied_before", "No")
         )
 
@@ -249,10 +279,10 @@ class UJAdapter(UniversityAdapter):
         button (`#oapNextBtn6`) stayed disabled until force-enabled; re-confirm a
         real (visible) selection fires ITS's enable routine in the live run.
         """
-        await self._select_label(
+        await self._select_label_or_js(
             page, _E_ACADEMIC_YEAR, str(mapping.get("academic_year", "2027"))
         )
-        await self._select_label(
+        await self._select_label_or_js(
             page, _E_APPLYING_FOR, mapping.get("applying_for", "Curricular Courses")
         )
         faculty = mapping.get("faculty")
@@ -311,6 +341,71 @@ class UJAdapter(UniversityAdapter):
             raise PortalChangedError(
                 f"no LOV row contains {row_contains!r}", selector=code_selector
             )
+
+    async def _is_visible(self, page: Page, selector: str) -> bool:
+        try:
+            return bool(await page.evaluate(
+                "(s)=>{const e=document.querySelector(s); return !!(e && e.offsetParent);}",
+                selector,
+            ))
+        except Exception:  # noqa: BLE001
+            return False
+
+    async def _select_label_or_js(
+        self, page: Page, selector: str, label: str
+    ) -> None:
+        """Select an option by visible text, falling back to a direct JS value-set
+        if the control is conditionally hidden (ITS sometimes renders `#oapECSLP`
+        hidden under automation; the dependent LOV query reads the value, not the
+        UI)."""
+        try:
+            await page.select_option(selector, label=label, timeout=5000)
+            return
+        except Exception:  # noqa: BLE001
+            pass
+        ok = await page.evaluate(
+            """([sel, txt]) => {
+              const s = document.querySelector(sel);
+              if (!s) return false;
+              const o = [...s.options].find(o => o.text.trim() === txt);
+              if (!o) return false;
+              s.value = o.value;
+              s.dispatchEvent(new Event('change', {bubbles: true}));
+              s.dispatchEvent(new Event('blur', {bubbles: true}));
+              return true;
+            }""",
+            [selector, label],
+        )
+        if not ok:
+            raise PortalChangedError(
+                f"select {selector} has no option {label!r}", selector=selector
+            )
+
+    async def _save_and_continue(
+        self, page: Page, selector: str, *, force: bool = False
+    ) -> None:
+        """Click a page's Save and Continue button and wait for the next page.
+        `force=True` clears a `disabled` attribute first (Page E's Save stays
+        disabled after automated fills; the server still validates on submit)."""
+        if force:
+            await page.evaluate(
+                "(s)=>{const e=document.querySelector(s); if(e) e.disabled=false;}",
+                selector,
+            )
+        await self._click(page, selector)
+        await page.wait_for_load_state("domcontentloaded")
+        await page.wait_for_timeout(1800)
+
+    async def _continue_summary(self, page: Page) -> None:
+        """Page F (summary) advances via an id-less "Continue" button → Page G."""
+        try:
+            await page.get_by_role("button", name="Continue", exact=False).first.click()
+            await page.wait_for_load_state("domcontentloaded")
+            await page.wait_for_timeout(1800)
+        except Exception as exc:  # noqa: BLE001
+            raise PortalChangedError(
+                "Page F 'Continue' button not found", selector="Continue"
+            ) from exc
 
     async def _fire(self, page: Page, selector: str, *events: str) -> None:
         """Dispatch DOM events so ITS's inline `eventRun(...)` reveal handlers
