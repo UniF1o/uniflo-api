@@ -5,10 +5,11 @@ simplest target: no captcha, and a new applicant doesn't log in — the entry/PO
 gate leads straight into the form; a student number + 5-digit PIN are issued at
 submit.
 
-Status: **login + Page A (Biographical) verified end-to-end — fills and Save
-advance to Page B (2026-06-05)**; the LOV popup handler is verified (citizenship
-+ postal); **Page B (Next of Kin + Account) ids harvested**; pages C–G + the
-submit page are pending the next walk (verify-only, no submit).
+Status (2026-06-05, verify-only — no submit): **Pages A (Biographical) and B
+(Next of Kin + Account) are verified end-to-end — fills + Save advance A→B→C.**
+The LOV popup handler is verified (citizenship + postal). **Page C (Matric /
+Results) ids harvested** (subject loop pending). Pages D–G + the submit page are
+pending the next walk.
 
 ## ⚠️ Selector strategy — id, not the accessibility tree
 
@@ -100,19 +101,31 @@ resolved:
 - The save round-trip preserves values — the earlier "everything empty" was the
   validation re-render before these fixes.
 
-## Page B — harvested (Next of Kin + Account)
+## Page B — SOLVED ✅ (Next of Kin + Account → advances to Page C)
 
-Reached after the Page A save. Fields (ids verified present; fill/save not yet
-run): NOK — `#oapNokName`, `#oapNokMobileNr`, `#oapNokPostalAddr1-4`,
-`#oapNokPostalAddrCode` (LOV) + `#oapNokEmail`; Account/fee-payer —
-`#oapAcntName`, `#oapAcntMobileNr`, `#oapAcntPostalAddr1-4`, `#oapAcntPostalCode`
-(LOV) + `#oapAcntEmail`. Nav: `#oapBackBtn2_1` / `#oapNextBtn2_1`. These map from
-the `contacts` table (`next_of_kin`, `fee_payer`). In the schema now.
+Filled and saved live (`#oapNextBtn2_1`). The catch: the **NOK block needs only
+name + mobile** — its address/email fields are *hidden* (not required), matching
+the dictation ("name of next of kin and then the phone number"). The **Account
+contact (fee payer)** takes the full address: `#oapAcntName`, `#oapAcntMobileNr`
+(optional/conditional — saved without it), `#oapAcntPostalAddr1-4` (town/province
+typed), `#oapAcntPostalCode` (LOV search → "SOSHANGUVE"), `#oapAcntEmail`. Maps
+from the `contacts` table (`next_of_kin`, `fee_payer`). In the schema.
+
+## Page C — harvested (Matric / Results)
+
+Reached after the Page B save. Scalars: `#oapMatYear`, `#oapUGPG`
+(Undergraduate/Post-graduate), `#oapStudUpgrade` (Yes/No), `#oapTypeMatric` (SA /
+International Matric), `#oapExamNum`. **Subject loop** (the repeating part):
+per subject pick `#oapMSubj` (LOV), `#oapMGrade` (LOV → "NSC"), `#oapmarkGr11` +
+`#oapsymbGr11` (LOVs) then click **`#oapAddMatric`** (Add Subject); rows
+accumulate. Nav `#oapBackBtn3` / `#oapNextBtn3`. The subject loop needs dedicated
+adapter logic (iterate `academic_records.subjects`) — **[VERIFY LIVE]**.
 
 ## Not done yet (next iterations)
-- **Page B fill + save** (then harvest **Pages C–G**: Matric + the subject loop,
-  Previous Studies, Qualifications, Check, Agreement) via the same method.
-- **Page transitions** — each page's Save button is `#oapNextBtn2`, `#oapNextBtn2_1`, …
+- **Page C subject loop** — dedicated adapter logic to iterate the subjects
+  (Subject/Grade/Gr11-mark LOVs + Add Subject), then harvest **Pages D–G**
+  (Previous Studies, Qualifications, Check, Agreement) via the same method.
+- **Page transitions** — each page's Save button is `#oapNextBtn2`, `#oapNextBtn2_1`, `#oapNextBtn3`, …
 - **Submit page (G)** ids: PIN field, I Accept, Submit Application (never Quit).
 - **verify_submission** success marker — only on the one real submit (agreed:
   build/verify up to submit only, never fake-submit).

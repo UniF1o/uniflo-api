@@ -10,7 +10,7 @@ from app.automation.adapters.uj import (
 from app.automation.base import FieldMapping, PortalCredentials
 from app.automation.exceptions import AuthFailedError, PortalChangedError
 
-_ALLOWED_TYPES = {"text", "date", "select", "checkbox", "lov", "file"}
+_ALLOWED_TYPES = {"text", "date", "select", "checkbox", "lov", "file", "subject_loop"}
 
 
 # --- LOV popup fakes -----------------------------------------------------------
