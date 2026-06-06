@@ -49,8 +49,27 @@ _GATE_TOKEN = "#oapTokenYesNo"
 _GATE_ACCEPT_POPI = "#oapAcceptPopi"
 _GATE_NEXT = "#oapNextBtn1"
 
-# Biographical page next button.
-_PAGE_A_NEXT = "#oapNextBtn2"
+# "Save and Continue" button per page (each advances to the next wizard page).
+_PAGE_A_NEXT = "#oapNextBtn2"  # Biographical -> Next of Kin
+_PAGE_B_NEXT = "#oapNextBtn2_1"  # Next of Kin -> Matric
+_PAGE_C_NEXT = "#oapNextBtn3"  # Matric -> Previous Studies
+_PAGE_D_NEXT = "#oapNextBtn4"  # Previous Studies -> Qualifications
+
+# Page C (Matric/Results) ids — verified live 2026-06-06.
+_C_MATRIC_YEAR = "#oapMatYear"
+_C_UG_ONLY = "#oapUGPGUGOnly"  # UG-only select shown after matric year (not #oapUGPG)
+_C_UPGRADING = "#oapStudUpgrade"
+_C_MATRIC_TYPE = "#oapTypeMatric"
+_C_ENDORSEMENT = "#oapMatType"  # LOV, gates the subject-capture fields
+_C_SUBJECT = "#oapMSubj"  # LOV
+_C_GRADE = "#oapMGrade"  # LOV ("NSC")
+_C_PERCENT = "#oapsymbGr11"  # LOV — the "symbol" field holds the Gr11 percentage
+_C_ADD_SUBJECT = "#oapAddMatric"
+
+# Page D (Previous Studies) ids.
+_D_SCHOOL = "#oapSchool"  # LOV
+_D_PRESENT_ACTIVITY = "#oapPact"  # LOV ("GRADE 12 PUPIL")
+_D_STUDIED_BEFORE = "#oapPrevQualInd"  # select Yes/No
 
 _FIELDS_PATH = Path(__file__).with_name("uj.fields.json")
 
@@ -95,6 +114,10 @@ class UJAdapter(UniversityAdapter):
             value = mapping.get(field["field_id"])
             if value is None:
                 continue  # unmapped / low-confidence — handled upstream
+            if field.get("manual"):
+                # Pages C/D need reveal-ordering, a re-assert, and the subject
+                # loop — driven by fill_matric_page / fill_previous_studies_page.
+                continue
             if not selector:
                 logger.info(
                     "UJ fill_form: %s has no verified selector yet — skipping",
@@ -132,6 +155,82 @@ class UJAdapter(UniversityAdapter):
             # (postal codes) filter first via `lov_search`.
             search = value if field.get("lov_search") else None
             await self.select_from_lov(page, selector, value, search_term=search)
+
+    # --- Page C / D: dedicated flows (reveal-ordering + the subject loop) -----
+
+    async def fill_matric_page(self, page: Page, mapping: FieldMapping) -> None:
+        """Page C (Matric/Results). ITS reveals this page's fields progressively
+        and the endorsement LOV silently resets matric-type, so the ordering and
+        a re-assert matter (all verified live 2026-06-06):
+
+        1. Matric year first — its onchange (`eventRun(5.4)`) reveals the rest.
+        2. UG/PG auto-resolves to the UG-only select (`#oapUGPGUGOnly`); the
+           choice control `#oapUGPG` hides.
+        3. Upgrading + matric-type, then the endorsement LOV (which gates the
+           subject-capture LOVs **and** wipes matric-type → re-assert it).
+        4. Loop the subjects (each: subject + grade(NSC) + Gr11 % + Add Subject).
+        """
+        matric_type = mapping.get("matric_type", "SA Matric")
+        await self._fill(page, _C_MATRIC_YEAR, str(mapping.get("matric_year", "")))
+        await self._fire(page, _C_MATRIC_YEAR, "change", "blur")
+        await self._select_label(
+            page, _C_UG_ONLY, mapping.get("ug_or_pg", "Undergraduate")
+        )
+        await self._select_label(page, _C_UPGRADING, mapping.get("upgrading", "No"))
+        await self._select_label(page, _C_MATRIC_TYPE, matric_type)
+        await self.select_from_lov(
+            page, _C_ENDORSEMENT, mapping.get("endorsement", "CURRENTLY IN GR.12")
+        )
+        # the endorsement LOV re-render resets matric-type to the placeholder
+        await self._select_label(page, _C_MATRIC_TYPE, matric_type)
+        for subject in mapping.get("subjects") or []:
+            await self.add_subject(page, subject["name"], subject["percentage"])
+
+    async def add_subject(
+        self, page: Page, subject_name: str, percentage: object
+    ) -> None:
+        """Add one row to the Page-C subjects table via the LOVs + Add Subject.
+        Grade is always 'NSC' for an SA matric; the Gr11 percentage lives in the
+        mislabelled 'symbol' field. Re-asserts matric-type first as a guard."""
+        await self.select_from_lov(
+            page, _C_SUBJECT, subject_name, search_term=subject_name
+        )
+        await self.select_from_lov(page, _C_GRADE, "NSC")
+        await self.select_from_lov(
+            page, _C_PERCENT, str(percentage), search_term=str(percentage)
+        )
+        await self._select_label(page, _C_MATRIC_TYPE, "SA Matric")
+        await self._click(page, _C_ADD_SUBJECT)
+
+    async def fill_previous_studies_page(
+        self, page: Page, mapping: FieldMapping
+    ) -> None:
+        """Page D (Previous Studies): last school (LOV), present activity (LOV,
+        'GRADE 12 PUPIL'), and whether they studied elsewhere before (No for a
+        school leaver). Verified ids 2026-06-06."""
+        school = mapping.get("school")
+        await self.select_from_lov(page, _D_SCHOOL, school, search_term=school)
+        await self.select_from_lov(
+            page, _D_PRESENT_ACTIVITY, mapping.get("present_activity", "GRADE 12 PUPIL")
+        )
+        await self._select_label(
+            page, _D_STUDIED_BEFORE, mapping.get("studied_before", "No")
+        )
+
+    async def _fire(self, page: Page, selector: str, *events: str) -> None:
+        """Dispatch DOM events so ITS's inline `eventRun(...)` reveal handlers
+        fire (e.g. matric year's onchange that reveals the UG block)."""
+        try:
+            await page.eval_on_selector(
+                selector,
+                "(el, evs) => evs.forEach("
+                "n => el.dispatchEvent(new Event(n, {bubbles: true})))",
+                list(events),
+            )
+        except Exception as exc:  # noqa: BLE001
+            raise PortalChangedError(
+                f"could not fire {events} on {selector}", selector=selector
+            ) from exc
 
     async def upload_documents(
         self, page: Page, documents: list[DocumentRef]

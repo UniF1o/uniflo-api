@@ -126,6 +126,10 @@ class FakePage:
             raise RuntimeError("evaluate failed")
         self.calls.append(("evaluate", arg))
 
+    async def eval_on_selector(self, selector, js, arg=None):
+        self._maybe_fail(selector, "eval_on_selector")
+        self.calls.append(("fire", selector, arg))
+
 
 def _adapter_with_pin(pin="13579"):
     a = UJAdapter()
@@ -302,9 +306,83 @@ async def test_fill_form_drives_lov_field():
 
 async def test_fill_form_skips_fields_without_selector():
     a, page = UJAdapter(), FakePage()
-    # school_attended (page D) still has no verified selector
-    await a.fill_form(page, FieldMapping(values={"school_attended": "Some School"}))
+    # academic_year (page E) still has no verified selector
+    await a.fill_form(page, FieldMapping(values={"academic_year": "2027"}))
     assert page.calls == []
+
+
+async def test_fill_form_skips_manual_fields():
+    a, page = UJAdapter(), FakePage()
+    # matric_year (page C) has a selector but is flagged manual — driven by
+    # fill_matric_page, not the generic fill_form loop.
+    await a.fill_form(page, FieldMapping(values={"matric_year": "2026"}))
+    assert page.calls == []
+
+
+# --- Page C / D dedicated flows ------------------------------------------------
+
+async def test_fill_matric_page_reveals_and_loops_subjects():
+    popup = FakeLovPopup()
+    a, page = UJAdapter(), FakePage(next_popup=popup)
+    mapping = FieldMapping(
+        values={
+            "matric_year": "2026",
+            "ug_or_pg": "Undergraduate",
+            "upgrading": "No",
+            "matric_type": "SA Matric",
+            "endorsement": "CURRENTLY IN GR.12",
+            "subjects": [
+                {"name": "MATHEMATICS (NSC/NCV/ISC)", "percentage": 72},
+                {"name": "ENGLISH HOME LANG. (NSC/NCV)", "percentage": 75},
+            ],
+        }
+    )
+    await a.fill_matric_page(page, mapping)
+    # matric year first, then fire its onchange to reveal the UG block
+    assert ("fill", "#oapMatYear", "2026") in page.calls
+    assert ("fire", "#oapMatYear", ["change", "blur"]) in page.calls
+    assert ("select", "#oapUGPGUGOnly", "Undergraduate") in page.calls
+    assert ("select", "#oapStudUpgrade", "No") in page.calls
+    # matric-type re-asserted at least twice (once after endorsement, once/subject)
+    assert sum(c == ("select", "#oapTypeMatric", "SA Matric") for c in page.calls) >= 2
+    # endorsement + both subjects driven through the LOV
+    assert ("link", "CURRENTLY IN GR.12") in popup.calls
+    assert ("link", "MATHEMATICS (NSC/NCV/ISC)") in popup.calls
+    assert ("link", "ENGLISH HOME LANG. (NSC/NCV)") in popup.calls
+    assert ("link", "NSC") in popup.calls
+    assert ("link", "72") in popup.calls and ("link", "75") in popup.calls
+    # one Add Subject click per subject
+    assert sum(c == ("click", "#oapAddMatric", None) for c in page.calls) == 2
+
+
+async def test_add_subject_drives_lovs_and_clicks_add():
+    popup = FakeLovPopup()
+    a, page = UJAdapter(), FakePage(next_popup=popup)
+    await a.add_subject(page, "LIFE ORIENTATION (NSC/NCV/DR)", 80)
+    assert ("click", "a[href*=oapMSubj]", None) in page.calls
+    assert ("link", "LIFE ORIENTATION (NSC/NCV/DR)") in popup.calls
+    assert ("link", "NSC") in popup.calls
+    assert ("link", "80") in popup.calls
+    assert ("select", "#oapTypeMatric", "SA Matric") in page.calls  # reset guard
+    assert ("click", "#oapAddMatric", None) in page.calls
+
+
+async def test_fill_previous_studies_page():
+    popup = FakeLovPopup()
+    a, page = UJAdapter(), FakePage(next_popup=popup)
+    mapping = FieldMapping(
+        values={
+            "school": "SOSHANGUVE SECONDARY SCHOOL",
+            "present_activity": "GRADE 12 PUPIL",
+            "studied_before": "No",
+        }
+    )
+    await a.fill_previous_studies_page(page, mapping)
+    assert ("click", "a[href*=oapSchool]", None) in page.calls
+    assert ("link", "SOSHANGUVE SECONDARY SCHOOL") in popup.calls
+    assert ("click", "a[href*=oapPact]", None) in page.calls
+    assert ("link", "GRADE 12 PUPIL") in popup.calls
+    assert ("select", "#oapPrevQualInd", "No") in page.calls
 
 
 async def test_fill_form_skips_conditional_field_when_not_actionable():

@@ -5,11 +5,12 @@ simplest target: no captcha, and a new applicant doesn't log in — the entry/PO
 gate leads straight into the form; a student number + 5-digit PIN are issued at
 submit.
 
-Status (2026-06-05, verify-only — no submit): **Pages A (Biographical) and B
-(Next of Kin + Account) are verified end-to-end — fills + Save advance A→B→C.**
-The LOV popup handler is verified (citizenship + postal). **Page C (Matric /
-Results) ids harvested** (subject loop pending). Pages D–G + the submit page are
-pending the next walk.
+Status (2026-06-06, verify-only — no submit): **Pages A (Biographical), B (Next
+of Kin + Account) and C (Matric/Results) are SOLVED end-to-end — fills + Save
+advance A→B→C→D.** The LOV popup handler is verified (citizenship, postal,
+endorsement, subjects, school). **Page D (Previous Studies) ids + LOV
+vocabularies are harvested.** Pages E–G + the submit page are pending the next
+walk.
 
 ## ⚠️ Selector strategy — id, not the accessibility tree
 
@@ -26,8 +27,11 @@ handle for ITS**, and the adapter uses id/CSS selectors (`page.fill("#id", …)`
 still holds for the PeopleSoft portals (UCT/Wits/UP) — re-confirm per portal.
 
 `uj.fields.json` therefore carries a `selector` (the id) per field alongside the
-`label` (which drives the AI mapping). Page A selectors + option lists are
-verified; pages B–G have `selector: null` until walked.
+`label` (which drives the AI mapping). Pages A–D selectors + option lists are
+verified; pages E–G have `selector: null` until walked. Fields needing
+reveal-ordering or loop logic (all of Pages C/D) are flagged `"manual": true` so
+the generic `fill_form` skips them — they're driven by the dedicated
+`fill_matric_page` / `fill_previous_studies_page` methods instead.
 
 ## Verified: entry/POPI gate (login)
 
@@ -111,24 +115,48 @@ contact (fee payer)** takes the full address: `#oapAcntName`, `#oapAcntMobileNr`
 typed), `#oapAcntPostalCode` (LOV search → "SOSHANGUVE"), `#oapAcntEmail`. Maps
 from the `contacts` table (`next_of_kin`, `fee_payer`). In the schema.
 
-## Page C — harvested (Matric / Results)
+## Page C — SOLVED ✅ (Matric / Results → advances to Page D)
 
-Reached after the Page B save. Scalars: `#oapMatYear`, `#oapUGPG`
-(Undergraduate/Post-graduate), `#oapStudUpgrade` (Yes/No), `#oapTypeMatric` (SA /
-International Matric), `#oapExamNum`. **Subject loop** (the repeating part):
-per subject pick `#oapMSubj` (LOV), `#oapMGrade` (LOV → "NSC"), `#oapmarkGr11` +
-`#oapsymbGr11` (LOVs) then click **`#oapAddMatric`** (Add Subject); rows
-accumulate. Nav `#oapBackBtn3` / `#oapNextBtn3`. The subject loop needs dedicated
-adapter logic (iterate `academic_records.subjects`) — **[VERIFY LIVE]**.
+Reached after the Page B save. The page reveals its fields **progressively** via
+ITS's event model and has one nasty gotcha — all pinned down live 2026-06-06 and
+encoded in `fill_matric_page()`:
+
+1. **Matric year first.** `#oapMatYear`'s `onchange="eventRun(5.4,this)"` reveals
+   the hidden `#UGDiv` block (everything below). Nothing else is reachable until
+   this fires, so the adapter fills it then dispatches change/blur (`_fire`).
+2. **UG/PG auto-resolves.** After matric year, the choice control `#oapUGPG`
+   **hides** and a UG-only select `#oapUGPGUGOnly` (pre-set to "Undergraduate")
+   is shown — drive that one, not `#oapUGPG`.
+3. `#oapStudUpgrade` (Yes/No) and `#oapTypeMatric` (SA/International Matric).
+4. **Endorsement LOV** `#oapMatType` → "CURRENTLY IN GR.12". This *gates* (reveals)
+   the subject-capture LOVs — **and its re-render silently resets `#oapTypeMatric`
+   back to the placeholder.** So the adapter **re-asserts matric-type** right
+   after the endorsement and again before each Add Subject.
+5. **Subject loop** (`add_subject`): per subject pick `#oapMSubj` (LOV; names are
+   qualifier-tagged, e.g. `MATHEMATICS (NSC/NCV/ISC)`, `ENGLISH HOME LANG.
+   (NSC/NCV)`), `#oapMGrade` (LOV → "NSC"), and `#oapsymbGr11` (LOV → the Gr11
+   **percentage** — the "symbol" field actually holds percentages; `#oapmarkGr11`
+   is `mandatory=N` and skipped), then click **`#oapAddMatric`**. Rows accumulate.
+
+Verified live: all 7 of Jane Doe's subjects added cleanly (table 1→7) and Save
+(`#oapNextBtn3`) advanced to Page D.
+
+## Page D — harvested (Previous Studies)
+
+`#oapSchool` (LOV — full SA school list, search e.g. "SOSHANGUVE" →
+`SOSHANGUVE SECONDARY SCHOOL`), `#oapPact` (present-activity LOV — single option
+`GRADE 12 PUPIL`), `#oapPrevQualInd` (select Yes/No — "No" for school leavers).
+Nav `#oapBackBtn4` / `#oapNextBtn4`. Encoded in `fill_previous_studies_page()`.
 
 ## Not done yet (next iterations)
-- **Page C subject loop** — dedicated adapter logic to iterate the subjects
-  (Subject/Grade/Gr11-mark LOVs + Add Subject), then harvest **Pages D–G**
-  (Previous Studies, Qualifications, Check, Agreement) via the same method.
-- **Page transitions** — each page's Save button is `#oapNextBtn2`, `#oapNextBtn2_1`, `#oapNextBtn3`, …
-- **Submit page (G)** ids: PIN field, I Accept, Submit Application (never Quit).
-- **verify_submission** success marker — only on the one real submit (agreed:
-  build/verify up to submit only, never fake-submit).
+- **One complete walkthrough to harvest Pages E–G** (Qualifications, Check,
+  Agreement) — fill D live, then push through E (academic year, faculty LOV,
+  programme LOV tagged `(ELIGIBLE TO APPLY-Y)`, year/mode), F (summary →
+  Continue), G (PIN + I Accept + Submit — **inspect only, never click Submit**).
+- **Page orchestration** — wire `fill_form` (or a `run_application`) to call the
+  per-page fills with the Save buttons between them
+  (`#oapNextBtn2` → `#oapNextBtn2_1` → `#oapNextBtn3` → `#oapNextBtn4` → …).
+- **verify_submission** success marker — only on the one real supervised submit.
 - **AI mapping integration** — run Jane Doe + the field schema through `AIClient`
   to produce the `FieldMapping` (currently tested with hand-built mappings).
 - **End-to-end wiring** (plan Task 4): replace the Phase 2 `process_application`
@@ -137,7 +165,10 @@ adapter logic (iterate `academic_records.subjects`) — **[VERIFY LIVE]**.
   table), and the `POST /applications/{id}/retry` endpoint.
 
 ## Tests
-`tests/test_uj_adapter.py` (15) drives a faked `Page`: identity/schema shape,
+`tests/test_uj_adapter.py` (25) drives a faked `Page`: identity/schema shape,
 each id helper, the gate login sequence, submit (PIN required; never Quit),
-upload no-op, fill_form dispatch, skip-without-selector, conditional-skip, and
-LOV-not-wired. No real browser. Live verification is manual (gated), per the plan.
+upload no-op, fill_form dispatch, skip-without-selector, skip-manual,
+conditional-skip, the LOV popup (direct + search), the Page-C reveal + subject
+loop (`fill_matric_page`/`add_subject`), and the Page-D flow
+(`fill_previous_studies_page`). No real browser — live verification is manual
+(gated), per the plan.
