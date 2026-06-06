@@ -6,6 +6,7 @@ covered by the pure helpers it composes (`_apply_result`, `_map_error_code`,
 import uuid
 from datetime import date
 from types import SimpleNamespace
+from unittest.mock import MagicMock
 
 import pytest
 
@@ -146,6 +147,93 @@ def test_derive_portal_pin_differs_by_application():
 
 def test_consent_required_is_canonical():
     assert "consent_required" in JOB_ERROR_CODES
+
+
+# --- AI mapping generation -----------------------------------------------------
+
+def test_ai_configured(monkeypatch):
+    monkeypatch.setattr(bg.settings, "AI_PROVIDER", "gemini")
+    monkeypatch.setattr(bg.settings, "GEMINI_API_KEY", "k")
+    assert bg._ai_configured() is True
+    monkeypatch.setattr(bg.settings, "GEMINI_API_KEY", None)
+    assert bg._ai_configured() is False
+    monkeypatch.setattr(bg.settings, "AI_PROVIDER", "anthropic")
+    monkeypatch.setattr(bg.settings, "ANTHROPIC_API_KEY", "k")
+    assert bg._ai_configured() is True
+
+
+def test_portal_form_schema_from_uj_adapter():
+    form = bg._portal_form_schema(UJAdapter())
+    assert form.slug == "uj"
+    ids = {f.field_id for f in form.fields}
+    assert {"sa_citizen", "programme"} <= ids
+
+
+def test_generate_ai_mapping_skips_when_unconfigured(monkeypatch):
+    monkeypatch.setattr(bg, "_ai_configured", lambda: False)
+    session = MagicMock()
+    bg._generate_ai_mapping(
+        session, SimpleNamespace(id=uuid.uuid4()), object(), None, None
+    )
+    session.commit.assert_not_called()
+
+
+def test_generate_ai_mapping_persists_when_configured(monkeypatch):
+    import app.ai.client as client_mod
+    import app.ai.field_mapping as fm
+    from app.ai.schemas import FieldMappingEntry, FieldMappingResponse
+
+    app_id = uuid.uuid4()
+    monkeypatch.setattr(bg, "_ai_configured", lambda: True)
+    monkeypatch.setattr(bg, "_portal_form_schema", lambda adapter: object())
+    monkeypatch.setattr(
+        client_mod.AIClient, "from_env", classmethod(lambda cls: object())
+    )
+
+    async def fake_map(**kwargs):
+        return FieldMappingResponse(
+            university_id=uuid.uuid4(),
+            application_id=app_id,
+            entries=[FieldMappingEntry(field_id="surname", value="Doe", confidence=0.9)],
+            overall_confidence=0.9,
+        )
+
+    captured = {}
+    monkeypatch.setattr(fm, "map_application_to_portal", fake_map)
+    monkeypatch.setattr(
+        fm, "persist_field_mapping", lambda session, response: captured.update(r=response)
+    )
+
+    session = MagicMock()
+    adapter = SimpleNamespace(form_schema=lambda: {})
+    bg._generate_ai_mapping(
+        session, SimpleNamespace(id=app_id), adapter, MagicMock(), None
+    )
+    assert captured["r"].application_id == app_id
+    session.commit.assert_called_once()
+
+
+def test_generate_ai_mapping_survives_failure(monkeypatch):
+    import app.ai.client as client_mod
+    import app.ai.field_mapping as fm
+
+    monkeypatch.setattr(bg, "_ai_configured", lambda: True)
+    monkeypatch.setattr(bg, "_portal_form_schema", lambda adapter: object())
+    monkeypatch.setattr(
+        client_mod.AIClient, "from_env", classmethod(lambda cls: object())
+    )
+
+    async def boom(**kwargs):
+        raise RuntimeError("gemini down")
+
+    monkeypatch.setattr(fm, "map_application_to_portal", boom)
+    session = MagicMock()
+    adapter = SimpleNamespace(form_schema=lambda: {})
+    # must not raise (best-effort) and must not commit a partial mapping
+    bg._generate_ai_mapping(
+        session, SimpleNamespace(id=uuid.uuid4()), adapter, MagicMock(), None
+    )
+    session.commit.assert_not_called()
 
 
 def test_consent_gate(monkeypatch):

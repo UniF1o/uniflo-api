@@ -109,6 +109,11 @@ class UJAdapter(UniversityAdapter):
         # Stashed in login() so submit() can read the 5-digit PIN.
         self._credentials: PortalCredentials | None = None
 
+    def form_schema(self) -> dict:
+        """The portal form-field catalog (`field_id`/`label`/`type`/...), used by
+        the AI mapping layer to map a profile onto this portal's fields."""
+        return load_field_schema()
+
     # --- pipeline -------------------------------------------------------------
 
     async def login(self, page: Page, credentials: PortalCredentials) -> None:

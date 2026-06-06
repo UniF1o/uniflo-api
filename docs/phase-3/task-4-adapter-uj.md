@@ -294,14 +294,22 @@ submitted or in-flight application.
 mapping was produced is stored on the row). The model is `FieldMappingRecord`
 (named to avoid clashing with the runtime's transient `FieldMapping`).
 
-## Not done yet (next iterations)
-- **Wire the AI mapping into a run** — `persist_field_mapping` + the read
-  endpoint exist, but a run currently fills from the deterministic
-  `build_field_mapping`; generating + persisting the AI mapping (for review
-  before/with a run) is the remaining integration.
+## AI mapping wired into the run ✅
+
+`_run_real_automation` now calls `_generate_ai_mapping` — it builds the profile
+payload + the adapter's `form_schema()`, runs `map_application_to_portal` through
+`AIClient.from_env()`, and `persist_field_mapping`s the result to
+`field_mappings` for the review screen. Best-effort: skipped (logged) if no AI key
+is configured, and a failure never sinks the run — the bot still fills via the
+deterministic `build_field_mapping` (the AI mapping is advisory/for review).
+Switching the *fill* to the reviewed AI mapping is a later enhancement.
+
+## Not done yet
 - **The one real supervised submit** — record consent, flip
-  `AUTOMATION_ALLOW_SUBMIT=true`; confirms the Page-E Save-enable without force
-  and pins the `verify_submission` success marker.
+  `AUTOMATION_ALLOW_SUBMIT=true`, run with a real consenting student. Deferred
+  until one is available (see memory `project_uj_supervised_submit_pending`);
+  confirms the Page-E Save-enable without the force-enable and pins the
+  `verify_submission` success marker.
 - **The one real supervised submit** — flip `AUTOMATION_ALLOW_SUBMIT=true` for a
   consenting student; confirms the Page-E Save-enable without force and pins the
   `verify_submission` success marker.

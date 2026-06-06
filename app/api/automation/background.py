@@ -156,6 +156,79 @@ def _map_error_code(code: Optional[str]) -> str:
     return _ERROR_CODE_MAP.get(code or "", "internal_error")
 
 
+def _ai_configured() -> bool:
+    """Whether an API key is set for the configured AI provider."""
+    provider = (settings.AI_PROVIDER or "gemini").lower()
+    if provider == "gemini":
+        return bool(settings.GEMINI_API_KEY)
+    if provider == "anthropic":
+        return bool(settings.ANTHROPIC_API_KEY)
+    return False
+
+
+def _portal_form_schema(adapter):
+    """Adapter's field catalog -> the AI layer's PortalFormSchema."""
+    import uuid as _uuid
+
+    from app.ai.schemas import PortalField, PortalFormSchema
+
+    raw = adapter.form_schema()
+    fields = [
+        PortalField(
+            field_id=f["field_id"],
+            label=f.get("label", ""),
+            type=f.get("type", "text"),
+            required=f.get("required", False),
+            options=f.get("options"),
+            help_text=f.get("help_text"),
+        )
+        for f in raw.get("fields", [])
+    ]
+    return PortalFormSchema(
+        university_id=_uuid.UUID(str(raw["university_id"])),
+        slug=raw["slug"],
+        fields=fields,
+    )
+
+
+def _generate_ai_mapping(session, application, adapter, profile, academic_record) -> None:
+    """Best-effort: produce the AI field mapping for Partner-A's review screen and
+    persist it to `field_mappings`. Skipped (logged) if AI isn't configured or the
+    adapter exposes no form schema; a failure never sinks the run (the bot fills
+    via the deterministic mapper either way)."""
+    if not _ai_configured() or not hasattr(adapter, "form_schema"):
+        logger.info("AI mapping skipped for %s (AI not configured)", application.id)
+        return
+    try:
+        import asyncio
+
+        from app.ai.client import AIClient
+        from app.ai.field_mapping import (
+            build_profile_payload,
+            map_application_to_portal,
+            persist_field_mapping,
+        )
+
+        client = AIClient.from_env()
+        form = _portal_form_schema(adapter)
+        payload = build_profile_payload(
+            profile, [academic_record] if academic_record else None
+        )
+        response = asyncio.run(
+            map_application_to_portal(
+                application_id=application.id, profile=payload, form=form, client=client
+            )
+        )
+        persist_field_mapping(session, response)
+        session.commit()
+        logger.info(
+            "AI field mapping persisted for %s (overall_confidence=%.2f)",
+            application.id, response.overall_confidence,
+        )
+    except Exception:  # noqa: BLE001 — review-screen data is non-critical to the run
+        logger.warning("AI field mapping generation failed (continuing)", exc_info=True)
+
+
 def _consent_gate(application) -> tuple[bool, bool]:
     """(can_run, allow_submit) from the recorded consent + the submit setting.
     The bot won't even fill the form (which ticks POPI) without POPI consent, and
@@ -302,6 +375,9 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
                 contacts=contacts,
                 email=email,
             )
+            # Produce + persist the AI mapping for the review screen (best-effort;
+            # the bot fills via the deterministic mapping above regardless).
+            _generate_ai_mapping(session, application, adapter, profile, record)
             credentials = PortalCredentials(
                 username="", password="", extra={"pin": derive_portal_pin(application_id)}
             )
