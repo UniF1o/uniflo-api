@@ -5,9 +5,10 @@ simplest target: no captcha, and a new applicant doesn't log in — the entry/PO
 gate leads straight into the form; a student number + 5-digit PIN are issued at
 submit.
 
-Status: **login (entry/POPI gate) and the biographical page (Page A) are
-live-verified (2026-06-05)**; LOV search popups, pages B–G, and the submit page
-are scaffolded and marked **[VERIFY LIVE]** for the next supervised walk.
+Status: **login + Page A (Biographical) verified end-to-end — fills and Save
+advance to Page B (2026-06-05)**; the LOV popup handler is verified (citizenship
++ postal); **Page B (Next of Kin + Account) ids harvested**; pages C–G + the
+submit page are pending the next walk (verify-only, no submit).
 
 ## ⚠️ Selector strategy — id, not the accessibility tree
 
@@ -73,38 +74,47 @@ country list) load in full → it clicks the row by name directly
 (**verified: "South Africa" → `oapCitzCode_desc` = "South Africa"`, 2026-06-05**).
 Long lists set `lov_search` in the schema → it filters first.
 
-**Open:** the **postal-code** LOV (`#oapStreetAddrPCodeRq`) — searching the raw
-code `"0152"` returned no results, so its filter matches a different column
-(area name? code prefix?). Format **[VERIFY LIVE]**. Later-page LOVs (endorsement
-/ school / faculty / programme / year / mode) reuse the same mechanism.
+**Postal-code LOV — solved (2026-06-05).** It *is* populated (all SA codes), but
+its result rows are **plain `<a>` with the code as text** (e.g. `0152`) — no
+`resetDependant` onclick, unlike the country list. So search the code and click
+the row by text (`get_by_role("link", name="0152")`), which `select_from_lov`
+already does with `lov_search: true`. Verified: `0152` → `oapStreetAddrPCodeRq_desc`
+= "SOSHANGUVE". Town (addr line 3) + province (line 4) are **typed** directly
+(the hidden "Find your Town" helper is ignored). Later-page LOVs (endorsement /
+school / faculty / programme / year / mode) reuse the same mechanism.
 
-## Page A — clean SAVE not yet achieved (next live walk)
+## Page A — SOLVED end-to-end ✅ (2026-06-05)
 
-Individual fields fill in-page and the citizenship LOV works, but clicking **Save
-and Continue** (`#oapNextBtn2`) re-renders Page A with validation errors rather
-than advancing — ITS leans on `onchange`/`onblur`/`eventRun` handlers and
-conditional show/hide that need the right ordering. Open blockers found
-2026-06-05:
-- **DOB** (`#oapBirthdate`) is a **calendar-widget** field (readonly text +
-  `showCalendar(...)`); `fill` doesn't stick → age unknown → the form then
-  demands the **Parent/Guardian** block (`#oapGuardName/Cell/Email` + an under-age
-  I-Accept). Need to set the date via the calendar (or a value+event that ITS
-  accepts).
-- **Gender** (`#oapGender`) is a **hidden** select (not auto-derived from the ID,
-  as first assumed) — find what reveals it.
-- **Citizenship "Yes"** isn't suppressing the passport / study-permit fields, so
-  `oapCitizenType`'s onchange/eventRun conditional isn't firing as the form
-  expects — sequence: set citizenship → let it settle → then dependent fields.
-- **Postal LOV** filter format (above).
-Until Page A saves, pages B–G can't be reached to harvest their ids.
+Filling Page A with the Jane Doe data and clicking **Save and Continue**
+(`#oapNextBtn2`) **advances to Page B** — verified live. The earlier blockers all
+resolved:
+- **DOB** (`#oapBirthdate`) is a **readonly calendar** field — `fill` won't
+  stick. `_set_date()` sets the value + fires change/blur via JS (format
+  `12-MAR-2008`). With DOB set, the form computes age 18 and the **guardian block
+  hides** — the earlier guardian/passport/study-permit errors were a *cascade*
+  from the missing DOB + unset citizenship, not separate requirements.
+- **Gender** (`#oapGender`) is hidden and **not required** (the server never
+  flagged it) — skip it (already `"conditional": true`).
+- **Address:** town (line 3 `#oapStreetAddr3`) + province (line 4
+  `#oapStreetAddr4`) are **typed**; postal via the LOV search (above).
+- The save round-trip preserves values — the earlier "everything empty" was the
+  validation re-render before these fixes.
+
+## Page B — harvested (Next of Kin + Account)
+
+Reached after the Page A save. Fields (ids verified present; fill/save not yet
+run): NOK — `#oapNokName`, `#oapNokMobileNr`, `#oapNokPostalAddr1-4`,
+`#oapNokPostalAddrCode` (LOV) + `#oapNokEmail`; Account/fee-payer —
+`#oapAcntName`, `#oapAcntMobileNr`, `#oapAcntPostalAddr1-4`, `#oapAcntPostalCode`
+(LOV) + `#oapAcntEmail`. Nav: `#oapBackBtn2_1` / `#oapNextBtn2_1`. These map from
+the `contacts` table (`next_of_kin`, `fee_payer`). In the schema now.
 
 ## Not done yet (next iterations)
-- **Page A save** — the conditional/event-ordering work above.
-- **Pages B–G** (Next of Kin + Account, Matric + subjects loop, Previous
-  Studies, Qualifications, Check, Agreement) — ids + the **Save and Continue**
-  page transitions and the repeating Add-Subject rows (gated behind Page A save).
+- **Page B fill + save** (then harvest **Pages C–G**: Matric + the subject loop,
+  Previous Studies, Qualifications, Check, Agreement) via the same method.
+- **Page transitions** — each page's Save button is `#oapNextBtn2`, `#oapNextBtn2_1`, …
 - **Submit page (G)** ids: PIN field, I Accept, Submit Application (never Quit).
-- **verify_submission** success marker — only on the one real submit (we agreed:
+- **verify_submission** success marker — only on the one real submit (agreed:
   build/verify up to submit only, never fake-submit).
 - **AI mapping integration** — run Jane Doe + the field schema through `AIClient`
   to produce the `FieldMapping` (currently tested with hand-built mappings).

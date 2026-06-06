@@ -120,6 +120,12 @@ class FakePage:
     def expect_popup(self):
         return _PopupCtx(self)
 
+    async def evaluate(self, js, arg=None):
+        sel = arg[0] if isinstance(arg, (list, tuple)) and arg else arg
+        if sel in self.fail:
+            raise RuntimeError("evaluate failed")
+        self.calls.append(("evaluate", arg))
+
 
 def _adapter_with_pin(pin="13579"):
     a = UJAdapter()
@@ -267,6 +273,25 @@ async def test_fill_form_dispatches_verified_fields():
     assert not any(c[0] == "check" for c in page.calls)
 
 
+async def test_set_date_uses_evaluate():
+    a, page = UJAdapter(), FakePage()
+    await a._set_date(page, "#oapBirthdate", "12-MAR-2008")
+    assert ("evaluate", ["#oapBirthdate", "12-MAR-2008"]) in page.calls
+
+
+async def test_set_date_failure_raises_portal_changed():
+    a = UJAdapter()
+    page = FakePage(fail={"#oapBirthdate"})
+    with pytest.raises(PortalChangedError):
+        await a._set_date(page, "#oapBirthdate", "12-MAR-2008")
+
+
+async def test_fill_form_dispatches_date_via_set_date():
+    a, page = UJAdapter(), FakePage()
+    await a.fill_form(page, FieldMapping(values={"date_of_birth": "12-MAR-2008"}))
+    assert ("evaluate", ["#oapBirthdate", "12-MAR-2008"]) in page.calls
+
+
 async def test_fill_form_drives_lov_field():
     popup = FakeLovPopup()
     a, page = UJAdapter(), FakePage(next_popup=popup)
@@ -277,7 +302,8 @@ async def test_fill_form_drives_lov_field():
 
 async def test_fill_form_skips_fields_without_selector():
     a, page = UJAdapter(), FakePage()
-    await a.fill_form(page, FieldMapping(values={"nok_name": "John Doe"}))
+    # matric_year (page C) still has no verified selector
+    await a.fill_form(page, FieldMapping(values={"matric_year": "2026"}))
     assert page.calls == []
 
 

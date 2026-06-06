@@ -118,8 +118,10 @@ class UJAdapter(UniversityAdapter):
         self, page: Page, field: dict, selector: str, value: str
     ) -> None:
         ftype = field["type"]
-        if ftype in ("text", "date"):
+        if ftype == "text":
             await self._fill(page, selector, value)
+        elif ftype == "date":
+            await self._set_date(page, selector, value)
         elif ftype == "select":
             await self._select_label(page, selector, value)
         elif ftype == "checkbox":
@@ -188,6 +190,28 @@ class UJAdapter(UniversityAdapter):
         except Exception as exc:  # noqa: BLE001
             raise PortalChangedError(
                 f"dropdown {selector} has no value {value!r}", selector=selector
+            ) from exc
+
+    async def _set_date(self, page: Page, selector: str, value: str) -> None:
+        """ITS date fields (e.g. `#oapBirthdate`) are **readonly** calendar
+        widgets — `fill` won't stick. Set the value and fire change/blur directly.
+        Value must already be in UJ's `DD-MON-YYYY` format (e.g. `12-MAR-2008`).
+        Verified live 2026-06-05 (Page A saved with this)."""
+        try:
+            await page.evaluate(
+                """([sel, val]) => {
+                  const el = document.querySelector(sel);
+                  if (!el) throw new Error('date field missing');
+                  el.removeAttribute('readonly');
+                  el.value = val;
+                  el.dispatchEvent(new Event('change', {bubbles: true}));
+                  el.dispatchEvent(new Event('blur', {bubbles: true}));
+                }""",
+                [selector, value],
+            )
+        except Exception as exc:  # noqa: BLE001
+            raise PortalChangedError(
+                f"date field {selector} could not be set", selector=selector
             ) from exc
 
     async def _check(self, page: Page, selector: str) -> None:
