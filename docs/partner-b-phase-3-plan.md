@@ -297,6 +297,8 @@ Default provider: **Google Gemini 2.5 Flash**. The wrapper is built provider-agn
 
 Pick the simplest portal from the research artefact. Build the first concrete adapter, wire it into FastAPI BackgroundTasks, and run a real submission end-to-end.
 
+> **Progress (2026-06-05):** UJ chosen (no captcha). `feature/adapter-uj` — `app/automation/adapters/uj.py` + `uj.fields.json`, 15 unit tests, doc `docs/phase-3/task-4-adapter-uj.md`. **Login (entry/POPI gate) + biographical page (Page A) live-verified** against the real portal (16/19 fields filled with the Jane Doe test applicant, read back correctly; stopped before submit). **Key finding: approach C fails on ITS Integrator — UJ has no accessible names, so the adapter targets by stable element id** (`#oapSurname`, …); the Phase 3 decision is amended for ITS (PeopleSoft portals TBC). **Not done:** LOV search-popup wiring, pages B–G + Save-and-Continue transitions + the subject loop, the submit-page ids, the `verify_submission` marker, and the end-to-end wiring (BackgroundTasks, persist to `application_jobs`, `field_mappings` table, screenshot upload, retry endpoint). Partner-A calls taken: separate `field_mappings` table, extended failure taxonomy, re-enqueue-on-retry.
+
 - [ ] Create `automation/adapters/<slug>.py` implementing `UniversityAdapter`:
   - `login()` — navigate to portal login, fill credentials from env, handle MFA if required (stop with `AuthFailedError` if MFA is required and not solvable headlessly)
   - `fill_form()` — page-by-page, field-by-field, using the `FieldMapping` from Task 3. Wrap every selector lookup in a try/except that raises `PortalChangedError` with the selector that broke

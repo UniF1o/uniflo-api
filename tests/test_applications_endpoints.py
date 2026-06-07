@@ -341,20 +341,147 @@ def test_get_application_not_found():
     assert response.json()["detail"] == "application_not_found"
 
 
-# POST /applications/{id}/retry returns 501
-def test_retry_application_not_implemented():
+# GET /applications/{id}/field-mappings returns the review-screen mapping
+def test_field_mappings_endpoint_success():
+    from app.api.applications.schemas import FieldMappingEntryRead, FieldMappingRead
+
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+    mapping = FieldMappingRead(
+        application_id=VALID_APPLICATION_ID,
+        university_id=VALID_UNIVERSITY_ID,
+        overall_confidence=0.8,
+        confidence_threshold=0.85,
+        entries=[
+            FieldMappingEntryRead(field_id="surname", value="Doe", confidence=0.95, flagged=False),
+            FieldMappingEntryRead(field_id="programme", value="Civil", confidence=0.6, flagged=True),
+        ],
+        created_at=datetime.now(timezone.utc),
+    )
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
+         patch("app.api.applications.service.get_field_mapping") as mock_get:
+        mock_auth(mock_decode)
+        mock_get.return_value = mapping
+        response = client.get(
+            f"/applications/{VALID_APPLICATION_ID}/field-mappings",
+            headers=auth_headers(),
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    body = response.json()
+    flagged = {e["field_id"]: e["flagged"] for e in body["entries"]}
+    assert flagged == {"surname": False, "programme": True}
+
+
+# POST /applications/{id}/consent records acceptance and returns the application
+def test_consent_endpoint_success():
     mock_session = MagicMock()
     app.dependency_overrides[get_session] = lambda: mock_session
 
-    with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
+         patch("app.api.applications.service.record_consent") as mock_consent:
         mock_auth(mock_decode)
+        mock_consent.return_value = make_mock_application()
+        response = client.post(
+            f"/applications/{VALID_APPLICATION_ID}/consent",
+            json={"popi": True, "agreement": True},
+            headers=auth_headers(),
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+
+
+def test_record_consent_service_sets_timestamps():
+    from app.api.applications import service
+
+    mock_session = MagicMock()
+    mock_session.exec.return_value.first.return_value = make_mock_profile()
+    mock_session.exec.return_value.all.return_value = []
+    appn = make_mock_application()
+    appn.popi_consent_at = None
+    appn.agreement_consent_at = None
+    mock_session.get.return_value = appn
+
+    service.record_consent(
+        mock_session, VALID_USER_ID, VALID_APPLICATION_ID, popi=True, agreement=True
+    )
+    assert appn.popi_consent_at is not None
+    assert appn.agreement_consent_at is not None
+    mock_session.commit.assert_called_once()
+
+
+def test_record_consent_requires_a_flag():
+    import pytest
+    from fastapi import HTTPException
+
+    from app.api.applications import service
+    with pytest.raises(HTTPException) as exc:
+        service.record_consent(
+            MagicMock(), VALID_USER_ID, VALID_APPLICATION_ID,
+            popi=False, agreement=False,
+        )
+    assert exc.value.status_code == 422
+
+
+# POST /applications/{id}/retry re-enqueues automation and returns the application
+def test_retry_application_success():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
+         patch("app.api.applications.service.retry_application") as mock_retry, \
+         patch("app.api.applications.router.process_application") as mock_proc:
+        mock_auth(mock_decode)
+        mock_retry.return_value = make_mock_application()
         response = client.post(
             f"/applications/{VALID_APPLICATION_ID}/retry",
             headers=auth_headers()
         )
 
     app.dependency_overrides.clear()
-    assert response.status_code == 501
+    assert response.status_code == 200
+    mock_proc.assert_called_once()  # automation re-enqueued
+
+
+def test_retry_application_blocks_submitted():
+    from fastapi import HTTPException
+
+    from app.api.applications import service
+
+    mock_session = MagicMock()
+    mock_session.exec.return_value.first.return_value = make_mock_profile()
+    appn = make_mock_application()
+    appn.status = "submitted"
+    mock_session.get.return_value = appn
+
+    import pytest
+    with pytest.raises(HTTPException) as exc:
+        service.retry_application(mock_session, VALID_USER_ID, VALID_APPLICATION_ID)
+    assert exc.value.status_code == 409
+    assert exc.value.detail["code"] == "already_submitted"
+
+
+def test_retry_application_blocks_in_progress():
+    from fastapi import HTTPException
+
+    from app.api.applications import service
+
+    mock_session = MagicMock()
+    job = make_mock_job()
+    job.status = "processing"
+    # get_student_profile, then get_latest_job
+    mock_session.exec.return_value.first.side_effect = [make_mock_profile(), job]
+    appn = make_mock_application()
+    appn.status = "processing"
+    mock_session.get.return_value = appn
+
+    import pytest
+    with pytest.raises(HTTPException) as exc:
+        service.retry_application(mock_session, VALID_USER_ID, VALID_APPLICATION_ID)
+    assert exc.value.status_code == 409
+    assert exc.value.detail["code"] == "already_in_progress"
 
 
 # All application endpoints return 401 without a valid token

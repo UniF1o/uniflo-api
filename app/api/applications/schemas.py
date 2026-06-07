@@ -45,6 +45,10 @@ class ApplicationRead(BaseModel):
     submitted_at: Optional[datetime]
     updated_at: Optional[datetime]
     created_at: datetime
+    # When the student accepted the portal's POPI notice / application agreement
+    # (null = not yet — the automation won't tick POPI / submit without these).
+    popi_consent_at: Optional[datetime] = None
+    agreement_consent_at: Optional[datetime] = None
     latest_job: Optional[ApplicationJobRead] = None
     # Ordered programme choices (choice 1 == `programme`). Portals take 2-3.
     choices: list[ApplicationChoiceRead] = []
@@ -61,6 +65,37 @@ def _validate_programme(v: str) -> str:
 
 # Most choices any target portal accepts (Wits = 3): choice 1 + 2 extra.
 MAX_ADDITIONAL_PROGRAMMES = 2
+
+
+class FieldMappingEntryRead(BaseModel):
+    """One mapped field for the review screen. `flagged` == low confidence
+    (below the threshold in force when the mapping was produced)."""
+
+    field_id: str
+    value: Optional[str] = None
+    confidence: float
+    flagged: bool
+    reasoning: str = ""
+    source_profile_field: Optional[str] = None
+
+
+class FieldMappingRead(BaseModel):
+    application_id: uuid.UUID
+    university_id: uuid.UUID
+    overall_confidence: float
+    confidence_threshold: float
+    entries: list[FieldMappingEntryRead]
+    created_at: datetime
+    updated_at: Optional[datetime] = None
+
+
+class ConsentRequest(BaseModel):
+    """Records the student's explicit acceptance after they've viewed the portal's
+    POPI notice / application agreement (surfaced by the frontend). At least one
+    must be true."""
+
+    popi: bool = False
+    agreement: bool = False
 
 
 class ApplicationCreate(BaseModel):

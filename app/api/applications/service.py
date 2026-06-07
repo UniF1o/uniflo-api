@@ -5,13 +5,28 @@ from typing import Optional
 from fastapi import HTTPException
 from sqlmodel import Session, select
 
-from app.api.applications.schemas import ApplicationCreate, ApplicationStatus
+from app.api.applications.schemas import (
+    ApplicationCreate,
+    ApplicationStatus,
+    FieldMappingEntryRead,
+    FieldMappingRead,
+)
 from app.api.profiles.schemas import REQUIRED_PROFILE_FIELDS
+from app.automation.screenshots import create_signed_url, is_storage_path
 from app.models.application import Application
 from app.models.application_choice import ApplicationChoice
 from app.models.application_job import ApplicationJob
+from app.models.field_mapping import FieldMappingRecord
 from app.models.student_profile import StudentProfile
 from app.models.university import University
+
+
+def _sign_job_screenshot(job: Optional[ApplicationJob]) -> None:
+    """Replace a job's stored screenshot *path* with a short-lived signed URL for
+    the response. In-memory only — read endpoints never commit, so the path stays
+    in the DB (do NOT call this on a code path that commits)."""
+    if job is not None and is_storage_path(job.screenshot_url):
+        job.screenshot_url = create_signed_url(job.screenshot_url)
 
 
 def get_student_profile(session: Session, user_id: str) -> StudentProfile:
@@ -121,6 +136,80 @@ def create_application(
     return application
 
 
+def retry_application(
+    session: Session, user_id: str, application_id: uuid.UUID
+) -> Application:
+    """Queue a fresh automation attempt for a failed application: a new
+    ApplicationJob (preserving the failed one) + status back to pending. The
+    router enqueues `process_application` after this returns."""
+    profile = get_student_profile(session, user_id)
+    application = session.get(Application, application_id)
+    if not application or application.student_id != profile.id:
+        raise HTTPException(status_code=404, detail="application_not_found")
+
+    if application.status == ApplicationStatus.SUBMITTED:
+        raise HTTPException(status_code=409, detail={"code": "already_submitted"})
+    latest = get_latest_job(session, application_id)
+    if latest and latest.status in (
+        ApplicationStatus.PENDING,
+        ApplicationStatus.PROCESSING,
+    ):
+        raise HTTPException(status_code=409, detail={"code": "already_in_progress"})
+
+    job = ApplicationJob(
+        application_id=application.id,
+        status=ApplicationStatus.PENDING,
+        attempts=0,
+    )
+    session.add(job)
+    application.status = ApplicationStatus.PENDING
+    application.updated_at = datetime.now(timezone.utc)
+    session.add(application)
+    session.commit()
+    session.refresh(application)
+    session.refresh(job)
+
+    application.latest_job = job
+    application.choices = get_choices(session, application.id)
+    return application
+
+
+def record_consent(
+    session: Session,
+    user_id: str,
+    application_id: uuid.UUID,
+    *,
+    popi: bool,
+    agreement: bool,
+) -> Application:
+    """Record the student's explicit POPI / agreement acceptance (timestamps).
+    At least one flag must be true. The automation gate reads these before it
+    ticks POPI / submits on the student's behalf."""
+    if not (popi or agreement):
+        raise HTTPException(
+            status_code=422, detail={"code": "no_consent_specified"}
+        )
+    profile = get_student_profile(session, user_id)
+    application = session.get(Application, application_id)
+    if not application or application.student_id != profile.id:
+        raise HTTPException(status_code=404, detail="application_not_found")
+
+    now = datetime.now(timezone.utc)
+    if popi:
+        application.popi_consent_at = now
+    if agreement:
+        application.agreement_consent_at = now
+    application.updated_at = now
+    session.add(application)
+    session.commit()
+    session.refresh(application)
+
+    application.latest_job = get_latest_job(session, application.id)
+    _sign_job_screenshot(application.latest_job)
+    application.choices = get_choices(session, application.id)
+    return application
+
+
 def list_applications(session: Session, user_id: str) -> list[Application]:
     profile = get_student_profile(session, user_id)
 
@@ -134,9 +223,51 @@ def list_applications(session: Session, user_id: str) -> list[Application]:
     # attach latest job + ordered choices to each application
     for app in applications:
         app.latest_job = get_latest_job(session, app.id)
+        _sign_job_screenshot(app.latest_job)
         app.choices = get_choices(session, app.id)
 
     return applications
+
+
+def get_field_mapping(
+    session: Session, user_id: str, application_id: uuid.UUID
+) -> FieldMappingRead:
+    """The AI-proposed mapping for Partner-A's review screen. 404 if the
+    application isn't the student's, or no mapping has been produced yet."""
+    profile = get_student_profile(session, user_id)
+    application = session.get(Application, application_id)
+    if not application or application.student_id != profile.id:
+        raise HTTPException(status_code=404, detail="application_not_found")
+
+    record = session.exec(
+        select(FieldMappingRecord).where(
+            FieldMappingRecord.application_id == application_id
+        )
+    ).first()
+    if record is None:
+        raise HTTPException(status_code=404, detail="field_mapping_not_found")
+
+    threshold = record.confidence_threshold
+    entries = [
+        FieldMappingEntryRead(
+            field_id=e.get("field_id"),
+            value=e.get("value"),
+            confidence=e.get("confidence", 0.0),
+            flagged=e.get("confidence", 0.0) < threshold,
+            reasoning=e.get("reasoning", ""),
+            source_profile_field=e.get("source_profile_field"),
+        )
+        for e in (record.entries or [])
+    ]
+    return FieldMappingRead(
+        application_id=record.application_id,
+        university_id=record.university_id,
+        overall_confidence=record.overall_confidence,
+        confidence_threshold=threshold,
+        entries=entries,
+        created_at=record.created_at,
+        updated_at=record.updated_at,
+    )
 
 
 def get_application(

@@ -3,6 +3,8 @@
 > **Status: Draft v2 — verified from screen recording.** Rebuilt from `uj.mp4` (14:34) frame-by-frame, not just dictation. Field labels, control types, required flags, dropdown/LOV option lists, the page order, and the review/agreement pages are now confirmed from video. **Not** in the video: the applicant-type choice + login screen (recording starts already logged in — taken from dictation) and the post-submit confirmation page (recording ends at the agreement step). Sample data shown in the video is intentionally omitted (PII).
 >
 > **Drive mechanism: accessibility-tree primary (approach C).** The "Control / target" column names the visible label + control type the agent acts on, not a CSS selector.
+>
+> ⚠️ **Update (2026-06-05, from building the adapter):** approach C **does not work on this ITS portal** — its inputs have **no accessible names**, so the adapter targets by **stable element id** (`#oapSurname`, `#oapTitle`, `#oapNextBtn1`, …) instead. The labels below are still correct for AI mapping; the live-verified element ids live in `app/automation/adapters/uj.fields.json`. See `docs/phase-3/task-4-adapter-uj.md`.
 
 ## Portal URL
 - Login: <https://registration.uj.ac.za/pls/prodi41/gen.gw1pkg.gw1startup?x_processcode=ITS_OAP>
@@ -178,15 +180,27 @@ Full schema cross-check + status: **[data-model-gaps.md](data-model-gaps.md)** (
 - **Consent** — POPI (entry) + Agreement (submit) both **surfaced to the student** (decision 2026-06-03).
 - Maps cleanly: names, `id_number`, `date_of_birth`, `phone`, street-address block, `postal_code`, `nationality`, `marital_status`, `home_language`, `ethnicity`; school → `academic_records.institution`.
 
-## Screenshots
+## Screenshots / video — CONSULT BEFORE LIVE-PROBING
 - **Committed:** the entry/POPI gate (`screenshots/uj/entry-1-student-number.png`, `entry-2-popi-gate.png`) — captured live, the only record of Page 0.
-- Video frames from `uj.mp4` (1 per ~18s) stay in a local scratch folder — **not committed**.
+- **Walkthrough video + frames (local, not committed — too large):**
+  `C:\Users\fulum\Videos\Uniflo\uj.mp4` and `…\uj_frames\t_001.jpg …` (≈1 frame/18s).
+  Landmarks: subject LOV ≈ `t_034`; **Qualifications page** ≈ `t_041`–`t_044`
+  (t_042 = faculty LOV "no data" before *Are you applying for* = Curricular
+  Courses; t_043 = faculty `ENGINEERING&BUILT ENVIRONMENT`; t_044 = programme
+  `(ELIGIBLE TO APPLY-Y) - B ENG TECH IN ELECTRICAL ENGINEERING`).
+  Other portals: `uct.mp4`/`uct_frames`, `up.mp4`/`up_frames`,
+  `wits.mp4`/`wits_frames` in the same folder. (The `IMG-…WA00xx.jpg` files there
+  are **UCT** phone shots, not UJ.)
+- **The dictation** is the appendix at the bottom of this file — read it for page
+  ordering/gating the video doesn't show. **Read the frames + dictation before
+  reverse-engineering a page live** (saves tokens + avoids PROD footprints).
 
 ## Open questions / to verify
 - [x] Agreement/submit screen — **captured** (PIN + I Accept/I do not Accept + Submit Application/Quit Application).
 - [~] Post-submit **success** page — **on hold (2026-06-03): can't capture without submitting a real application**; confirm at the first live adapter run.
 - [x] Document uploads — **confirmed not required for the initial application** (2026-06-03).
-- [~] "What are you currently doing?" option list + "Add Qualification" reset behaviour — **deferred**: both are mid-wizard, so capturing them means filling the live form with PII (no login wall, but it creates a real in-progress application); left until a test-account walk.
+- [x] "What are you currently doing?" — **`GRADE 12 PUPIL`** (Page D `#oapPact`, single option), confirmed in the 2026-06-06 test-account walk. "Add Qualification" (`#oapAddQual`) allows a 2nd choice (num allowed = 2); reset behaviour not re-tested.
+- [x] **Full A→G flow driven live (verify-only, never submitted) 2026-06-06** with the Jane Doe test account — every page's element ids + LOV mechanics captured; see `docs/phase-3/task-4-adapter-uj.md`.
 - [x] Applicant-type + entry/POPI gate first screen — **captured live (2026-06-03)**: see Page 0 (no separate login for new applicants; POPI accept gate up-front; landing-page entry points noted).
 
 ---
