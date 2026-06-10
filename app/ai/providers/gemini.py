@@ -73,12 +73,45 @@ class GeminiProvider(AIProvider):
             # Fall back to validating the raw JSON text the model returned.
             parsed = response_schema.model_validate_json(resp.text)
 
+        return parsed, self._usage(resp)
+
+    async def generate_vision_structured(
+        self,
+        system: str,
+        user: str,
+        image: bytes,
+        image_mime: str,
+        response_schema: type[T],
+        *,
+        temperature: float = 0.0,
+    ) -> tuple[T, TokenUsage]:
+        config = genai_types.GenerateContentConfig(
+            system_instruction=system,
+            temperature=temperature,
+            response_mime_type="application/json",
+            response_schema=response_schema,
+        )
+        part = genai_types.Part.from_bytes(data=image, mime_type=image_mime)
+
+        async def _call():
+            return await self._client.aio.models.generate_content(
+                model=self.model, contents=[part, user], config=config
+            )
+
+        resp = await with_retries(
+            _call, max_attempts=self.max_attempts, label=f"gemini-vision[{self.model}]"
+        )
+        parsed = getattr(resp, "parsed", None)
+        if parsed is None:
+            parsed = response_schema.model_validate_json(resp.text)
+        return parsed, self._usage(resp)
+
+    def _usage(self, resp) -> TokenUsage:
         meta = getattr(resp, "usage_metadata", None)
-        usage = TokenUsage(
+        return TokenUsage(
             input=getattr(meta, "prompt_token_count", 0) or 0,
             output=getattr(meta, "candidates_token_count", 0) or 0,
             cached_input=getattr(meta, "cached_content_token_count", 0) or 0,
             provider=self.name,
             model=self.model,
         )
-        return parsed, usage

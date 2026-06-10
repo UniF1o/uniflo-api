@@ -143,6 +143,8 @@ _ERROR_CODE_MAP = {
     "timeout": "timeout",
     # Email-challenge values (OTP / emailed login) never arrived — retryable.
     "challenge_timeout": "timeout",
+    # Vision model couldn't read the portal captcha — retryable (fresh captcha).
+    "captcha_unsolved": "portal_unavailable",
     "portal_changed": "form_submit_failed",
     "validation_failed": "form_submit_failed",
     "form_submit_failed": "form_submit_failed",

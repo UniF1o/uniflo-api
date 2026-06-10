@@ -92,6 +92,15 @@ class HumanActionRequiredError(AdapterError):
         self.browser_state = browser_state
 
 
+class CaptchaUnsolvedError(AdapterError):
+    """The vision model couldn't produce a valid reading of a captcha image
+    after the configured attempts. Retryable — a fresh run gets a fresh
+    captcha (and the adapter may refresh the image between solve calls)."""
+
+    code = "captcha_unsolved"
+    retryable = True
+
+
 class UnknownAdapterError(AdapterError):
     """Catch-all for anything we didn't anticipate. Retryable — the next attempt
     might land on a transient hiccup rather than a real defect."""
