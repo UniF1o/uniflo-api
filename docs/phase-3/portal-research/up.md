@@ -152,7 +152,7 @@ Full schema cross-check + status: **[data-model-gaps.md](data-model-gaps.md)** (
 - Frames extracted from `up.mp4` (1 per ~25s) to a local scratch folder — **not committed**. TODO: export key page shots to `screenshots/up/`.
 
 ## Open questions / to verify
-- [x] Apply (submit) screen + full Payment methods — **captured**.
+- [x] Apply (submit) screen + full Payment methods — **captured; live-verified 2026-06-11** (Apply button id `UP_FAE_WRK_APPLY`, enabled even while unpaid — see Live spike findings).
 - [~] Post-"Apply" **success** page — **on hold: can't capture without a real submission**; confirm at first live adapter run (use the "Must still verify & apply" status flip meanwhile).
 - [x] Address lines 2–4 — **optional (live-verified 2026-06-11**: saved with only Line 1).
 - [x] Gender set — **live-verified 2026-06-11: Female / Male / Unspecified-Non-Binary** (wider than our M/F enum; map Unspecified to an explicit ask if we ever store it).
@@ -192,7 +192,7 @@ Full walkthrough on the live portal, synthetic Jane Doe, Application ID `T398988
 - **Declaration:** Yes/No switch `UP_FAE_STG_GENL_CONFIRMED`. Full wording captured (surface to the student per the consent decision); key line: *"I acknowledge that I have to click on 'verify' and 'apply' to finalise my application…"* — i.e. the declaration itself is NOT the submit.
 - **Verify:** button `UP_FAE_WRK_VERIFY`; pass ⇒ alert `(31100, 388)` *"No errors — …make payment and click the 'Apply' link"*; sections get ✓.
 - **Payment (STOPPED HERE):** Amount Due **300.00** (non-refundable), Payment Status **Not Paid**, Reference + Confirmed Date read-only; bank details Standard Bank · Hatfield (011545) · SBZAZAJJ · 012602604; method tabs Online Credit Card Payment / Upload My Proof of Payment / Upload My Parent's Payslip. Not exercised.
-- **Apply:** not opened (needs payment first; the one real submit waits for a consenting student).
+- **Apply (scanned read-only, button NOT clicked):** ⚠️ **the page is reachable and the Apply button is ENABLED with Payment still "Not Paid"** — payment does not gate the button client-side, so the adapter's no-submit protection must be on our side (`AUTOMATION_ALLOW_SUBMIT` + never targeting it), not the portal's. Single control: **`UP_FAE_WRK_APPLY`** (anchor button labelled "Apply"). Page text verbatim: *"Please confirm that you wish to complete your application. Once you apply, further changes to your application are not possible. Your application will first be verified. If errors or omissions are found, you must address them before continuing. If no errors are found, your application will be submitted to the University."* The toolbar Next is disabled here (last page); left-nav shows ✓ on everything except Payment. Whether clicking Apply while unpaid errors at the server-side verification pass is unknown — do not test.
 
 ### Adapter notes
 - Pure approach C is workable for plain fields, but modals/grids want the stable ids above (same conclusion as UCT).
