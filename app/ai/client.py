@@ -58,6 +58,24 @@ class AIClient:
         _log_usage(usage)
         return result, usage
 
+    async def generate_vision_structured(
+        self,
+        system: str,
+        user: str,
+        image: bytes,
+        image_mime: str,
+        response_schema: type[T],
+        *,
+        temperature: float = 0.0,
+    ) -> tuple[T, TokenUsage]:
+        """`generate_structured` with one inline image (e.g. captcha reading)."""
+        result, usage = await self._provider.generate_vision_structured(
+            system, user, image, image_mime, response_schema,
+            temperature=temperature,
+        )
+        _log_usage(usage)
+        return result, usage
+
 
 def _log_usage(usage: TokenUsage) -> None:
     logger.info(

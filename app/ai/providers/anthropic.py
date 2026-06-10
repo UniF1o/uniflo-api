@@ -76,7 +76,58 @@ class ClaudeProvider(AIProvider):
         resp = await with_retries(
             _call, max_attempts=self.max_attempts, label=f"claude[{self.model}]"
         )
+        return self._parse_tool_response(resp, response_schema)
 
+    async def generate_vision_structured(
+        self,
+        system: str,
+        user: str,
+        image: bytes,
+        image_mime: str,
+        response_schema: type[T],
+        *,
+        temperature: float = 0.0,
+    ) -> tuple[T, TokenUsage]:
+        import base64
+
+        tool = {
+            "name": _TOOL_NAME,
+            "description": "Return the structured reading.",
+            "input_schema": response_schema.model_json_schema(),
+        }
+        system_blocks = [
+            {"type": "text", "text": system, "cache_control": {"type": "ephemeral"}}
+        ]
+        content = [
+            {
+                "type": "image",
+                "source": {
+                    "type": "base64",
+                    "media_type": image_mime,
+                    "data": base64.b64encode(image).decode("ascii"),
+                },
+            },
+            {"type": "text", "text": user},
+        ]
+
+        async def _call():
+            return await self._client.messages.create(
+                model=self.model,
+                max_tokens=_MAX_TOKENS,
+                temperature=temperature,
+                system=system_blocks,
+                tools=[tool],
+                tool_choice={"type": "tool", "name": _TOOL_NAME},
+                messages=[{"role": "user", "content": content}],
+            )
+
+        resp = await with_retries(
+            _call, max_attempts=self.max_attempts,
+            label=f"claude-vision[{self.model}]",
+        )
+        return self._parse_tool_response(resp, response_schema)
+
+    def _parse_tool_response(self, resp, response_schema: type[T]) -> tuple[T, TokenUsage]:
         tool_input = None
         for block in resp.content:
             if getattr(block, "type", None) == "tool_use":

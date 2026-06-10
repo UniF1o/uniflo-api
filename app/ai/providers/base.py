@@ -37,3 +37,18 @@ class AIProvider(ABC):
         *,
         temperature: float = 0.0,
     ) -> tuple[T, TokenUsage]: ...
+
+    @abstractmethod
+    async def generate_vision_structured(
+        self,
+        system: str,
+        user: str,
+        image: bytes,
+        image_mime: str,
+        response_schema: type[T],
+        *,
+        temperature: float = 0.0,
+    ) -> tuple[T, TokenUsage]:
+        """`generate_structured` with one inline image (captcha reading etc.).
+        Both current backends are vision-capable (Gemini Flash, Claude)."""
+        ...
