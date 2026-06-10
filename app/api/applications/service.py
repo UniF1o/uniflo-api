@@ -17,6 +17,7 @@ from app.models.application import Application
 from app.models.application_choice import ApplicationChoice
 from app.models.application_job import ApplicationJob
 from app.models.field_mapping import FieldMappingRecord
+from app.models.portal_challenge import PortalChallenge
 from app.models.student_profile import StudentProfile
 from app.models.university import University
 
@@ -48,6 +49,21 @@ def get_latest_job(
         select(ApplicationJob)
         .where(ApplicationJob.application_id == application_id)
         .order_by(ApplicationJob.created_at.desc())
+        .limit(1)
+    )
+    return session.exec(statement).first()
+
+
+def get_pending_challenge(
+    session: Session, application_id: uuid.UUID
+) -> Optional[PortalChallenge]:
+    """The latest unanswered email challenge, if the run is waiting on one
+    (status `action_required`). The app renders one input per requested field."""
+    statement = (
+        select(PortalChallenge)
+        .where(PortalChallenge.application_id == application_id)
+        .where(PortalChallenge.supplied_at == None)  # noqa: E711 — SQL IS NULL
+        .order_by(PortalChallenge.created_at.desc())
         .limit(1)
     )
     return session.exec(statement).first()
@@ -133,6 +149,7 @@ def create_application(
 
     application.latest_job = job
     application.choices = get_choices(session, application.id)
+    application.pending_challenge = None
     return application
 
 
@@ -153,6 +170,7 @@ def retry_application(
     if latest and latest.status in (
         ApplicationStatus.PENDING,
         ApplicationStatus.PROCESSING,
+        ApplicationStatus.ACTION_REQUIRED,
     ):
         raise HTTPException(status_code=409, detail={"code": "already_in_progress"})
 
@@ -171,6 +189,47 @@ def retry_application(
 
     application.latest_job = job
     application.choices = get_choices(session, application.id)
+    application.pending_challenge = get_pending_challenge(session, application.id)
+    return application
+
+
+def supply_challenge(
+    session: Session,
+    user_id: str,
+    application_id: uuid.UUID,
+    values: dict[str, str],
+) -> Application:
+    """Answer the pending email challenge (e.g. type in the OTP the portal sent).
+    The waiting automation run polls the row and continues once the values land;
+    it clears them after consumption."""
+    profile = get_student_profile(session, user_id)
+    application = session.get(Application, application_id)
+    if not application or application.student_id != profile.id:
+        raise HTTPException(status_code=404, detail="application_not_found")
+
+    challenge = get_pending_challenge(session, application_id)
+    if challenge is None:
+        raise HTTPException(status_code=404, detail="no_pending_challenge")
+
+    requested = list(challenge.requested_fields or [])
+    missing = [f for f in requested if not values.get(f)]
+    if missing:
+        raise HTTPException(
+            status_code=422,
+            detail={"code": "missing_challenge_fields", "missing_fields": missing},
+        )
+
+    # Store only what was asked for — extra keys are dropped.
+    challenge.supplied_values = {f: values[f] for f in requested}
+    challenge.supplied_at = datetime.now(timezone.utc)
+    session.add(challenge)
+    session.commit()
+    session.refresh(application)
+
+    application.latest_job = get_latest_job(session, application.id)
+    _sign_job_screenshot(application.latest_job)
+    application.choices = get_choices(session, application.id)
+    application.pending_challenge = get_pending_challenge(session, application.id)
     return application
 
 
@@ -207,6 +266,7 @@ def record_consent(
     application.latest_job = get_latest_job(session, application.id)
     _sign_job_screenshot(application.latest_job)
     application.choices = get_choices(session, application.id)
+    application.pending_challenge = get_pending_challenge(session, application.id)
     return application
 
 
@@ -225,6 +285,7 @@ def list_applications(session: Session, user_id: str) -> list[Application]:
         app.latest_job = get_latest_job(session, app.id)
         _sign_job_screenshot(app.latest_job)
         app.choices = get_choices(session, app.id)
+        app.pending_challenge = get_pending_challenge(session, app.id)
 
     return applications
 
@@ -282,4 +343,5 @@ def get_application(
 
     application.latest_job = get_latest_job(session, application.id)
     application.choices = get_choices(session, application.id)
+    application.pending_challenge = get_pending_challenge(session, application.id)
     return application

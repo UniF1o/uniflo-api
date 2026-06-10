@@ -33,6 +33,15 @@ class Settings(BaseSettings):
     # DB). Falls back to the JWT secret if unset.
     AUTOMATION_PIN_SECRET: Optional[str] = None
 
+    # Email-challenge capability (Phase 3 Task 5): how mid-run portal emails
+    # (UCT's OTP, Wits/UP login deliveries) are answered. "relay" pauses the run
+    # in place and prompts the student in-app; "imap" reads an inbox we control
+    # (the dev/test Gmail; later a managed catch-all mailbox).
+    EMAIL_CHALLENGE_SOURCE: str = "relay"  # relay | imap
+    IMAP_HOST: str = "imap.gmail.com"
+    IMAP_USER: Optional[str] = None
+    IMAP_APP_PASSWORD: Optional[str] = None
+
     # AI field-mapping layer (Phase 3). Provider-agnostic; default Gemini Flash.
     # All optional so the app still boots without a key.
     AI_PROVIDER: str = "gemini"  # gemini | anthropic

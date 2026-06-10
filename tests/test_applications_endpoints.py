@@ -69,6 +69,7 @@ def make_mock_application():
     mock.updated_at = None
     mock.created_at = datetime.now(timezone.utc)
     mock.latest_job = make_mock_job()
+    mock.pending_challenge = None
     mock.choices = [
         _make_choice(1, "BSc Computer Science"),
         _make_choice(2, "BEng Electrical"),
