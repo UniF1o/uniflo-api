@@ -9,6 +9,10 @@ from pydantic import BaseModel, ConfigDict, field_validator
 class ApplicationStatus(str, Enum):
     PENDING = "pending"
     PROCESSING = "processing"
+    # The run is waiting in place for the student (e.g. an emailed OTP) — the
+    # frontend prompts using `pending_challenge.requested_fields` and posts the
+    # values to /applications/{id}/challenge.
+    ACTION_REQUIRED = "action_required"
     SUBMITTED = "submitted"
     FAILED = "failed"
 
@@ -33,6 +37,20 @@ class ApplicationChoiceRead(BaseModel):
     eligible: Optional[bool] = None
 
 
+class PendingChallengeRead(BaseModel):
+    """An unanswered email challenge the run is waiting on — non-null while the
+    status is `action_required`. The app shows one input per requested field
+    (e.g. ["otp"], or ["temp_id", "password"]) and posts the values to
+    /applications/{id}/challenge."""
+
+    model_config = ConfigDict(from_attributes=True)
+
+    id: uuid.UUID
+    portal_slug: str
+    requested_fields: list[str]
+    created_at: datetime
+
+
 class ApplicationRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -52,6 +70,7 @@ class ApplicationRead(BaseModel):
     latest_job: Optional[ApplicationJobRead] = None
     # Ordered programme choices (choice 1 == `programme`). Portals take 2-3.
     choices: list[ApplicationChoiceRead] = []
+    pending_challenge: Optional[PendingChallengeRead] = None
 
 
 def _validate_programme(v: str) -> str:
@@ -96,6 +115,30 @@ class ConsentRequest(BaseModel):
 
     popi: bool = False
     agreement: bool = False
+
+
+class ChallengeSupplyRequest(BaseModel):
+    """The student's answer to a pending challenge: one value per requested
+    field name (extra keys are ignored, missing ones are a 422)."""
+
+    values: dict[str, str]
+
+    @field_validator("values")
+    @classmethod
+    def validate_values(cls, v: dict[str, str]) -> dict[str, str]:
+        if not v:
+            raise ValueError("values must not be empty")
+        if len(v) > 10:
+            raise ValueError("too many values")
+        cleaned = {}
+        for key, value in v.items():
+            value = value.strip()
+            if not value:
+                raise ValueError(f"value for {key!r} must not be blank")
+            if len(value) > 200:
+                raise ValueError(f"value for {key!r} is too long")
+            cleaned[key.strip()] = value
+        return cleaned
 
 
 class ApplicationCreate(BaseModel):

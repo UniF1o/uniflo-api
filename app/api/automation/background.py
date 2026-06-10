@@ -141,6 +141,8 @@ def _run_fake_automation(application_id: uuid.UUID) -> None:
 # Runtime/adapter failure codes → the canonical JOB_ERROR_CODES the frontend maps.
 _ERROR_CODE_MAP = {
     "timeout": "timeout",
+    # Email-challenge values (OTP / emailed login) never arrived — retryable.
+    "challenge_timeout": "timeout",
     "portal_changed": "form_submit_failed",
     "validation_failed": "form_submit_failed",
     "form_submit_failed": "form_submit_failed",

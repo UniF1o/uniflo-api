@@ -7,6 +7,7 @@ from app.api.applications import service
 from app.api.applications.schemas import (
     ApplicationCreate,
     ApplicationRead,
+    ChallengeSupplyRequest,
     ConsentRequest,
     FieldMappingRead,
 )
@@ -79,6 +80,23 @@ def record_consent(
     return service.record_consent(
         session, user_id, application_id, popi=data.popi, agreement=data.agreement
     )
+
+
+@router.post(
+    "/{application_id}/challenge",
+    response_model=ApplicationRead,
+    operation_id="applications_supply_challenge",
+)
+def supply_challenge(
+    application_id: uuid.UUID,
+    data: ChallengeSupplyRequest,
+    request: Request,
+    session: Session = Depends(get_session),
+):
+    """Answer the pending email challenge the automation run is waiting on
+    (status `action_required`) — e.g. the OTP the portal emailed the student."""
+    user_id = request.state.user["sub"]
+    return service.supply_challenge(session, user_id, application_id, data.values)
 
 
 @router.post(
