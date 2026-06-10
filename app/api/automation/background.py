@@ -268,6 +268,63 @@ def derive_portal_pin(application_id: uuid.UUID) -> str:
     return "".join(digits)
 
 
+def derive_portal_credentials(seed_id: uuid.UUID, slug: str) -> tuple[str, str]:
+    """Deterministic per-student portal credentials (UCT-style self-created
+    accounts), HMAC-derived like `derive_portal_pin` — nothing persisted, any
+    retry recomputes the same pair. Keyed on the **student profile id** (the
+    portal account is per-student, reused across applications/runs).
+
+    Satisfies UCT's rules: username >=10 chars from [a-z0-9.] and not an email;
+    password >=16 chars with upper + lower + digit + special guaranteed by the
+    prefix. Generic enough for other portals (Wits permanent password later)."""
+    secret = settings.AUTOMATION_PIN_SECRET or settings.SUPABASE_JWT_SECRET or "uniflo"
+
+    def digest(purpose: str) -> str:
+        return hmac.new(
+            secret.encode(), f"{seed_id}:{slug}:{purpose}".encode(), hashlib.sha256
+        ).hexdigest()
+
+    username = f"uniflo.{digest('username')[:10]}"
+    password = f"Uf!2{digest('password')[:16]}"
+    return username, password
+
+
+def _wire_challenge_source(adapter, application_id: uuid.UUID, email) -> None:
+    """Hand the configured EmailChallengeSource to adapters that take one (UCT's
+    OTP; Wits/UP login deliveries later). The relay source polls the DB, so it
+    gets a fresh-session factory."""
+    if not hasattr(adapter, "set_challenge_source"):
+        return
+    from app.automation.challenge import get_challenge_source
+
+    source = get_challenge_source(lambda: Session(get_engine()))
+    adapter.set_challenge_source(
+        source, application_id=application_id, applicant_email=email or ""
+    )
+
+
+def _account_extra(profile, application, email) -> dict:
+    """Account-creation fields for portals with self-created accounts (UCT) —
+    passed via credentials.extra because the runtime hands the mapping to
+    fill_form only after login()."""
+    extra: dict[str, str] = {}
+    if profile is not None:
+        if getattr(profile, "first_name", None):
+            extra["first_name"] = profile.first_name
+        if getattr(profile, "last_name", None):
+            extra["last_name"] = profile.last_name
+        if getattr(profile, "date_of_birth", None):
+            extra["date_of_birth"] = profile.date_of_birth.strftime("%d/%m/%Y")
+        if getattr(profile, "id_number", None):
+            extra["id_number"] = profile.id_number
+    if email:
+        extra["email"] = email
+    year = getattr(application, "application_year", None)
+    if year:
+        extra["application_year"] = str(year)
+    return extra
+
+
 def _apply_result(application, job, result) -> None:
     """Mutate the application + job from a runtime SubmissionResult. Pure (no
     DB / commit) so it unit-tests without a session."""
@@ -301,7 +358,11 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
     application_jobs / applications. Never raises."""
     import asyncio
 
-    from app.automation.adapters import get_adapter_for_university
+    from app.automation.adapters import (
+        get_adapter,
+        get_adapter_for_university,
+        slug_for_website,
+    )
     from app.automation.base import PortalCredentials
     from app.automation.mapping import build_field_mapping
     from app.automation.runtime import run_job
@@ -309,6 +370,7 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
     from app.models.academic_record import AcademicRecord
     from app.models.contact import Contact
     from app.models.student_profile import StudentProfile
+    from app.models.university import University
     from app.models.user import User
 
     try:
@@ -322,7 +384,13 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
                 logger.error("automation: no job for application %s", application_id)
                 return
 
+            # Pinned-id resolution (UJ), else by the university row's website
+            # domain (seeded row ids are uuid4 — nothing stable to pin).
             adapter = get_adapter_for_university(application.university_id)
+            if adapter is None:
+                university = session.get(University, application.university_id)
+                slug = slug_for_website(getattr(university, "website", None))
+                adapter = get_adapter(slug) if slug else None
             if adapter is None:
                 logger.error(
                     "automation: no adapter for university %s",
@@ -380,9 +448,16 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
             # Produce + persist the AI mapping for the review screen (best-effort;
             # the bot fills via the deterministic mapping above regardless).
             _generate_ai_mapping(session, application, adapter, profile, record)
-            credentials = PortalCredentials(
-                username="", password="", extra={"pin": derive_portal_pin(application_id)}
+            username, password = derive_portal_credentials(
+                profile.id if profile else application.student_id, adapter.slug
             )
+            extra = {"pin": derive_portal_pin(application_id)}
+            extra.update(_account_extra(profile, application, email))
+            credentials = PortalCredentials(
+                username=username, password=password, extra=extra
+            )
+            # Email-challenge wiring (UCT OTP etc.) for adapters that take it.
+            _wire_challenge_source(adapter, application_id, email)
 
             # transition pending → processing before the (slow) browser run
             job.status = "processing"
