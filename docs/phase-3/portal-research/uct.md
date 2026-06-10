@@ -1,6 +1,6 @@
 # UCT — Portal Research
 
-> **Status: Draft v2 — verified from screen recording.** Rebuilt from `uct.mp4` (38:26) frame-by-frame. Field labels, control types, required flags, dropdown option lists, the 16-step flow, and the document-upload + review steps are confirmed from video. **Not** fully captured: Step 16 (Agreement and Submission) and the post-submit confirmation page — the recording ends at the Step 15 review confirm dialog. Sample data shown in the video is intentionally omitted (PII).
+> **Status: v3 — LIVE-VERIFIED (2026-06-10).** A full live walkthrough (account creation → OTP → all 16 steps → stopped on Step 16 without submitting) was driven via Playwright with the Jane Doe test applicant. See **"Live spike findings"** below for verified behaviours, PeopleSoft field ids, and corrections. Previous status: Draft v2 — verified from screen recording. Rebuilt from `uct.mp4` (38:26) frame-by-frame. Field labels, control types, required flags, dropdown option lists, the 16-step flow, and the document-upload + review steps are confirmed from video. **Not** fully captured: Step 16 (Agreement and Submission) and the post-submit confirmation page — the recording ends at the Step 15 review confirm dialog. Sample data shown in the video is intentionally omitted (PII).
 >
 > **Drive mechanism: accessibility-tree primary (approach C).** The "Control / target" column names the visible label + control type, not a CSS selector.
 
@@ -183,14 +183,42 @@ Full schema cross-check + status: **[data-model-gaps.md](data-model-gaps.md)** (
 - **Disability support detail**, **funding (NSFAS) intent**, **residence/housing interest** — not stored.
 - Maps cleanly: names, `id_number`, `date_of_birth`, address block, `nationality`, `gender`, `home_language`, `ethnicity`; school → `academic_records.institution`; SA ID upload → `documents` ID_COPY.
 
+## Live spike findings (2026-06-10) — adapter-critical facts
+
+Driven end-to-end with the synthetic Jane Doe applicant (test account `uniflo.jane.t26`; creds in Bitwarden). Application instance `UCT_ONLAPP1421118`, left at **Step 16 In Progress — NOT submitted**.
+
+### Drive mechanism — approach C confirmed, with caveats
+- **PeopleSoft Fluid exposes proper accessible names** — `get_by_role("textbox", name="*First Name (as per SA ID/Passport)")` works for nearly every field. Approach C is viable (unlike UJ's ITS).
+- **Exceptions:** the account-creation **email fields have no accessible name** (label is a detached sibling) — fall back to PeopleSoft ids (`SCC_NUR_WRK_EMAILID`, `SCC_NUR_WRK_EMAIL_ADDR$10$`). Every element carries a **stable, semantic PeopleSoft id** (`UCT_OA_PERS_*`, `UCT_OA_CONTACT_*`, `UCT_OA_SCHOOL_*`, `UCT_OA_CHOICE_*`, `UCT_OA_REDRESS_*`, `UCT_ONL_APP_NBT_*`…) — use ids as the deterministic fallback layer.
+- **AJAX re-render hazards:** (1) element handles go stale after every server round-trip — re-locate before each action; (2) a re-render can **silently revert selections made in the same batch** (Race reset after Citizenship; School qualification reset after school selection) — fill one field at a time and verify after fields that trigger round-trips; (3) **switches/checkboxes are covered by a `ps_indicator` overlay** that intercepts pointer events — JS-click the input (`element.click()`), not a pointer click.
+- **Modals are iframes** (`ptModFrame_N`): OTP dialog, Phone add-row, School Search, Subject Details, File Attachment — target inside the frame. PeopleSoft **error/confirm dialogs carry stable message codes** (e.g. `21000, 2756` P/G incomplete; `21000, 3062` NBT incomplete; `21000, 2835` NBT must start "931"; `21000, 3279` review confirm) — key error handling off them.
+- **Step pages have stable page names** in the left-nav (`UCT_ONLAPP_PERSONAL_INFO`, `UCT_ONLAPP_SCHOOL_INFO`, …) and the **Next button only renders after a successful Save** — "Save then wait for Next" is the per-step completion signal. Header Save id: `UCT_DERIVED_ONL_SAVE_BTN`.
+
+### Flow facts verified live
+- **Account creation:** direct URL works (no "not authorized" when hitting `UCT_PUBLIC_MENU.UCT_ONL_HOME_FL.GBL` fresh); DOB typed as **dd/mm/yyyy** (no calendar needed); OTP arrives in seconds, modal = iframe with `*OTP` textbox + Verify OTP / Resend OTP; after verify the browser **auto-redirects to the studentsonline login**. **No OTP at login** — account-creation only. Login = plain User ID + Password form.
+- **Names/DOB/ID prefill** into Step 2 from account creation; selecting **SA Citizen reveals the conditional `*SA ID Number` field** (auto-formats `080312 4001 089`; checksum + DOB cross-validated). **Sex options: Female / Male / Trans** (research said F/M only).
+- **Step 3:** typing the postal code + Tab **populates the Suburb dropdown directly — the Lookup modal is optional**. Contact numbers: "+" → iframe modal (Phone Type → SA Cellular auto-sets country code 027). The applicant email is **prefilled** as a Personal row.
+- **Step 4:** P/G **SA ID / Passport is required** once P/G details are entered (Luhn-validated); "guardian is also fee payer" checkbox hides the fee-payer dropdown (options: Guardian / Other-Parent / Self).
+- **Step 5:** school-leaving qualification options are **year-dependent** (NSC(DBE, IEB or SACAI) only appears after picking a recent year). School Search: Province + ≥4 letters → click result row; a **"School not found" switch enables manual entry**. **Subjects are slot-semantic**: row 1 = Home Language only, row 2 = HL/1st-Additional languages, row 3 = Maths (Mathematics / Math Lit / Technical / Exempted), row 4 = Life Orientation only, rows 5+ = full ~160-option elective list. Names are **abbreviated** ("Afrikaans 1st Additional Lang") → fuzzy matching required. **Grade 12 grid auto-copies the Grade 11 subjects**; per-subject modal wants ***April Results % (required)* and June Results % (optional)** — the grid has BOTH columns (research said April only). Subject modal confirm id: `UCT_DERIVED_ONL_CONFIRM_PB`.
+- **Step 6 (was TBD):** a single switch — *"Have you ever applied to UCT before?"* (`UCT_OA_TERTIARY_UCT_TERTIARY_INDIC`).
+- **Step 7:** zero fields for current matriculants — just Save.
+- **Step 8:** cascading selects Level of Qualification → Faculty → Academic Qualification → Specialisation (`UCT_OA_CHOICE_ACAD_CAREER/_GROUP/_PROG/_PLAN`; choice 2 mirrors with `_INC` suffix). Note **"Undergrad Health Sciences" is a separate level** from "Undergraduate". No eligibility gating observed at selection (unlike UP/UJ).
+- **Step 10 (NBT):** `*NBT Registration Number` (**must start "931"**, 14 digits accepted) + `*Year` + conditional `*NBT Exam Date` **dropdown of actual NBT sitting dates** (dd/mm/yy) that appears after year selection.
+- **Step 11:** two switches (NSFAS-from-other-institution; need financial assistance). **Step 12 (was TBD):** a single switch — *"Do you wish to be considered for student housing?"* (`UCT_ONL_APP_HSE_UCT_SF_HOUSING`).
+- **Step 13:** exactly the 8 redress dropdowns documented (ids `UCT_OA_REDRESS_*`) — maps 1:1 to our `redress_factors` JSONB.
+- **Step 14:** one required row "*SA Identity Document / All / Upload" (`SCC_ATCH_WRK_ATTACHADD$0`) → File Attachment iframe → **My Device** opens a native file chooser → Upload → "Upload Complete" → Done. A 344-byte PDF was accepted (no size floor).
+- **Step 15:** Save triggers confirm dialog `21000, 3279` ("reviewed and is correct?") → Yes completes the step (this is NOT the submission).
+- **Step 16:** Terms & Conditions + Agreement declarations; **Submit = `SCC_TM_ADM_WRK_SCC_TM_ACCEPT`**, **Do not Accept = `SCC_TM_ADM_WRK_SCC_TM_DECLINE`**. Left untouched.
+
 ## Screenshots
 - Frames extracted from `uct.mp4` (1 per ~45s) to a local scratch folder — **not committed**. TODO: export key page shots to `screenshots/uct/`.
+- Live spike: full-page shot of Step 16 (stop point) saved locally to `.playwright-mcp/uct-spike-step16-stop.png` — not committed.
 
 ## Open questions / to verify
 - [x] Step 16 (Agreement & Submission) content — **captured** (Terms & Conditions + Submit / Do not Accept).
 - [~] Post-submit **success** page — **on hold (2026-06-03): can't capture without submitting a real application**; confirm at the first live adapter run (use the emailed applicant number / status flip meanwhile).
 - [x] Navigation — **confirmed: Previous button works, flow is navigable** (2026-06-03); the "one-way" note was a mistake.
-- [~] Step 6 (Tertiary) + Step 12 (Housing) fields, and whether the OTP recurs at login — **login-gated; deferred until test-account access** (checked live 2026-06-03: the create-account page returns "not authorized" without a session).
+- [x] Step 6 (Tertiary) + Step 12 (Housing) fields, and whether the OTP recurs at login — **resolved live 2026-06-10**: Step 6 = one switch ("applied to UCT before?"), Step 12 = one switch ("considered for student housing?"), and the **OTP does NOT recur at login** (account-creation only). See "Live spike findings".
 - [x] NBT scope — **decided (2026-06-03): student completes NBT; Uniflo captures the reference only.**
 - [x] Captcha/OTP — **kept in MVP (2026-06-03)**; runtime needs inbox read for the email OTP.
 
