@@ -17,7 +17,7 @@ Mostly **native `<select>` dropdowns** (target by label). Several modal/search p
 - **File Attachment** modal (Documentation/Payment): My Device → file → Uploading… → Upload Complete → Done.
 
 ## Application window
-- Opens 1 April; closes **31 May** (earliest-closing target). Video applied for the **2027** intake.
+- **Corrected 2026-06-10 (verified on up.ac.za/online-application/important-dates):** opens 1 April 2026; closes **31 May 2026 for Veterinary Science only**; **all other undergraduate programmes close 30 June 2026**. (The earlier "closes 31 May" note over-generalised the Vet Science date.) Video applied for the **2027** intake.
 
 ## Account / login
 - Credentials live in **Bitwarden** per Phase 3 plan §3 — _TBD: link entry._
