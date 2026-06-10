@@ -16,10 +16,15 @@ from uuid import UUID
 
 from app.automation.adapters.uct import UCTAdapter
 from app.automation.adapters.uj import UJAdapter
+from app.automation.adapters.up import UPAdapter
 from app.automation.base import UniversityAdapter
 
 # Add new portals here as they're built.
-_ADAPTER_CLASSES: tuple[type[UniversityAdapter], ...] = (UJAdapter, UCTAdapter)
+_ADAPTER_CLASSES: tuple[type[UniversityAdapter], ...] = (
+    UJAdapter,
+    UCTAdapter,
+    UPAdapter,
+)
 _BY_SLUG = {a.slug: a for a in _ADAPTER_CLASSES}
 _BY_UNIVERSITY_ID = {a.university_id: a for a in _ADAPTER_CLASSES}
 
@@ -64,6 +69,7 @@ def registered_slugs() -> frozenset[str]:
 __all__ = [
     "UCTAdapter",
     "UJAdapter",
+    "UPAdapter",
     "get_adapter",
     "get_adapter_for_university",
     "registered_slugs",
