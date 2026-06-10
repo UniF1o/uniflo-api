@@ -9,9 +9,17 @@ from fastapi import HTTPException
 from fastapi.testclient import TestClient
 
 from app.api.applications import service
+from app.db import get_session
 from app.main import app
 
 client = TestClient(app)
+
+
+def override_session():
+    """Endpoint tests patch the service layer, so the session is never used —
+    but the dependency must still be overridden or FastAPI builds a real
+    engine from DATABASE_URL (absent/dummy in CI)."""
+    app.dependency_overrides[get_session] = lambda: MagicMock()
 
 VALID_USER_ID = "a1b2c3d4-0000-0000-0000-000000000000"
 VALID_APPLICATION_ID = uuid.uuid4()
@@ -66,6 +74,7 @@ def make_mock_challenge(requested_fields=None, supplied_at=None):
 
 
 def test_supply_challenge_success():
+    override_session()
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
          patch("app.api.applications.service.supply_challenge") as mock_supply:
         mock_auth(mock_decode)
@@ -85,6 +94,7 @@ def test_supply_challenge_success():
 
 
 def test_supply_challenge_no_pending_404():
+    override_session()
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
          patch("app.api.applications.service.supply_challenge") as mock_supply:
         mock_auth(mock_decode)
@@ -104,6 +114,7 @@ def test_supply_challenge_no_pending_404():
 
 
 def test_supply_challenge_empty_values_422():
+    override_session()
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
         mock_auth(mock_decode)
         response = client.post(
@@ -116,6 +127,7 @@ def test_supply_challenge_empty_values_422():
 
 
 def test_supply_challenge_blank_value_422():
+    override_session()
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode:
         mock_auth(mock_decode)
         response = client.post(
@@ -136,6 +148,7 @@ def test_supply_challenge_requires_auth():
 
 
 def test_get_application_serializes_pending_challenge():
+    override_session()
     with patch("app.api.middleware.auth.jwt.decode") as mock_decode, \
          patch("app.api.applications.service.get_application") as mock_get:
         mock_auth(mock_decode)
