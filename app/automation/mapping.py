@@ -118,7 +118,122 @@ def build_field_mapping(
             contacts=contacts,
             email=email,
         )
+    if slug == "uct":
+        return _uct_mapping(
+            profile=profile,
+            application=application,
+            academic_record=academic_record,
+            contacts=contacts,
+            email=email,
+        )
     raise ValueError(f"no field mapping built for portal slug {slug!r}")
+
+
+def _title_case(value: Optional[str]) -> Optional[str]:
+    """UCT's dropdowns use title-case entries ('English', 'African') where the
+    profile may hold uppercase/lowercase."""
+    if not value:
+        return None
+    return value.strip().title() or None
+
+
+def _uct_sex(gender: Optional[str]) -> Optional[str]:
+    if not gender:
+        return None
+    g = gender.strip().lower()
+    if g.startswith("f"):
+        return "Female"
+    if g.startswith("m"):
+        return "Male"
+    if g.startswith("t"):
+        return "Trans"
+    return None
+
+
+def _uct_date(value: Any, fmt: str) -> Optional[str]:
+    if isinstance(value, date):
+        return value.strftime(fmt)
+    return None
+
+
+def _uct_mapping(
+    *, profile: Any, application: Any, academic_record: Any, contacts: Any,
+    email: Optional[str],
+) -> FieldMapping:
+    """UCT field values keyed to uct.fields.json. Guardian falls back through
+    guardian → next_of_kin → fee_payer contact types (UCT wants a P/G + fee
+    payer; 'guardian is also fee payer' keeps step 4 to one person). Subjects
+    carry the Gr11 final %; the Gr12 April % defaults to the same value until
+    per-record-type capture lands (the grid auto-copies subjects anyway).
+    Redress answers pass through from `profile.redress_factors` (keys match the
+    uct.fields.json redress_* ids, with or without the prefix)."""
+    guardian = (
+        _contact_by_type(contacts, "guardian")
+        or _contact_by_type(contacts, "next_of_kin")
+        or _contact_by_type(contacts, "fee_payer")
+    )
+    app_year = _g(application, "application_year")
+    matric_year = _g(academic_record, "year")
+    if matric_year is None and isinstance(app_year, int):
+        matric_year = app_year - 1
+
+    redress_raw = _g(profile, "redress_factors") or {}
+    redress: dict[str, Any] = {}
+    if isinstance(redress_raw, dict):
+        for key, value in redress_raw.items():
+            name = key if key.startswith("redress_") else f"redress_{key}"
+            redress[name] = value
+
+    values: dict[str, Any] = {
+        # account creation (also passed via credentials.extra by the wiring)
+        "first_name": _g(profile, "first_name"),
+        "last_name": _g(profile, "last_name"),
+        "date_of_birth": _uct_date(_g(profile, "date_of_birth"), "%d/%m/%Y"),
+        "id_number": _g(profile, "id_number"),
+        "email": email,
+        # step 2 — personal
+        "title": _title_case(_g(profile, "title")),
+        "sex": _uct_sex(_g(profile, "gender")),
+        "home_language": _title_case(_g(profile, "home_language")),
+        "citizenship_type": "SA Citizen" if _g(profile, "is_sa_citizen") else None,
+        "race": _title_case(_g(profile, "ethnicity")),
+        "sa_id": _g(profile, "id_number"),
+        # step 3 — contact
+        "postal_code": _g(profile, "postal_code"),
+        "suburb": (_g(profile, "suburb") or "").upper() or None,
+        "address_line_1": _g(profile, "street_address"),
+        "phone": _g(profile, "phone"),
+        # step 4 — parent/guardian + fee payer
+        "guardian_title": _title_case(_g(guardian, "title")),
+        "guardian_first_name": _g(guardian, "first_name"),
+        "guardian_last_name": _g(guardian, "last_name"),
+        "guardian_id_number": _g(guardian, "id_number"),
+        "guardian_relationship": _title_case(_g(guardian, "relationship")),
+        "guardian_email": _g(guardian, "email"),
+        "guardian_phone": _g(guardian, "phone"),
+        "guardian_is_fee_payer": True,
+        # step 5 — school + subjects
+        "matric_year": str(matric_year) if matric_year is not None else None,
+        "school_terms": "4 Terms",
+        "school_qualification": "NSC(DBE, IEB or SACAI)",
+        "school": _g(academic_record, "institution"),
+        "school_province": _title_case(_g(profile, "province")),
+        "subjects": _coerce_subjects(_g(academic_record, "subjects")),
+        # step 6 / 11 / 12 — switches
+        "applied_before": "No",
+        "nsfas_other_institution": "No",
+        "needs_financial_assistance": _yn(_g(profile, "applying_nsfas")),
+        "wants_housing": _yn(_g(profile, "wants_residence")),
+        # step 8 — choices
+        "choice_level": "Undergraduate",
+        "programme": _g(application, "programme"),
+        # step 10 — NBT (precondition; student-supplied)
+        "nbt_registration_number": _g(profile, "nbt_reference"),
+        "nbt_year": _g(profile, "nbt_year"),
+        "nbt_date": _uct_date(_g(profile, "nbt_date"), "%d/%m/%y"),
+    }
+    values.update(redress)
+    return FieldMapping(values={k: v for k, v in values.items() if v is not None})
 
 
 def _uj_mapping(
