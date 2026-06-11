@@ -133,6 +133,14 @@ def build_field_mapping(
             academic_record=academic_record,
             email=email,
         )
+    if slug == "wits":
+        return _wits_mapping(
+            profile=profile,
+            application=application,
+            academic_record=academic_record,
+            contacts=contacts,
+            email=email,
+        )
     raise ValueError(f"no field mapping built for portal slug {slug!r}")
 
 
@@ -310,6 +318,99 @@ def _up_mapping(
         "wants_residence": _yn(_g(profile, "wants_residence")) or "No",
         "applying_nsfas": _yn(_g(profile, "applying_nsfas")) or "No",
         "up_funding": "No",
+    }
+    return FieldMapping(values={k: v for k, v in values.items() if v is not None})
+
+
+def _wits_gender(gender: Optional[str]) -> Optional[str]:
+    """Wits' set (live-verified): Female / Gender Neutral / Male."""
+    if not gender:
+        return None
+    g = gender.strip().lower()
+    if g.startswith("f"):
+        return "Female"
+    if g.startswith("m"):
+        return "Male"
+    return "Gender Neutral"
+
+
+def _wits_population(ethnicity: Optional[str]) -> Optional[str]:
+    """Wits' Population Group set (live-verified): Asian / Black / Coloured /
+    Indian / White — notably 'Black' where the profile stores 'African'."""
+    if not ethnicity:
+        return None
+    e = ethnicity.strip().lower()
+    if e in ("african", "black", "black african"):
+        return "Black"
+    return ethnicity.strip().title()
+
+
+def _wits_mapping(
+    *, profile: Any, application: Any, academic_record: Any, contacts: Any,
+    email: Optional[str],
+) -> FieldMapping:
+    """Wits field values keyed to wits.fields.json. The Create-Application-ID
+    identity fields also travel via credentials.extra (the runtime hands the
+    mapping over only after login). The examining authority is the plain
+    province name (live-verified — not '<province> DoE' like UP); the next of
+    kin is required and the portal enforces NOK mobile/email ≠ applicant's
+    (preconditioned by the adapter)."""
+    nok = (
+        _contact_by_type(contacts, "next_of_kin")
+        or _contact_by_type(contacts, "guardian")
+        or _contact_by_type(contacts, "fee_payer")
+    )
+    app_year = _g(application, "application_year")
+    matric_year = _g(academic_record, "year")
+    if matric_year is None and isinstance(app_year, int):
+        matric_year = app_year - 1
+    nok_first = _g(nok, "first_name") or ""
+
+    values: dict[str, Any] = {
+        # Create Application ID (also passed via credentials.extra)
+        "nationality": "South Africa" if _g(profile, "is_sa_citizen") else None,
+        "title": _title_case(_g(profile, "title")),
+        "first_name": _g(profile, "first_name"),
+        "middle_names": _g(profile, "middle_names"),
+        "last_name": _g(profile, "last_name"),
+        "date_of_birth": _uct_date(_g(profile, "date_of_birth"), "%d/%m/%Y"),
+        "gender": _wits_gender(_g(profile, "gender")),
+        "id_number": _g(profile, "id_number"),
+        "email": email,
+        "phone": _g(profile, "phone"),
+        "application_year": str(app_year) if app_year is not None else None,
+        # 3 Current Activities
+        "current_activity": _g(profile, "current_activity") or "School",
+        # 4 Secondary Education
+        "school": _g(academic_record, "institution"),
+        "examining_authority": _title_case(_g(profile, "province")),
+        "examination_year": str(matric_year) if matric_year is not None else None,
+        "examination_month": "November",
+        "exam_number": _g(profile, "exam_number"),
+        "subjects": _coerce_subjects(_g(academic_record, "subjects")),
+        # 5 Tertiary Education
+        "tertiary_studies": "No",
+        # 6 Study Choices
+        "programme": _g(application, "programme"),
+        "programme_second": _g(application, "programme_second"),
+        "programme_third": _g(application, "programme_third"),
+        # 7 Domicilium Address (8/9 reuse it via 'Same as Other Address')
+        "address_line_1": _g(profile, "street_address"),
+        "suburb": _g(profile, "suburb"),
+        "postal_code": _g(profile, "postal_code"),
+        # 11 Demographic Details
+        "marital_status": _title_case(_g(profile, "marital_status")) or "Single",
+        "population_group": _wits_population(_g(profile, "ethnicity")),
+        "home_language": _title_case(_g(profile, "home_language")),
+        "religious_affiliation": _g(profile, "religious_affiliation"),
+        "has_disability": _yn(bool(_g(profile, "disability"))),
+        # 12 Next of Kin (+ 13 Emergency Contact copies it)
+        "nok_title": _title_case(_g(nok, "title")),
+        "nok_initial": (nok_first[:1].upper() or None),
+        "nok_surname": _g(nok, "last_name"),
+        "nok_phone": _g(nok, "phone"),
+        "nok_email": _g(nok, "email"),
+        "nok_relationship": _title_case(_g(nok, "relationship")),
     }
     return FieldMapping(values={k: v for k, v in values.items() if v is not None})
 

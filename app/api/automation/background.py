@@ -307,19 +307,18 @@ def _wire_challenge_source(adapter, application_id: uuid.UUID, email) -> None:
 
 
 def _account_extra(profile, application, email) -> dict:
-    """Account-creation fields for portals with self-created accounts (UCT) —
+    """Account-creation fields for portals with self-created accounts (UCT,
+    Wits' Create Application ID — which also wants title/gender/phone) —
     passed via credentials.extra because the runtime hands the mapping to
     fill_form only after login()."""
     extra: dict[str, str] = {}
     if profile is not None:
-        if getattr(profile, "first_name", None):
-            extra["first_name"] = profile.first_name
-        if getattr(profile, "last_name", None):
-            extra["last_name"] = profile.last_name
+        for key in ("first_name", "middle_names", "last_name", "id_number",
+                    "title", "gender", "phone"):
+            if value := getattr(profile, key, None):
+                extra[key] = value
         if getattr(profile, "date_of_birth", None):
             extra["date_of_birth"] = profile.date_of_birth.strftime("%d/%m/%Y")
-        if getattr(profile, "id_number", None):
-            extra["id_number"] = profile.id_number
     if email:
         extra["email"] = email
     year = getattr(application, "application_year", None)
@@ -456,6 +455,10 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
             )
             extra = {"pin": derive_portal_pin(application_id)}
             extra.update(_account_extra(profile, application, email))
+            # Wits orders its indemnity step before document uploads — the
+            # adapter accepts it only when this consent is recorded.
+            if application.agreement_consent_at is not None:
+                extra["agreement_consented"] = "true"
             credentials = PortalCredentials(
                 username=username, password=password, extra=extra
             )
