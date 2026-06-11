@@ -606,7 +606,9 @@ class UPAdapter(UniversityAdapter):
 
     async def _fill_subjects(self, page: Page, subjects: list[dict]) -> None:
         """Rows are pre-rendered (`SCHOOL_CRSE_NBR$n` / `CRSE_GRADE_INPUT$n` /
-        `CRSE_GRADE_OFF$n`), entered top-down to preserve school-report order."""
+        `CRSE_GRADE_OFF$n`), entered top-down to preserve school-report order.
+        The captured NSC level is used when the record carries one; otherwise
+        it derives from the percentage band."""
         for index, subject in enumerate(subjects):
             name = str(subject.get("name", ""))
             try:
@@ -624,7 +626,7 @@ class UPAdapter(UniversityAdapter):
                 )
             await fluid.js_select_text(page, subject_sel, chosen)
             await fluid.settle(page, 800)
-            level = nsc_level(percent)
+            level = subject.get("nsc_level") or nsc_level(percent)
             await fluid.js_select_text(
                 page, f"#CRSE_GRADE_INPUT\\${index}", str(level)
             )

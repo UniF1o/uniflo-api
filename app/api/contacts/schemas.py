@@ -7,6 +7,12 @@ from pydantic import BaseModel, ConfigDict
 
 
 class ContactType(str, Enum):
+    """One captured contact covers all portals (the automation layer resolves
+    roles through fallback chains) — the frontend should ask for ONE
+    parent/guardian and offer a separate fee payer only as an opt-in
+    ("someone else pays my fees"); never ask for an emergency contact
+    (no portal needs a distinct person — Wits copies the next of kin)."""
+
     NEXT_OF_KIN = "next_of_kin"
     FEE_PAYER = "fee_payer"
     GUARDIAN = "guardian"

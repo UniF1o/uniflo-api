@@ -571,8 +571,10 @@ class UCTAdapter(UniversityAdapter):
 
     async def _fill_grade12_april(self, page: Page, subjects: list[dict]) -> None:
         """The Grade 12 grid auto-copies the Gr11 subjects; each row's modal
-        wants the April % (required; June optional). Switch the grade radio
-        first (JS click — radios sit under the ps_indicator overlay too)."""
+        wants the April % (required) and takes an optional June % — filled
+        when a grade_12_june record was captured (mid-year applicants).
+        Switch the grade radio first (JS click — radios sit under the
+        ps_indicator overlay too)."""
         await fluid.js_click(page, "#UCT_DERIVED_ONL_UCT_SCHOOL_GRADE\\$105\\$")
         await fluid.settle(page)
         for index, subject in enumerate(subjects):
@@ -582,9 +584,35 @@ class UCTAdapter(UniversityAdapter):
             await fluid.settle(page, 800)
             frame = await fluid.wait_modal_frame(page)
             await fluid.js_fill(frame, _GR12_APRIL, str(april))
+            june = subject.get("june")
+            if june is not None:
+                await self._fill_june_mark(page, str(june), subject)
             await fluid.js_click(frame, _SUBJECT_MODAL_CONFIRM)
             await fluid.wait_modal_closed(page)
             await fluid.settle(page, 600)
+
+    async def _fill_june_mark(self, page: Page, june: str, subject: dict) -> None:
+        """The June % input in the Gr12 subject modal, found by its label (the
+        id wasn't pinned at the spike — only April's was). Logged and skipped
+        when absent, since the portal treats June as optional."""
+        frame = await fluid.wait_modal_frame(page)
+        filled = await frame.evaluate(
+            """(val) => {
+              const inp = [...document.querySelectorAll('input')]
+                .find(i => !i.disabled && i.labels && i.labels[0]
+                      && /june/i.test(i.labels[0].textContent));
+              if (!inp) return false;
+              inp.value = val;
+              inp.dispatchEvent(new Event('change', {bubbles: true}));
+              return true;
+            }""",
+            june,
+        )
+        if not filled:
+            logger.info(
+                "UCT June %% input not found for %r — April only",
+                subject.get("name"),
+            )
 
     async def _step6_tertiary(self, page: Page, mapping: FieldMapping) -> None:
         applied = str(mapping.get("applied_before", "No")).lower() in ("yes", "true", "1")

@@ -14,6 +14,9 @@ from pydantic import BaseModel, ConfigDict
 class RecordType(str, Enum):
     GRADE_11_FINAL = "grade_11_final"
     GRADE_12_APRIL = "grade_12_april"
+    # UCT's Grade 12 subject modal takes an optional June % alongside the
+    # required April % — relevant for students applying after mid-year exams.
+    GRADE_12_JUNE = "grade_12_june"
 
 
 class SubjectIn(BaseModel):

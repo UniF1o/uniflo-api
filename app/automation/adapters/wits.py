@@ -483,7 +483,7 @@ class WitsAdapter(UniversityAdapter):
         await self._step_choices(page, mapping)  # ends with Validate + Next
         await self._step_domicilium(page, mapping)
         await self._step_same_as_address(page, _ADDR2_SAME_AS, "8 Residential Address")
-        await self._step_same_as_address(page, _ADDR3_SAME_AS, "9 Postal Address")
+        await self._step_postal(page, mapping)
         await self._step_contact(page, mapping)
         await self._step_demographics(page, mapping)
         await self._step_next_of_kin(page, mapping)
@@ -826,6 +826,25 @@ class WitsAdapter(UniversityAdapter):
         await fluid.js_select_text(page, selector, "Domicilium")
         await fluid.settle(page, 1200)
         await self._save_and_next(page, step)
+
+    async def _step_postal(self, page: Page, mapping: FieldMapping) -> None:
+        """Step 9: 'Same as Domicilium' unless the profile carries a different
+        mailing address (postal_same='No'), which is then entered manually —
+        same ADD3 field family + Address Search as step 7. [VERIFY LIVE] the
+        manual branch: the spike only exercised the same-as path."""
+        postal_suburb = str(mapping.get("postal_suburb") or "")
+        if str(mapping.get("postal_same", "Yes")).lower() != "no" or not postal_suburb:
+            await self._step_same_as_address(page, _ADDR3_SAME_AS, "9 Postal Address")
+            return
+        if line1 := mapping.get("postal_address_line_1"):
+            await fluid.js_fill(page, "#VC_OA_STG_ADD3_ADDRESS1", str(line1))
+            await fluid.settle(page, 800)
+        await fluid.js_fill(page, "#VC_OA_STG_ADD3_ADDRESS3", postal_suburb)
+        await fluid.settle(page, 800)
+        await self._resolve_address_search(
+            page, postal_suburb, str(mapping.get("postal_postal_code") or "")
+        )
+        await self._save_and_next(page, "9 Postal Address")
 
     async def _step_contact(self, page: Page, mapping: FieldMapping) -> None:
         """Step 10: email + mobile prefill from registration; re-asserted from
