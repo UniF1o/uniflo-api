@@ -628,24 +628,48 @@ class UCTAdapter(UniversityAdapter):
         """Cascade: Level → Faculty → Academic Qualification → Specialisation.
         The free-text programme is resolved against the live cascade (scanning
         every faculty when none is mapped); UCT applies no eligibility gate at
-        selection."""
-        level = mapping.get("choice_level", "Undergraduate")
-        await fluid.js_select_text(page, "#UCT_OA_CHOICE_ACAD_CAREER", level)
-        await fluid.settle(page)
+        selection. The optional second choice mirrors the cascade on the
+        `_INC`-suffixed selects (ids recorded at the live spike) — best-effort,
+        a failed second choice never sinks the run."""
         programme = str(mapping.get("programme") or "")
         if not programme:
             raise ValidationFailedError("no programme to apply for", field="programme")
-        faculties = await fluid.select_option_texts(page, "#UCT_OA_CHOICE_ACAD_GROUP")
-        if mapped_faculty := mapping.get("faculty"):
-            match = best_option_match(str(mapped_faculty), faculties)
+        await self._fill_choice_cascade(
+            page, "", mapping.get("choice_level", "Undergraduate"),
+            mapping.get("faculty"), programme,
+        )
+        if second := mapping.get("programme_second"):
+            try:
+                await self._fill_choice_cascade(
+                    page, "_INC", mapping.get("choice_level", "Undergraduate"),
+                    None, str(second),
+                )
+            except (PortalChangedError, ValidationFailedError) as exc:
+                logger.warning("UCT second choice skipped: %s", exc)
+        await fluid.save_step(page, step="8 Programme Choices")
+        await fluid.next_step(page)
+
+    async def _fill_choice_cascade(
+        self, page: Page, suffix: str, level: str,
+        faculty_hint, programme: str,
+    ) -> None:
+        """One Level → Faculty → Qualification → Specialisation cascade; the
+        second choice uses the same ids with an `_INC` suffix."""
+        career = f"#UCT_OA_CHOICE_ACAD_CAREER{suffix}"
+        group = f"#UCT_OA_CHOICE_ACAD_GROUP{suffix}"
+        prog = f"#UCT_OA_CHOICE_ACAD_PROG{suffix}"
+        plan_sel = f"#UCT_OA_CHOICE_ACAD_PLAN{suffix}"
+        await fluid.js_select_text(page, career, level)
+        await fluid.settle(page)
+        faculties = await fluid.select_option_texts(page, group)
+        if faculty_hint:
+            match = best_option_match(str(faculty_hint), faculties)
             faculties = [match] if match else faculties
         chosen_faculty, chosen_prog = None, None
         for faculty in faculties:
-            await fluid.js_select_text(page, "#UCT_OA_CHOICE_ACAD_GROUP", faculty)
+            await fluid.js_select_text(page, group, faculty)
             await fluid.settle(page)
-            programmes = await fluid.select_option_texts(
-                page, "#UCT_OA_CHOICE_ACAD_PROG"
-            )
+            programmes = await fluid.select_option_texts(page, prog)
             match = best_option_match(programme, programmes)
             if match:
                 chosen_faculty, chosen_prog = faculty, match
@@ -655,17 +679,16 @@ class UCTAdapter(UniversityAdapter):
                 f"no UCT qualification matched {programme!r} in any faculty",
                 field="programme",
             )
-        await fluid.js_select_text(page, "#UCT_OA_CHOICE_ACAD_PROG", chosen_prog)
+        await fluid.js_select_text(page, prog, chosen_prog)
         await fluid.settle(page)
-        plans = await fluid.select_option_texts(page, "#UCT_OA_CHOICE_ACAD_PLAN")
+        plans = await fluid.select_option_texts(page, plan_sel)
         plan = best_option_match(programme, plans) or (plans[0] if plans else None)
         if plan:
-            await fluid.js_select_text(page, "#UCT_OA_CHOICE_ACAD_PLAN", plan)
+            await fluid.js_select_text(page, plan_sel, plan)
         logger.info(
-            "UCT choice 1: %s / %s / %s", chosen_faculty, chosen_prog, plan
+            "UCT choice%s: %s / %s / %s",
+            " 2" if suffix else " 1", chosen_faculty, chosen_prog, plan,
         )
-        await fluid.save_step(page, step="8 Programme Choices")
-        await fluid.next_step(page)
 
     async def _step9_referees(self, page: Page) -> None:
         await fluid.save_step(page, step="9 Referees & Supervisors")

@@ -417,6 +417,7 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
     from app.automation.runtime import run_job
     from app.automation.screenshots import upload_screenshots
     from app.models.academic_record import AcademicRecord
+    from app.models.application_choice import ApplicationChoice
     from app.models.contact import Contact
     from app.models.student_profile import StudentProfile
     from app.models.university import University
@@ -489,15 +490,38 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
             )
             user = session.get(User, profile.user_id) if profile else None
             email = getattr(user, "email", None)
+            # Ordered programme choices (choice 1 mirrors applications.programme;
+            # 2+ exist only in application_choices) — UP/Wits/UCT fill them.
+            choices = [
+                c.programme
+                for c in session.exec(
+                    select(ApplicationChoice)
+                    .where(ApplicationChoice.application_id == application_id)
+                    .order_by(ApplicationChoice.choice_number)
+                ).all()
+            ]
 
-            mapping = build_field_mapping(
-                adapter.slug,
-                profile=profile,
-                application=application,
-                academic_record=records,
-                contacts=contacts,
-                email=email,
-            )
+            try:
+                mapping = build_field_mapping(
+                    adapter.slug,
+                    profile=profile,
+                    application=application,
+                    academic_record=records,
+                    contacts=contacts,
+                    email=email,
+                    choices=choices,
+                )
+            except ValueError as exc:
+                # e.g. an applicant situation the adapters would misreport
+                # (gap year / upgrading) — a data problem, not an internal one.
+                logger.warning("automation: %s blocked — %s", application_id, exc)
+                job.status = "failed"
+                job.last_error = "form_submit_failed"
+                job.attempts += 1
+                application.status = "failed"
+                session.add_all([job, application])
+                session.commit()
+                return
             # Produce + persist the AI mapping for the review screen (best-effort;
             # the bot fills via the deterministic mapping above regardless).
             _generate_ai_mapping(session, application, adapter, profile, records)

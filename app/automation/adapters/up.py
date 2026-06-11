@@ -723,6 +723,16 @@ class UPAdapter(UniversityAdapter):
         residence = str(mapping.get("wants_residence", "No"))
         await fluid.js_select_text(page, _RESIDENCE_SELECT, residence)
         await fluid.settle(page, 600)
+        # Yes reveals a Preferred Residence control — best-effort: the field
+        # wasn't walked at the spike, so a miss is logged, not fatal.
+        if residence == "Yes" and (preferred := mapping.get("preferred_residence")):
+            try:
+                await self._select_label_best(
+                    page, "Preferred Residence", str(preferred)
+                )
+                await fluid.settle(page, 600)
+            except (PortalChangedError, ValidationFailedError) as exc:
+                logger.warning("UP preferred residence skipped: %s", exc)
         nsfas = str(mapping.get("applying_nsfas", "No")).lower() in ("yes", "true", "1")
         funding = str(mapping.get("up_funding", "No")).lower() in ("yes", "true", "1")
         await fluid.set_switch(page, _NSFAS_CHECKBOX, nsfas)

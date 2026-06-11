@@ -210,3 +210,79 @@ def test_wits_postal_defaults_to_same():
         academic_record=[_GR11], contacts=[_Guardian()], email=None,
     )
     assert mapping.get("postal_same") == "Yes"
+
+
+# --- programme choices flow from application_choices ----------------------------------
+
+
+def test_choices_list_feeds_second_and_third_programmes():
+    choices = ["Civil Engineering", "Construction Studies", "Bachelor of Science"]
+    wits = build_field_mapping(
+        "wits", profile=_Profile(), application=_Application(),
+        academic_record=[_GR11], contacts=[_Guardian()], email=None,
+        choices=choices,
+    )
+    assert wits.get("programme") == "Civil Engineering"
+    assert wits.get("programme_second") == "Construction Studies"
+    assert wits.get("programme_third") == "Bachelor of Science"
+    uct = build_field_mapping(
+        "uct", profile=_Profile(), application=_Application(),
+        academic_record=[_GR11], contacts=[_Guardian()], email=None,
+        choices=choices[:2],
+    )
+    assert uct.get("programme_second") == "Construction Studies"
+    up = build_field_mapping(
+        "up", profile=_Profile(), application=_Application(),
+        academic_record=[_GR11], contacts=[], email=None, choices=choices[:2],
+    )
+    assert up.get("programme_second") == "Construction Studies"
+
+
+def test_single_choice_keeps_legacy_programme_column():
+    mapping = build_field_mapping(
+        "up", profile=_Profile(), application=_Application(),
+        academic_record=[_GR11], contacts=[], email=None, choices=[],
+    )
+    assert mapping.get("programme") == "Civil Engineering"
+    assert mapping.get("programme_second") is None
+
+
+# --- current-Grade-12 integrity guard ---------------------------------------------------
+
+
+def test_non_school_activity_fails_fast():
+    import pytest
+
+    class _GapYearProfile(_Profile):
+        current_activity = "Gap Year"
+
+    for slug in ("uj", "uct", "up", "wits"):
+        with pytest.raises(ValueError, match="Grade 12"):
+            build_field_mapping(
+                slug, profile=_GapYearProfile(), application=_Application(),
+                academic_record=[_GR11], contacts=[_Guardian()], email=None,
+            )
+
+
+def test_school_activity_passes_the_guard():
+    class _SchoolProfile(_Profile):
+        current_activity = "GRADE 12 PUPIL"
+
+    mapping = build_field_mapping(
+        "uj", profile=_SchoolProfile(), application=_Application(),
+        academic_record=[_GR11], contacts=[_Guardian()], email=None,
+    )
+    assert mapping.get("present_activity") == "GRADE 12 PUPIL"
+
+
+def test_up_preferred_residence_passes_through():
+    class _ResidenceProfile(_Profile):
+        wants_residence = True
+        preferred_residence = "TuksRes Boekenhout"
+
+    mapping = build_field_mapping(
+        "up", profile=_ResidenceProfile(), application=_Application(),
+        academic_record=[_GR11], contacts=[], email=None,
+    )
+    assert mapping.get("wants_residence") == "Yes"
+    assert mapping.get("preferred_residence") == "TuksRes Boekenhout"

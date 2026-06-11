@@ -184,6 +184,38 @@ def _payer_field(payer: Any, profile: Any, field: str) -> Any:
     return _g(payer, field) or _g(profile, field)
 
 
+# --- programme choices -----------------------------------------------------------------
+
+def _choice(choices: Any, application: Any, n: int) -> Any:
+    """Programme choice `n` (1-based): the ordered `application_choices` list
+    when provided, the legacy `applications.programme` column for choice 1,
+    and attribute passthrough last (keeps dict/namespace test fixtures
+    working)."""
+    if choices and len(choices) >= n:
+        return choices[n - 1]
+    if n == 1:
+        return _g(application, "programme")
+    return _g(application, ("programme_second", "programme_third")[n - 2])
+
+
+# All four adapters currently submit as a CURRENT Grade 12 applicant — UJ's
+# endorsement, UP's exemption/highest-grade/tell-us-more and Wits' school-
+# status radio are hardcoded to that persona (their other branches were never
+# walked). Submitting those values for a gap-year/upgrading/employed applicant
+# would put false statements on a legal form, so the mapping fails fast.
+def _require_current_schooling(profile: Any, slug: str) -> None:
+    activity = str(_g(profile, "current_activity") or "").lower()
+    if activity and any(
+        key in activity
+        for key in ("gap", "upgrad", "employ", "occupat", "universit", "complete")
+    ):
+        raise ValueError(
+            f"{slug}: portal automation currently supports applicants still in "
+            f"Grade 12 — profile activity {activity!r} would be misreported; "
+            "manual application required until the non-school flows are built"
+        )
+
+
 def _contact_name(contact: Any) -> Optional[str]:
     parts = [_g(contact, "first_name"), _g(contact, "last_name")]
     name = " ".join(p for p in parts if p).strip()
@@ -198,12 +230,17 @@ def build_field_mapping(
     academic_record: Any = None,
     contacts: Any = None,
     email: Optional[str] = None,
+    choices: Any = None,
 ) -> FieldMapping:
     """Build a `FieldMapping` for the given portal `slug`. Raises ValueError
-    for a portal with no mapping yet. `academic_record` takes either one
-    record or the student's full list — with a list, each portal picks by
-    `record_type` (Gr11 finals feed the grids; UCT additionally merges
-    grade_12_april/grade_12_june marks)."""
+    for a portal with no mapping yet (and for applicant situations the
+    adapters would misreport — see `_require_current_schooling`).
+    `academic_record` takes either one record or the student's full list —
+    with a list, each portal picks by `record_type` (Gr11 finals feed the
+    grids; UCT additionally merges grade_12_april/grade_12_june marks).
+    `choices` is the ordered programme list from `application_choices`
+    (choice 1 mirrors `applications.programme`)."""
+    _require_current_schooling(profile, slug)
     if slug == "uj":
         return _uj_mapping(
             profile=profile,
@@ -211,6 +248,7 @@ def build_field_mapping(
             academic_record=academic_record,
             contacts=contacts,
             email=email,
+            choices=choices,
         )
     if slug == "uct":
         return _uct_mapping(
@@ -219,6 +257,7 @@ def build_field_mapping(
             academic_record=academic_record,
             contacts=contacts,
             email=email,
+            choices=choices,
         )
     if slug == "up":
         return _up_mapping(
@@ -226,6 +265,7 @@ def build_field_mapping(
             application=application,
             academic_record=academic_record,
             email=email,
+            choices=choices,
         )
     if slug == "wits":
         return _wits_mapping(
@@ -234,6 +274,7 @@ def build_field_mapping(
             academic_record=academic_record,
             contacts=contacts,
             email=email,
+            choices=choices,
         )
     raise ValueError(f"no field mapping built for portal slug {slug!r}")
 
@@ -267,7 +308,7 @@ def _uct_date(value: Any, fmt: str) -> Optional[str]:
 
 def _uct_mapping(
     *, profile: Any, application: Any, academic_record: Any, contacts: Any,
-    email: Optional[str],
+    email: Optional[str], choices: Any = None,
 ) -> FieldMapping:
     """UCT field values keyed to uct.fields.json. The guardian resolves via
     the shared contact chain (UCT wants a P/G + fee payer; 'guardian is also
@@ -345,7 +386,8 @@ def _uct_mapping(
         "wants_housing": _yn(_g(profile, "wants_residence")),
         # step 8 — choices
         "choice_level": "Undergraduate",
-        "programme": _g(application, "programme"),
+        "programme": _choice(choices, application, 1),
+        "programme_second": _choice(choices, application, 2),
         # step 10 — NBT (precondition; student-supplied)
         "nbt_registration_number": _g(profile, "nbt_reference"),
         "nbt_year": _g(profile, "nbt_year"),
@@ -369,7 +411,7 @@ def _up_gender(gender: Optional[str]) -> Optional[str]:
 
 def _up_mapping(
     *, profile: Any, application: Any, academic_record: Any,
-    email: Optional[str],
+    email: Optional[str], choices: Any = None,
 ) -> FieldMapping:
     """UP field values keyed to up.fields.json. The new-application identity
     fields also travel via credentials.extra (the runtime hands the mapping over
@@ -416,10 +458,11 @@ def _up_mapping(
         "exemption_type": "Currently busy with schooling",
         "subjects": _coerce_subjects(_g(gr11, "subjects")),
         # Study Choice
-        "programme": _g(application, "programme"),
-        "programme_second": _g(application, "programme_second"),
+        "programme": _choice(choices, application, 1),
+        "programme_second": _choice(choices, application, 2),
         # General Details
         "wants_residence": _yn(_g(profile, "wants_residence")) or "No",
+        "preferred_residence": _g(profile, "preferred_residence"),
         "applying_nsfas": _yn(_g(profile, "applying_nsfas")) or "No",
         "up_funding": _yn(_g(profile, "applying_institutional_funding")) or "No",
     }
@@ -451,7 +494,7 @@ def _wits_population(ethnicity: Optional[str]) -> Optional[str]:
 
 def _wits_mapping(
     *, profile: Any, application: Any, academic_record: Any, contacts: Any,
-    email: Optional[str],
+    email: Optional[str], choices: Any = None,
 ) -> FieldMapping:
     """Wits field values keyed to wits.fields.json. The Create-Application-ID
     identity fields also travel via credentials.extra (the runtime hands the
@@ -494,9 +537,9 @@ def _wits_mapping(
         # 5 Tertiary Education
         "tertiary_studies": "No",
         # 6 Study Choices
-        "programme": _g(application, "programme"),
-        "programme_second": _g(application, "programme_second"),
-        "programme_third": _g(application, "programme_third"),
+        "programme": _choice(choices, application, 1),
+        "programme_second": _choice(choices, application, 2),
+        "programme_third": _choice(choices, application, 3),
         # 7 Domicilium Address; 8 (Residential) is always 'Same as Domicilium'
         "address_line_1": _g(profile, "street_address"),
         "suburb": _g(profile, "suburb"),
@@ -526,7 +569,7 @@ def _wits_mapping(
 
 def _uj_mapping(
     *, profile: Any, application: Any, academic_record: Any, contacts: Any,
-    email: Optional[str],
+    email: Optional[str], choices: Any = None,
 ) -> FieldMapping:
     is_sa = _g(profile, "is_sa_citizen")
     # One captured contact covers both roles (UJ's account contact "can be
@@ -590,10 +633,13 @@ def _uj_mapping(
         "school": _g(gr11, "institution"),
         "present_activity": _g(profile, "current_activity") or "GRADE 12 PUPIL",
         "studied_before": "No",
-        # Page E — Qualifications (faculty unresolved — see module docstring)
+        # Page E — Qualifications (faculty unresolved — see module docstring).
+        # programme_second is mapped but the UJ adapter doesn't drive "Add
+        # Qualification" yet (LOV reset behaviour untested) — known gap.
         "academic_year": str(app_year) if app_year is not None else None,
         "applying_for": "Curricular Courses",
-        "programme": _g(application, "programme"),
+        "programme": _choice(choices, application, 1),
+        "programme_second": _choice(choices, application, 2),
         "year_of_study": "FIRST YEAR",
     }
     # Drop keys that resolved to None so the adapter's "unmapped → skip" logic
