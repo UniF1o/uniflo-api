@@ -126,6 +126,13 @@ def build_field_mapping(
             contacts=contacts,
             email=email,
         )
+    if slug == "up":
+        return _up_mapping(
+            profile=profile,
+            application=application,
+            academic_record=academic_record,
+            email=email,
+        )
     raise ValueError(f"no field mapping built for portal slug {slug!r}")
 
 
@@ -233,6 +240,77 @@ def _uct_mapping(
         "nbt_date": _uct_date(_g(profile, "nbt_date"), "%d/%m/%y"),
     }
     values.update(redress)
+    return FieldMapping(values={k: v for k, v in values.items() if v is not None})
+
+
+def _up_gender(gender: Optional[str]) -> Optional[str]:
+    """UP's set (live-verified): Female / Male / Unspecified-Non-Binary."""
+    if not gender:
+        return None
+    g = gender.strip().lower()
+    if g.startswith("f"):
+        return "Female"
+    if g.startswith("m"):
+        return "Male"
+    return "Unspecified/Non-Binary"
+
+
+def _up_mapping(
+    *, profile: Any, application: Any, academic_record: Any,
+    email: Optional[str],
+) -> FieldMapping:
+    """UP field values keyed to up.fields.json. The new-application identity
+    fields also travel via credentials.extra (the runtime hands the mapping over
+    only after login). Subject percentages double as the NSC level source (the
+    adapter derives level = band(percent) — UP's percent dropdown is gated on
+    the level). The examining authority defaults to '<province> DoE' and is
+    fuzzy-matched against the live board list by the adapter."""
+    app_year = _g(application, "application_year")
+    matric_year = _g(academic_record, "year")
+    if matric_year is None and isinstance(app_year, int):
+        matric_year = app_year - 1
+    province = _title_case(_g(profile, "province"))
+
+    values: dict[str, Any] = {
+        # new-application form (also passed via credentials.extra)
+        "first_name": _g(profile, "first_name"),
+        "last_name": _g(profile, "last_name"),
+        "email": email,
+        "date_of_birth": _uct_date(_g(profile, "date_of_birth"), "%Y-%m-%d"),
+        "id_number": _g(profile, "id_number"),
+        "application_year": str(app_year) if app_year is not None else None,
+        # Personal Information
+        "title": _title_case(_g(profile, "title")),
+        "preferred_name": _g(profile, "preferred_name") or _g(profile, "first_name"),
+        # Contact Details
+        "address_line_1": _g(profile, "street_address"),
+        "suburb": _g(profile, "suburb"),
+        "city": _g(profile, "city"),
+        "postal_code": _g(profile, "postal_code"),
+        "phone": _g(profile, "phone"),
+        # Demographic Details
+        "gender": _up_gender(_g(profile, "gender")),
+        "home_language": _title_case(_g(profile, "home_language")),
+        "population_group": _title_case(_g(profile, "ethnicity")),
+        "tell_us_more": "I am currently still in high school",
+        # Tertiary / Secondary Education
+        "prev_enrolled": "No",
+        "final_school_year": str(matric_year) if matric_year is not None else None,
+        "examining_authority": f"{province} DoE" if province else None,
+        "school": _g(academic_record, "institution"),
+        "school_grades_type": "Nat Senior Cert or IEB",
+        "highest_grade": "Grade 11",
+        "exam_number": _g(profile, "exam_number"),
+        "exemption_type": "Currently busy with schooling",
+        "subjects": _coerce_subjects(_g(academic_record, "subjects")),
+        # Study Choice
+        "programme": _g(application, "programme"),
+        "programme_second": _g(application, "programme_second"),
+        # General Details
+        "wants_residence": _yn(_g(profile, "wants_residence")) or "No",
+        "applying_nsfas": _yn(_g(profile, "applying_nsfas")) or "No",
+        "up_funding": "No",
+    }
     return FieldMapping(values={k: v for k, v in values.items() if v is not None})
 
 
