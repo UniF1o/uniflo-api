@@ -286,7 +286,8 @@ def derive_portal_credentials(seed_id: uuid.UUID, slug: str) -> tuple[str, str]:
             secret.encode(), f"{seed_id}:{slug}:{purpose}".encode(), hashlib.sha256
         ).hexdigest()
 
-    username = f"uniflo.{digest('username')[:10]}"
+    # No product branding in portal usernames (user rule, 2026-06-10).
+    username = f"apply.{digest('username')[:10]}"
     password = f"Uf!2{digest('password')[:16]}"
     return username, password
 
