@@ -123,7 +123,7 @@ def test_uj_mapping_matric_year_falls_back_to_intake_minus_one():
 def test_build_field_mapping_unknown_slug():
     application = SimpleNamespace(programme="X", application_year=2027)
     with pytest.raises(ValueError):
-        build_field_mapping("wits", profile=_profile(), application=application)
+        build_field_mapping("stellies", profile=_profile(), application=application)
 
 
 # --- background helpers --------------------------------------------------------

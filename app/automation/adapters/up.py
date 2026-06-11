@@ -98,23 +98,25 @@ _UPLOAD_ROWS = {
 
 _FIELDS_PATH = Path(__file__).with_name("up.fields.json")
 
-# Six captcha <img> filenames: UP_{case}_{char}_{seq}.JPG. 'L' = lowercase
-# (verified live); 'U' presumed uppercase; digits carry their own glyph.
-_CAPTCHA_SRC_RE = re.compile(r"UP_([A-Z])_([A-Za-z0-9])_\d+\.JPG", re.IGNORECASE)
-
-
 def load_field_schema() -> dict:
     import json
 
     return json.loads(_FIELDS_PATH.read_text(encoding="utf-8"))
 
 
-def decode_captcha_sources(sources: list[str]) -> Optional[str]:
+def decode_captcha_sources(sources: list[str], *, prefix: str = "UP") -> Optional[str]:
     """The captcha answer spelled by the six image URLs, or None when any
-    filename doesn't match the known scheme (→ fall back to the vision solver)."""
+    filename doesn't match the known scheme (→ fall back to the vision solver).
+
+    Filenames are `{prefix}_{case}_{char}_{seq}.JPG` ('L' = lowercase, verified
+    live; 'U' presumed uppercase; digits carry their own glyph). The same
+    scheme ships on Wits with prefix "VC" — hence the parameter."""
+    pattern = re.compile(
+        rf"{re.escape(prefix)}_([A-Z])_([A-Za-z0-9])_\d+\.JPG", re.IGNORECASE
+    )
     chars: list[str] = []
     for src in sources:
-        match = _CAPTCHA_SRC_RE.search(src or "")
+        match = pattern.search(src or "")
         if not match:
             return None
         marker, char = match.group(1).upper(), match.group(2)

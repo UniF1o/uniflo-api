@@ -1,6 +1,8 @@
 # Wits — Portal Research
 
-> **Status: Draft v2 — verified from screen recording.** Rebuilt from `wits.mp4` (11:50) frame-by-frame. Temp-ID creation, the security-code captcha, the email-verify + temp-ID login, and all 17 wizard steps are confirmed from video. **Not** captured: the post-submit confirmation page (recording ends at the Step 17 Submit screen). Sample data shown in the video is intentionally omitted (PII).
+> **Status: v3 — LIVE-VERIFIED 2026-06-11.** Full walkthrough on the live portal (synthetic Jane Doe, Temporary ID `T1867394`, application instance `UW_OA_UGFT4338265`, parked at **Step 17 — Submit never clicked**). See **Live spike findings** below for verified element ids and behaviour corrections; earlier sections kept as the original video-derived research.
+>
+> Previously: **Draft v2 — verified from screen recording.** Rebuilt from `wits.mp4` (11:50) frame-by-frame. Temp-ID creation, the security-code captcha, the email-verify + temp-ID login, and all 17 wizard steps are confirmed from video. **Not** captured: the post-submit confirmation page (recording ends at the Step 17 Submit screen). Sample data shown in the video is intentionally omitted (PII).
 >
 > **Drive mechanism: accessibility-tree primary (approach C).** "Control / target" names the visible label + control type, not a CSS selector.
 
@@ -167,6 +169,53 @@ Full schema cross-check + status: **[data-model-gaps.md](data-model-gaps.md)** (
 - [~] Document-upload formats + size limits (Step 16) and Steps 8/9 "same as" behaviour — **login-gated; deferred until test-account access** (checked live 2026-06-03: portal returns "not authorized" without a session).
 - [x] Indemnity acceptance approach — **decided (2026-06-03): surface to the student, don't auto-accept.**
 - [x] Captcha — **kept in MVP (2026-06-03)**; runtime must ship OCR for the 6-char security code (no longer a drop candidate).
+
+---
+
+## Live spike findings (2026-06-11)
+
+Full walkthrough on the live portal, synthetic Jane Doe, Temporary ID `T1867394`, application `UW_OA_UGFT4338265`, **parked at Step 17 (Submit never clicked)**. All ids below verified live.
+
+### Entry + engine
+- Entry: `https://www.wits.ac.za/applications/` → redirects to `https://self-service.wits.ac.za/psc/csprodonl/UW_SELF_SERVICE/SA/c/VC_OA_LOGIN_MENU.VC_OA_LOGIN_FL.GBL` (the doc's elided URL resolved — menu is `VC_OA_LOGIN_MENU`, portal `UW_SELF_SERVICE`, instance `csprodonl`).
+- The wizard is a PeopleSoft **Activity Guide** (`NUI_FRAMEWORK.PT_AGSTARTPAGE_NUI.GBL`, `TEMPLATE_ID:UW_OA_UGFT`, `INSTANCE_ID:UW_OA_UGFT<digits>` = the application instance). Step pages are inline in the main document (no per-step iframe); modals are `ptModFrame_N` iframes; `[role=alertdialog]` dialogs carry message codes — the shared `fluid.py` patterns all apply.
+
+### Anti-automation — both gates fall
+- **Captcha decodes from the DOM, same scheme as UP with a `VC_` prefix**: six `<img alt="Image1..6">` whose filenames spell the answer — `VC_L_Y_1.JPG → y`, `VC_N_7_1.JPG → 7` (`L`=lower, `U`=upper, `N`/digit = verbatim glyph). No vision call needed; solver stays as fallback.
+- **Emailed Temporary ID + password**: body markers are literal `TEMPORARY ACCESS ID:`/`PASSWORD:` on their own lines (`T1867394` / `080312`). ⚠️ The temp password was **the applicant's DOB as yymmdd** — DOB-derived, not random. Mail also carries a confirm link to `?Page=VC_OA_PWD_CNFRM_FL`.
+
+### Pre-application (Create Application ID → confirm → login) — ids
+- Login page: `VC_OA_LOGIN_WRK_OPRID` / `VC_OA_LOGIN_WRK_PASSWORD` / Login `VC_OA_LOGIN_WRK_VC_LOGIN_PB`; Create Temporary ID `VC_OA_LOGIN_WRK_REGISTER`; Confirm Temporary Password `VC_OA_LOGIN_WRK_VC_CONFIRM_PWD_PB`.
+- Create form (all `VC_OA_LOGIN_WRK_*`): Nationality `COUNTRY` (defaults South Africa) · National ID `NATIONAL_ID` · Name Title `NAME_PREFIX` (live list richer than the video: Admiral…Mx…Sister) · First `FIRST_NAME` · Middle `MIDDLE_NAME` · Surname `LAST_NAME` · DOB Day `CUB_BEGINDAY` (zero-padded "12") · DOB Month `MONTH_XLAT` (format **"03 - March"**) · DOB Year `VC_YEAR` · Gender `SEX` (Female / Gender Neutral / Male) · Email `EMAIL_ADDR` · country code `VC_COUNTRY_PHONE` (prefilled +27) + **unlabelled** mobile-number input `VC_PHONE_CELL_SS` · Security Code `VC_SEC_CODE` · Continue `CONTINUE_PB` / Cancel `CANCEL_BTN`.
+- **NEW (not in the video): a "Confirm Application Details" review page** sits between the create form and the email — second Continue click required.
+- "Confirmation of Email" page → OK → **User Details** (same ids: `EMAIL_ADDR` + `OPRID` + `PASSWORD`, OK = `CONTINUE_PB`) → forced "Enter a new password" (Password + Confirm Password) → "password successfully changed" → OK → login with Temporary ID + new password.
+- Apply for Admission (`VC_OA_STD_MENU.VC_OA_APPL_STRT_FL.GBL`): Application Action `VC_OA_APPLY_WRK_VC_OA_APPL_ACTN` (Begin New Application / Continue Existing Application) → Application Type `VC_OA_APPLY_WRK_VC_OA_APP_TYPE` (9 live options; **Undergraduate Full-Time**) → Academic Year `VC_OA_APPLY_WRK_ADMIT_TERM` ("Academic Year 2027" sole option) → Academic Calendar `VC_OA_APPLY_WRK_WITS_ADMISSIONCALE` ("January" sole option) → Continue.
+
+### Wizard mechanics
+- Header: Next/Previous `PTGP_GPLT_WRK_PTGP_NEXT_PB`/`_PREVIOUS_PB`; Save `VC_AGA_ACTNS_WK_SAVE_BTN`; Validate Application `VC_AGA_ACTNS_WK_VALIDATE_BTN` (all clickable by visible text too).
+- Left-nav items are Activity Guide steps (`PTGP_STEP_DVW_PTGP_STEP_LABEL$n`); **clicking the `li` does NOT navigate** — drive with Next/Previous. (Each step also has a direct `csprodonl_newwin … VC_OA_FL.GBL?PAGE=VC_OA_XXXX_DTL_FL` URL — untested for in-place navigation.)
+- ⚠️ **One field per server round-trip**: setting Examining Authority + Exam Year + Exam Month in one JS pass silently lost the year/month (the select's AJAX re-render discarded unsynced sibling values). Settle after every change-dispatch.
+- **The Next button is hidden on Step 6 until Validate Application passes** (steps 7+ locked). Validate failure → alert *"Errors found on multiple pages. (32030, 346)"* → **Validation Messages modal** (`ptModFrame`): rows of Page | Message | View Details.
+- **Eligibility is enforced at Validate, not at selection** (unlike UP): *"You do not meet the subject requirements for EFA01"* + a View Details modal listing the required subjects ("…must have completed at least one of: **Mathematics HG**"). The check keys off the **Grade 12** subject list — it cleared once Gr12 subjects (incl. Mathematics) were present.
+
+### Steps 2–13 — ids (prefix `VC_OA_STG_`)
+- **2 Personal:** Title + Gender selects editable (prefilled from create); names/DOB/ID read-only.
+- **3 Activities:** `GENL_VC_MAIN_ACTIVITY` (Currently upgrading matric / Employment Or Occupation / Gap Year / **School** / University); Add Sport optional.
+- **4 Secondary Education:** radios `SEDH_VC_OA_SCED_OPT` (South African — default ✓) and `SEDH_VC_OA_SCHL_TYPE` (Current Grd 12 — default ✓). **Select School** button → modal `VC_OA_WRK_SEARCH_KEY` + `VC_OA_WRK_SEARCH_BTN`, result rows `VC_OA_WRK_SELECT$n`. Examining Authority `SEDH_WITS_EXM_AUT_CD` — **plain province names** (Gauteng, Limpopo, … + I.E.B. / NCV / SACAI), not "<province> DoE". Exam Year `SEDH_VC_FINAL_SCHL_YEAR` (text) · Exam Month `SEDH_UW_EXAM_MONTH` (June/November) · Exam Number `SEDH_WITS_EXAMNUM`. **Gr11 grid** (10 rows): subject `SEDG_SCHOOL_CRSE_NBR$n` (156 options, names truncated ~30 chars: "Afrikaans First Additional Lan") + mark `SEDG_VC_GRADE$n`. **Gr12 grid** `SEDT_SCHOOL_CRSE_NBR$n` + **Copy Grade 11 Subjects `VC_OA_WRK_VC_COPY_GR11_SUBJ`**. ⚠️ Research correction: **Gr12 subjects (min 5) ARE required for Current-Grd-12 applicants** — validation msgs: "Exam Year (Grade 12) must be entered", "Exam Month (Grade 12) must be entered", "At least 5 subjects must be entered (Grade 12 Subjects)".
+- **5 Tertiary:** single checkbox `GENL_VC_OA_TERT_FLG` (unchecked = No — default right for matriculants).
+- **6 Study Choices:** `VC_OA_WRK_VC_ACAD_PROG1/2/3` + `VC_OA_WRK_VC_ACAD_PLAN1/2/3` (plan = single non-blank option, must be explicitly selected). ⚠️ **On first render only PROG3 is visible** — all three blocks render after the first server round-trip; target PROG1 explicitly (a value set on the lone visible select lands in Programme 3). 62 open programmes (code + name, e.g. `EFA01 - Bachelor of Science in Engineering (Civil)`).
+- **7 Domicilium:** Country `ADD1_COUNTRY` (defaults South Africa) · `ADD1_ADDRESS1/2` · Suburb `ADD1_ADDRESS3` · **Address Search link `VC_OA_WRK_ADDRESS_LOOKUP`** → modal rows `VC_OA_WRK_SELECT$n` (Suburb | City | Postal | Province) → selection fills the read-only City/Postal Code/Province.
+- **8 Residential / 9 Postal:** `ADD2_VC_USE_ADDRESS` / `ADD3_VC_USE_ADDRESS` — "Same as Other Address" selects, options `["", "Domicilium"]` (Domicilium only; the video's "same as residential" doesn't exist).
+- **10 Contact:** email + mobile prefilled from registration (`CNTC_VC_PHONE_CELL_SS`); home/work optional.
+- **11 Demographics:** Marital `DEMO_MAR_STATUS` (Divorced/Married/Separated/Single/Widowed) · Population Group `DEMO_ETHNIC_GRP_CD` — **Asian / Black / Coloured / Indian / White** (⚠️ "Black", not "African") · Home Language `DEMO_LANG_CD` (large list) · Religious Affiliation `DEMO_RELIGIOUS_PREF` (**"Nil Declared"** = safe non-answer) · Disability `DEMO_DISABLED` (No/Yes).
+- **12 Next of Kin** (`NKIN_*`): `NAME_PREFIX` · Initial `FIRST_NAME` · Surname `LAST_NAME` · mobile `VC_PHONE_CELL_SS` · `EMAIL_ADDR` · Relationship `PEOPLE_RELATION` · address same-as `VC_USE_ADDRESS` (`["", "Domicilium"]`) or manual `ADDRESS1/2/3` + `COUNTRY`.
+- **13 Emergency:** checkbox `GENL_VC_OA_EMERG_FLG` "Use same details as Next of Kin" — ticking it **hides** the name/phone inputs (copied server-side); Relationship `EMER_RELATIONSHIP` still needs a value.
+
+### Steps 14–17
+- **14 Indemnity:** an **Accept link `SCC_TM_ADM_WRK_SCC_TM_ACCEPT`** (SCC agreement framework — same id family as UCT's submit) + Printable Page. Accept → step flips to Complete, page stays. Sits **before** Documents in Next order, so reaching uploads requires acceptance (consent ordering handled adapter-side via the agreement-consent flag).
+- **15 Payment:** *"Application Fee Payable: R100"*, paid **after** submission — Self-Service Portal (Campus Finances → Make a Payment → Application Fee) or **EFT: FNB, acct 63075484302, branch 251905, Swift FIRNZAJJ**, person/student number as reference. Confirms: submission is NOT payment-gated. (The Welcome page also lists Standard Bank branch payments as an option.)
+- **16 Documents:** two rows for a Current-Grd-12 applicant — **"Copy of ID Document/Passport"** and **"Final GR11 Results"** (not the matric certificate). Add buttons `VC_OA_WRK_FILE_CREATE1_LBL$0/$1`; PeopleSoft File Attachment modal: **My Device = `PT_ATTACH_BUTTON_DEF`** (⚠️ differs from UP's `PT_ATTACH_MYDEVICE`) → chooser → Upload `[id="#ICUpload"]` → "Upload Complete" → Done `[id="#ICOK"]`. A 344-byte dummy PDF uploads fine.
+- **17 Submit:** *"Your application is complete. Please click 'Submit' below…"* — **Submit button = `VC_OA_WRK_SUBMIT_PB`** ("Submit Application to the University"). **Never clicked**; post-submit page remains [VERIFY] at the first supervised submit.
 
 ---
 
