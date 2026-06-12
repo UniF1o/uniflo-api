@@ -195,7 +195,7 @@ def _portal_form_schema(adapter):
     )
 
 
-def _generate_ai_mapping(session, application, adapter, profile, academic_record) -> None:
+def _generate_ai_mapping(session, application, adapter, profile, records) -> None:
     """Best-effort: produce the AI field mapping for Partner-A's review screen and
     persist it to `field_mappings`. Skipped (logged) if AI isn't configured or the
     adapter exposes no form schema; a failure never sinks the run (the bot fills
@@ -215,9 +215,7 @@ def _generate_ai_mapping(session, application, adapter, profile, academic_record
 
         client = AIClient.from_env()
         form = _portal_form_schema(adapter)
-        payload = build_profile_payload(
-            profile, [academic_record] if academic_record else None
-        )
+        payload = build_profile_payload(profile, records or None)
         response = asyncio.run(
             map_application_to_portal(
                 application_id=application.id, profile=payload, form=form, client=client
@@ -290,6 +288,55 @@ def derive_portal_credentials(seed_id: uuid.UUID, slug: str) -> tuple[str, str]:
     username = f"apply.{digest('username')[:10]}"
     password = f"Uf!2{digest('password')[:16]}"
     return username, password
+
+
+def _fetch_documents(session, profile):
+    """Download the student's Storage documents to a temp dir and build the
+    `DocumentRef` list the adapters upload from. Returns (refs, temp_dir);
+    the caller removes temp_dir after the run. A single failed download is
+    logged and skipped — the adapter raises its own clear error if a document
+    it requires ends up missing."""
+    import os
+    import tempfile
+
+    from app.automation.base import DocumentRef
+    from app.models.document import Document
+    from app.supabase_client import get_supabase
+
+    if profile is None:
+        return [], None
+    documents = list(
+        session.exec(
+            select(Document).where(Document.student_id == profile.id)
+        ).all()
+    )
+    if not documents:
+        return [], None
+    temp_dir = tempfile.mkdtemp(prefix="uniflo_docs_")
+    refs = []
+    for document in documents:
+        try:
+            data = (
+                get_supabase()
+                .storage.from_(settings.SUPABASE_STORAGE_BUCKET)
+                .download(document.storage_path)
+            )
+        except Exception:  # noqa: BLE001 — adapter surfaces missing-required
+            logger.warning(
+                "automation: document download failed for %s (skipping)",
+                document.storage_path, exc_info=True,
+            )
+            continue
+        filename = os.path.basename(document.storage_path)
+        local_path = os.path.join(temp_dir, filename)
+        with open(local_path, "wb") as fh:
+            fh.write(data)
+        refs.append(
+            DocumentRef(
+                doc_type=document.type, local_path=local_path, filename=filename
+            )
+        )
+    return refs, temp_dir
 
 
 def _wire_challenge_source(adapter, application_id: uuid.UUID, email) -> None:
@@ -370,6 +417,7 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
     from app.automation.runtime import run_job
     from app.automation.screenshots import upload_screenshots
     from app.models.academic_record import AcademicRecord
+    from app.models.application_choice import ApplicationChoice
     from app.models.contact import Contact
     from app.models.student_profile import StudentProfile
     from app.models.university import University
@@ -423,12 +471,16 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
                 return
 
             profile = session.get(StudentProfile, application.student_id)
-            record = session.exec(
-                select(AcademicRecord)
-                .where(AcademicRecord.student_id == application.student_id)
-                .order_by(AcademicRecord.year.desc())
-                .limit(1)
-            ).first()
+            # ALL records — the mapping picks by record_type (Gr11 finals for
+            # the grids, Gr12 April/June marks for UCT); a "latest by year"
+            # single pick was arbitrary once both types existed.
+            records = list(
+                session.exec(
+                    select(AcademicRecord).where(
+                        AcademicRecord.student_id == application.student_id
+                    )
+                ).all()
+            )
             contacts = list(
                 session.exec(
                     select(Contact).where(
@@ -438,18 +490,41 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
             )
             user = session.get(User, profile.user_id) if profile else None
             email = getattr(user, "email", None)
+            # Ordered programme choices (choice 1 mirrors applications.programme;
+            # 2+ exist only in application_choices) — UP/Wits/UCT fill them.
+            choices = [
+                c.programme
+                for c in session.exec(
+                    select(ApplicationChoice)
+                    .where(ApplicationChoice.application_id == application_id)
+                    .order_by(ApplicationChoice.choice_number)
+                ).all()
+            ]
 
-            mapping = build_field_mapping(
-                adapter.slug,
-                profile=profile,
-                application=application,
-                academic_record=record,
-                contacts=contacts,
-                email=email,
-            )
+            try:
+                mapping = build_field_mapping(
+                    adapter.slug,
+                    profile=profile,
+                    application=application,
+                    academic_record=records,
+                    contacts=contacts,
+                    email=email,
+                    choices=choices,
+                )
+            except ValueError as exc:
+                # e.g. an applicant situation the adapters would misreport
+                # (gap year / upgrading) — a data problem, not an internal one.
+                logger.warning("automation: %s blocked — %s", application_id, exc)
+                job.status = "failed"
+                job.last_error = "form_submit_failed"
+                job.attempts += 1
+                application.status = "failed"
+                session.add_all([job, application])
+                session.commit()
+                return
             # Produce + persist the AI mapping for the review screen (best-effort;
             # the bot fills via the deterministic mapping above regardless).
-            _generate_ai_mapping(session, application, adapter, profile, record)
+            _generate_ai_mapping(session, application, adapter, profile, records)
             username, password = derive_portal_credentials(
                 profile.id if profile else application.student_id, adapter.slug
             )
@@ -465,20 +540,31 @@ def _run_real_automation(application_id: uuid.UUID) -> None:
             # Email-challenge wiring (UCT OTP etc.) for adapters that take it.
             _wire_challenge_source(adapter, application_id, email)
 
+            # The runtime uploads from local files — fetch the student's
+            # documents out of Storage before the browser run.
+            document_refs, docs_temp_dir = _fetch_documents(session, profile)
+
             # transition pending → processing before the (slow) browser run
             job.status = "processing"
             application.status = "processing"
             session.add_all([job, application])
             session.commit()
 
-            result = asyncio.run(
-                run_job(
-                    adapter,
-                    credentials=credentials,
-                    mapping=mapping,
-                    allow_submit=allow_submit,
+            try:
+                result = asyncio.run(
+                    run_job(
+                        adapter,
+                        credentials=credentials,
+                        mapping=mapping,
+                        documents=document_refs,
+                        allow_submit=allow_submit,
+                    )
                 )
-            )
+            finally:
+                if docs_temp_dir:
+                    import shutil
+
+                    shutil.rmtree(docs_temp_dir, ignore_errors=True)
             _apply_result(application, job, result)
             # upload the per-step screenshots and keep the primary (final/failure)
             # one's storage path on the job (signed for the dashboard on read).

@@ -8,9 +8,18 @@ from sqlmodel import Field, SQLModel
 
 class Contact(SQLModel, table=True):
     """A person attached to a student's application: next of kin, fee payer,
-    parent/guardian, or emergency contact. Portals (UJ, Wits, UCT) require one
-    or more of these, with their own name/contact/address. At most one contact
-    per type per student (upsert semantics, like academic_records)."""
+    parent/guardian, or emergency contact. At most one contact per type per
+    student (upsert semantics, like academic_records).
+
+    Cross-portal finding (all four portals live-verified, 2026-06-12): ONE
+    captured adult contact satisfies every portal — UP asks for nobody; UJ's
+    next of kin + account contact may be the same person; UCT collapses
+    parent/guardian + fee payer via a checkbox; Wits' emergency contact has a
+    "same as next of kin" toggle. The automation mapping resolves each portal
+    role through fallback chains across types, so capture ONE parent/guardian
+    (as `guardian` or `next_of_kin`) and add a `fee_payer` row only when the
+    payer genuinely differs. The `emergency` type exists only as an override —
+    no portal requires it as a distinct person."""
 
     __tablename__ = "contacts"
     __table_args__ = (
