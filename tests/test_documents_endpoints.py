@@ -40,6 +40,7 @@ def make_mock_document():
     mock_document.student_id = VALID_PROFILE_ID
     mock_document.type = "ID_COPY"
     mock_document.storage_path = f"{VALID_USER_ID}/ID_COPY/{VALID_DOCUMENT_ID}.pdf"
+    mock_document.original_filename = "id.pdf"
     mock_document.uploaded_at = "2026-04-19T00:00:00"
     return mock_document
 
@@ -75,6 +76,8 @@ def test_upload_document_success():
     app.dependency_overrides.clear()
     assert response.status_code == 201
     assert response.json()["storage_url"] == SIGNED_URL
+    # The user-supplied upload name is captured and returned for display.
+    assert response.json()["original_filename"] == "id.pdf"
 
 
 # POST /documents/upload with invalid file type returns 422
@@ -133,6 +136,7 @@ def test_get_documents_success():
     app.dependency_overrides.clear()
     assert response.status_code == 200
     assert response.json()[0]["storage_url"] == SIGNED_URL
+    assert response.json()[0]["original_filename"] == "id.pdf"
 
 
 # GET /documents returns empty list when no documents exist

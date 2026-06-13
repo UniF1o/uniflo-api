@@ -27,6 +27,15 @@ def _safe_extension(filename: str | None) -> str:
     return ext
 
 
+def _clean_original_filename(filename: str | None) -> str | None:
+    """Tidy the user-supplied upload name for display. Storage paths never use
+    it (they are UUID-based) — this is only shown back to the student, so it is
+    trimmed and length-capped rather than sanitised for path safety."""
+    if not filename:
+        return None
+    return filename.strip()[:255] or None
+
+
 def _create_signed_url(storage_path: str) -> str:
     """Generate a short-lived signed URL for a private-bucket object."""
     try:
@@ -55,6 +64,7 @@ def _to_response(document: Document) -> DocumentResponse:
         student_id=document.student_id,
         type=DocumentType(document.type),
         storage_url=_create_signed_url(document.storage_path),
+        original_filename=document.original_filename,
         uploaded_at=document.uploaded_at,
     )
 
@@ -106,6 +116,7 @@ async def upload_document(
         student_id=profile.id,
         type=document_type,
         storage_path=storage_path,
+        original_filename=_clean_original_filename(file.filename),
     )
     session.add(document)
     session.commit()

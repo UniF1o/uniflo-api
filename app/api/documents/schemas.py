@@ -1,6 +1,7 @@
 import uuid
 from datetime import datetime
 from enum import Enum
+from typing import Optional
 
 from pydantic import BaseModel, ConfigDict
 
@@ -21,4 +22,7 @@ class DocumentResponse(BaseModel):
     student_id: uuid.UUID
     type: DocumentType
     storage_url: str
+    # Display-only upload name. Null for legacy rows uploaded before this was
+    # captured, and for uploads that arrived without a filename.
+    original_filename: Optional[str] = None
     uploaded_at: datetime
