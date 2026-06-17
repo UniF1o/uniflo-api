@@ -44,6 +44,17 @@ UNIVERSITIES = [
             "open_date": date(2026, 4, 1),
             "close_date": date(2026, 10, 31),
             "is_active": True
+        },
+        {
+            # Adapter resolves by website domain (up.ac.za) — keep it stable.
+            # General undergrad closes 30 June 2026; the 31 May date is
+            # Veterinary Science only (verified on up.ac.za important-dates).
+            "name": "University of Pretoria",
+            "website": "https://www.up.ac.za",
+            "portal_url": "https://upnet.up.ac.za",
+            "open_date": date(2026, 4, 1),
+            "close_date": date(2026, 6, 30),
+            "is_active": True
         }
     ]
 
