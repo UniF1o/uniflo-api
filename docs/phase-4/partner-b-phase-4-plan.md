@@ -237,7 +237,7 @@ faculty as a selectable level (the Phase 5 picker), and SA faculties carry real
 metadata (UP **Veterinary Science closes 31 May while all other programmes close
 30 June** — a per-faculty deadline the single `universities.close_date` can't hold).
 
-- [ ] New model `app/models/faculty.py` (exported from `app/models/__init__.py`):
+- [x] New model `app/models/faculty.py` (exported from `app/models/__init__.py`):
 
   | column | type | notes |
   |---|---|---|
@@ -246,7 +246,7 @@ metadata (UP **Veterinary Science closes 31 May while all other programmes close
   | `name` | str | e.g. "Engineering, Built Environment and IT" |
   | `close_date` | date, nullable | per-faculty deadline override (e.g. UP Vet Science) |
 
-- [ ] New model `app/models/programme.py` (exported from `app/models/__init__.py`):
+- [x] New model `app/models/programme.py` (exported from `app/models/__init__.py`):
 
   | column | type | notes |
   |---|---|---|
@@ -269,9 +269,9 @@ metadata (UP **Veterinary Science closes 31 May while all other programmes close
   portal's study-choice codes against. Treat it as the contract between the
   catalogue, the seed, and the automation layer.
 
-- [ ] Additive change to `app/models/university.py`: add `scoring_method`
+- [x] Additive change to `app/models/university.py`: add `scoring_method`
   (str, nullable) — names the APS function to apply (e.g. `"up_aps"`).
-- [ ] `requirements` JSONB shape — a list of subject rules. `subjects` is a list
+- [x] `requirements` JSONB shape — a list of subject rules. `subjects` is a list
   meaning "any one of these satisfies the rule", which cleanly handles language
   alternatives and the Mathematics-vs-Mathematical-Literacy distinction (only list
   the accepted subjects):
@@ -288,9 +288,9 @@ metadata (UP **Veterinary Science closes 31 May while all other programmes close
   (`uniflo-web/lib/constants/nsc-subjects.ts`) — the same list the academic-records
   matcher keys off. `min_mark` is a percentage; `min_level` (NSC 1–7) is optional
   and used when the prospectus states a level rather than a percentage.
-- [ ] One Alembic migration adding the `faculties` and `programmes` tables + the
+- [x] One Alembic migration adding the `faculties` and `programmes` tables + the
   `scoring_method` column. Additive, reversible. Apply via `command.upgrade()`.
-- [ ] No new tests beyond a model-import smoke test; the logic lives in Task 2.
+- [x] No new tests beyond a model-import smoke test; the logic lives in Task 2.
 
 **Squash commit:** `feat: add programmes table and university scoring_method`
 
