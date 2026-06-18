@@ -15,3 +15,4 @@ class University(SQLModel, table=True):
     open_date: Optional[date]
     close_date: Optional[date]
     is_active: bool = Field(default=False)
+    scoring_method: Optional[str] = Field(default=None, nullable=True)
