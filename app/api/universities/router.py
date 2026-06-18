@@ -4,6 +4,8 @@ from typing import Optional
 from fastapi import APIRouter, Depends, Request
 from sqlmodel import Session
 
+from app.api.recommendations import service as recommendations_service
+from app.api.recommendations.schemas import ProgrammesCatalogueResponse
 from app.api.universities import service
 from app.api.universities.schemas import UniversitiesListResponse, UniversityRead
 from app.db import get_session
@@ -34,3 +36,20 @@ def get_university(
     request: Request, university_id: uuid.UUID, session: Session = Depends(get_session)
 ):
     return service.get_university(session, university_id)
+
+
+@router.get(
+    "/{university_id}/programmes",
+    response_model=ProgrammesCatalogueResponse,
+    operation_id="universities_programmes",
+)
+@limiter.limit("60/minute")
+def list_university_programmes(
+    request: Request,
+    university_id: uuid.UUID,
+    intake_year: Optional[int] = None,
+    session: Session = Depends(get_session),
+):
+    return recommendations_service.list_university_programmes(
+        session, university_id, intake_year
+    )
