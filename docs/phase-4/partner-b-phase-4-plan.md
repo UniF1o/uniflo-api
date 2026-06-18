@@ -302,7 +302,7 @@ metadata (UP **Veterinary Science closes 31 May while all other programmes close
 The brain of the feature. Keep it a **pure module** — no DB, no network — so it is
 exhaustively unit-testable.
 
-- [ ] New `app/api/recommendations/scoring.py`:
+- [x] New `app/api/recommendations/scoring.py`:
   - `compute_aps(subjects: list[SubjectIn], method: str) -> int` — implements UP's
     APS exactly as transcribed in coordination Task 3 (default `up_aps`: sum of the
     NSC achievement levels of the best 6 subjects excluding Life Orientation; the
@@ -321,7 +321,7 @@ exhaustively unit-testable.
     **or** exactly one subject rule is short by `≤ SUBJECT_BORDERLINE_MARGIN`
     (default 5 percentage points). Everything failing harder is `not_yet`;
     everything met is `qualifies`.
-- [ ] **Subject-matching rules (correctness landmines) — get these exactly right:**
+- [x] **Subject-matching rules (correctness landmines) — get these exactly right:**
   match by the exact frozen NSC name; **never** treat `Mathematical Literacy` or
   `Technical Mathematics` as `Mathematics`; keep `English Home Language` and `English
   First Additional Language` distinct (a rule lists whichever it accepts); **exclude
@@ -329,7 +329,7 @@ exhaustively unit-testable.
   subjects for named requirements and decide whether they count toward APS; handle a
   record with **fewer than 6 subjects** gracefully (compute on what's there, flag
   provisional — don't error).
-- [ ] Tests (`tests/test_recommendation_scoring.py`) — truth tables, no DB:
+- [x] Tests (`tests/test_recommendation_scoring.py`) — truth tables, no DB:
   - APS computation: known subject sets -> expected APS (cover the LO-exclusion and
     the best-6 selection; cover percentage-only input with no `nsc_level`).
   - `evaluate`: a programme the student clearly meets (`qualifies`); one missed only
@@ -337,7 +337,7 @@ exhaustively unit-testable.
     missed on a subject by 12% and APS by 4 (`not_yet`) with both gap strings
     asserted. Use the UP BEng Civil `12136017` vs `12130017` example from the portal
     research as a fixture so the tests mirror reality.
-- [ ] `ruff check .` + `black --check .` + `pytest -v` green.
+- [x] `ruff check .` + `black --check .` + `pytest -v` green.
 
 **Squash commit:** `feat: add APS scoring and programme-matching engine`
 
