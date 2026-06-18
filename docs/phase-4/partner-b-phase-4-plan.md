@@ -349,9 +349,9 @@ exhaustively unit-testable.
 Wire the engine to the data behind the locked contract, following the standard
 `router` / `service` / `schemas` layering.
 
-- [ ] New `app/api/recommendations/{router,service,schemas}.py`; register the
+- [x] New `app/api/recommendations/{router,service,schemas}.py`; register the
   router in `app/main.py`.
-- [ ] `service.py`:
+- [x] `service.py`:
   - Resolve the student profile from `request.state.user["sub"]` (same lookup every
     other authenticated service uses).
   - Load the academic record: the requested `record_type`, else best available
@@ -363,15 +363,15 @@ Wire the engine to the data behind the locked contract, following the standard
     `scoring.compute_aps(subjects, university.scoring_method)`; run
     `scoring.evaluate` over each programme.
   - Sort qualifies -> borderline -> not_yet, then ascending by APS gap.
-- [ ] `schemas.py` — Pydantic response models exactly matching Appendix A so the
+- [x] `schemas.py` — Pydantic response models exactly matching Appendix A so the
   generated OpenAPI spec is the contract Partner A regenerates from.
-- [ ] `router.py` — `GET /recommendations`, authenticated, rate-limited like the
+- [x] `router.py` — `GET /recommendations`, authenticated, rate-limited like the
   other read endpoints.
-- [ ] **Catalogue endpoint** `GET /universities/{id}/programmes` (public, no
+- [x] **Catalogue endpoint** `GET /universities/{id}/programmes` (public, no
   matching) — returns the faculty→programme catalogue for the university (active
   intake year by default), grouped by faculty. Serves browsing now and is the Phase 5
   picker's data source. Same service module.
-- [ ] Tests (`tests/test_recommendations_endpoint.py`) — `TestClient` + mocked
+- [x] Tests (`tests/test_recommendations_endpoint.py`) — `TestClient` + mocked
   service per `tests/conftest.py`: happy path (three buckets present, sort order
   asserted), `409` when no record, auth required.
 
