@@ -386,46 +386,39 @@ The data task. **No extraction script, no AI API** — the prospectus is transcr
 in-session by Claude Code reading the PDF, then reviewed by a human and loaded by a
 plain seed script.
 
-- [ ] Claude Code reads `data/prospectus/up-2027.pdf` page-range by page-range and
-  transcribes each programme into `data/programmes/up.json`:
-  ```json
-  [
-    {
-      "qualification_code": "12136017",
-      "name": "BEng (Civil Engineering) ENGAGE",
-      "faculty": "Engineering, Built Environment and IT",
-      "min_aps": 33,
-      "requirements": {
-        "subject_rules": [
-          { "subjects": ["Mathematics"], "min_mark": 65 },
-          { "subjects": ["Physical Sciences"], "min_mark": 65 },
-          { "subjects": ["English Home Language", "English First Additional Language"], "min_mark": 65 }
-        ]
-      },
-      "notes": "5-year ENGAGE stream",
-      "source_page": 412,
-      "is_active": true
-    }
-  ]
-  ```
-- [ ] **Capture additional requirements as notes.** Any non-academic requirement a
-  programme lists (NBT, portfolio, audition, interview) goes in `notes` — shown to the
-  student but never gating (the matcher only checks NSC marks).
-- [ ] **Start with one faculty** (recommend Engineering, Built Environment and IT —
-  it is the worked example in the portal research) to prove the whole path
-  data -> seed -> API -> UI before transcribing the rest of UP in follow-up passes.
-  Each pass appends to `up.json`.
-- [ ] **Human review (required):** Partner B reviews `up.json` in the PR diff,
-  spot-checking entries against the prospectus, before merge/seed.
-- [ ] `scripts/seed_programmes.py` — mirrors `scripts/seed_universities.py`: plain
-  SQLAlchemy load, no AI; resolves UP's `university_id` by name; **upserts each
-  distinct `faculty` name into `faculties` and resolves `faculty_id`**; idempotent
-  upsert of programmes by `(university_id, qualification_code, intake_year)` (fallback
-  `name` + `intake_year`); sets UP's `scoring_method = "up_aps"` and the file's
-  `intake_year` (one prospectus = one intake year). The `up.json` keeps `faculty` as a
-  plain
-  name string — the seed creates/links the faculty row. Run:
-  `python scripts/seed_programmes.py`.
+- [x] Claude Code reads the prospectus PDF page-range by page-range and
+  transcribes each programme into `data/programmes/up.json`. **All 9 UP faculties,
+  120 programmes, intake_year 2027** transcribed in one pass (not just one faculty).
+  Top-level keys: `intake_year`, `default_close_date`, `faculty_overrides` (Vet
+  Science 31 May), `programmes`. Each entry carries `qualification_code` (null where
+  the prospectus prints none), `name`, `faculty`, `duration_years`, `min_aps`,
+  `requirements.subject_rules`, `notes`, `source_page`, `is_active`. Subject rules use
+  the frozen NSC names with `min_level` (achievement level) or `min_mark` (percentage,
+  e.g. 5-yr ENGAGE + extended programmes).
+- [x] **Capture additional requirements as notes.** Portfolio/audition/interview/
+  Grade-11-selection requirements captured in `notes`, never gating.
+- [x] **Storage decision (PDF vs JSON):** only the reviewed JSON is committed; raw
+  prospectus PDFs + transcription scratch stay out of the repo (`uni_data/` gitignored).
+  Traceability preserved via per-entry `source_page`.
+- [x] **Freshness pipeline (added beyond the original plan):** `app/intake.py` holds the
+  single `active_intake_year()` definition (recommendation service now imports it);
+  `app/programme_data.py` classifies each `data/programmes/*.json` as current/stale/
+  ahead; `scripts/check_prospectus_year.py` is a runnable check wired into CI as its own
+  step (exit 1 on stale); the seed refuses stale data unless `--allow-stale`; tests
+  cover the classifier plus a live tripwire that fails CI when the cycle rolls over and
+  the prospectus is not refreshed.
+- [ ] **Human review (required):** Partner B reviews `up.json` in the PR diff
+  (PR #56), spot-checking entries against the prospectus, before merge/seed. Pay
+  special attention to the Built Environment trio (Construction Management, Real Estate,
+  Quantity Surveying) — Physical Sciences requirement was ambiguous in extraction and is
+  flagged in their `notes`.
+- [x] `scripts/seed_programmes.py` — mirrors `scripts/seed_universities.py`: plain
+  SQLAlchemy load, no AI; resolves UP's `university_id` by name; upserts each distinct
+  `faculty` name into `faculties` and resolves `faculty_id`; idempotent upsert of
+  programmes by `(university_id, qualification_code, intake_year)` (fallback `name` +
+  `intake_year`); sets UP's `scoring_method = "up_aps"` and the file's `intake_year`.
+  The `up.json` keeps `faculty` as a plain name string — the seed creates/links the
+  faculty row. Run: `python scripts/seed_programmes.py`.
 - [ ] Apply against prod (`.env` is prod) only after the JSON is reviewed.
 
 **Squash commit:** `feat: seed UP programme admission requirements`
