@@ -70,7 +70,7 @@ def seed_file(filename: str, allow_stale: bool = False) -> None:
 
     active_year = active_intake_year()
     status, message = assess(intake_year, active_year)
-    print(f"\n=== {key} → {university_name} ===")
+    print(f"\n=== {key} -> {university_name} ===")
     print(f"Freshness check: {message}")
     if status == "stale":
         if not allow_stale:
@@ -182,7 +182,7 @@ def seed_file(filename: str, allow_stale: bool = False) -> None:
                 print(f"    Created: {prog_name}")
 
         session.commit()
-        print(f"Done — {len(programmes_data)} programmes processed for {university_name} intake {intake_year}.")
+        print(f"Done - {len(programmes_data)} programmes processed for {university_name} intake {intake_year}.")
 
 
 if __name__ == "__main__":
