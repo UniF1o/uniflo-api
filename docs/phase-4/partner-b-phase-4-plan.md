@@ -436,8 +436,11 @@ tasks, not out of scope** — UP ships and proves the pipeline first.
 
 Suggested ordering (most APS-like scoring first, bespoke last):
 
-- [ ] **UJ** — APS-based like UP; reuse `up_aps` if the bands match, else add
-  `uj_aps`. Research: `docs/phase-3/portal-research/uj.md`.
+- [x] **UJ** — transcribed (2027 prospectus, 149 bachelor + extended degrees, all 8
+  faculties) into `data/programmes/uj.json`. APS bands match UP, so it reuses
+  `up_aps` (no `uj_aps` needed). Required additively extending the engine for UJ's
+  conditional APS and per-option subject levels. PR open; human review + prod seed
+  still pending (Partner B gates). Research: `docs/phase-3/portal-research/uj.md`.
 - [ ] **Wits** — its own composite/APS with programme-specific subject rules; add
   `wits_aps` if the points differ. Research: `docs/phase-3/portal-research/wits.md`.
 - [ ] **UCT** — bespoke **Faculty Points Score (FPS/WPS)** with weighted percentages,
