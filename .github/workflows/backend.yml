@@ -25,6 +25,8 @@ jobs:
           cache: pip
       - run: pip install -r requirements-dev.txt
       - run: ruff check .
+      - name: Check prospectus data matches the active application cycle
+        run: python scripts/check_prospectus_year.py
       - run: pytest -v
 
   deploy:

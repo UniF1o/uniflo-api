@@ -1,0 +1,2761 @@
+{
+  "intake_year": 2027,
+  "default_close_date": "2026-06-30",
+  "faculty_overrides": {
+    "Veterinary Science": { "close_date": "2026-05-31" }
+  },
+  "programmes": [
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Administration specialising in Public Administration and International Relations",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics", "Mathematical Literacy"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Mathematics minimum is level 3; Mathematical Literacy minimum is level 4. Rule encoded at level 4 (stricter) — students with Mathematics level 3 should confirm eligibility with the faculty.",
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce in Accounting Sciences",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Investment Management",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Financial Management Sciences",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Econometrics",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Economics",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Statistics and Data Science",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Information Systems",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Also cross-listed under Engineering, Built Environment and IT (School of Information Technology).",
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Agribusiness Management",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Business Management",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Supply Chain Management",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Marketing Management",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Human Resource Management",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 8,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 9,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce [4-year extended]",
+      "faculty": "Economic and Management Sciences",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 3
+          }
+        ]
+      },
+      "notes": "Selection programme; additional selection criteria apply and will be communicated by the Faculty.",
+      "source_page": 9,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Education in Early Childhood Care and Education",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 9,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Education in Foundation Phase Teaching",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Covers Grade R to Grade 3.",
+      "source_page": 9,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Education in Intermediate Phase Teaching",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Covers Grades 4 to 6.",
+      "source_page": 9,
+      "is_active": true
+    },
+    {
+      "qualification_code": "09133031",
+      "name": "Bachelor of Education in Senior Phase and FET Teaching",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Covers Grades 7 to 12. Elective modules in Physical Sciences or Life Sciences additionally require Physical Sciences level 5 and Mathematics level 5.",
+      "source_page": 9,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Higher Certificate in Sports Sciences [1 year]",
+      "faculty": "Education",
+      "duration_years": 1,
+      "min_aps": 20,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Selection based on sports achievements in consultation with TuksSport; preference given to nominees of official UP sports clubs.",
+      "source_page": 9,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Higher Certificate in Sports Sciences [2 year online]",
+      "faculty": "Education",
+      "duration_years": 2,
+      "min_aps": 20,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Online programme; students must have at least part-time access to schools, sports clubs or accredited training facilities.",
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Engineering in Chemical Engineering",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 4,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": "12130017",
+      "name": "Bachelor of Engineering in Civil Engineering",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 4,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": "12136019",
+      "name": "Bachelor of Engineering in Computer Engineering",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 4,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": "12136013",
+      "name": "Bachelor of Engineering in Electrical Engineering",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 4,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Engineering in Electronic Engineering",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 4,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Engineering in Industrial Engineering",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 4,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Engineering in Mechanical Engineering",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 4,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Engineering in Metallurgical Engineering",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 4,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Engineering in Mining Engineering",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 4,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": "12136017",
+      "name": "Bachelor of Engineering [5-year ENGAGE]",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 5,
+      "min_aps": 33,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 65
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 65
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_mark": 65
+          }
+        ]
+      },
+      "notes": "5-year ENGAGE stream covering all Engineering disciplines; admission determined by Grade 12 results; students apply for their chosen engineering discipline within this stream.",
+      "source_page": 10,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Architecture",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Only considered as first study choice; selection includes an interview.",
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Construction Management",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics", "Accounting"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Mathematics or Accounting at level 5 accepted. Physical Sciences requirement uncertain from PDF extraction — verify against official faculty brochure.",
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Real Estate",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics", "Accounting"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Mathematics or Accounting at level 5 accepted. Physical Sciences requirement uncertain from PDF extraction — verify against official faculty brochure.",
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Quantity Surveying",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics", "Accounting"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Mathematics or Accounting at level 5 accepted. Physical Sciences requirement uncertain from PDF extraction — verify against official faculty brochure.",
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Town and Regional Planning",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Information Science",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "If specialising in Information Systems at first-year level, Mathematics level 5 is additionally required.",
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Information Science specialising in Publishing",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Information Science specialising in Multimedia",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Possible name change to Bachelor of Information Science specialising in Interactive Technology.",
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Information Technology in Information Systems",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Computer Science",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Information Technology in Information and Knowledge Systems",
+      "faculty": "Engineering, Built Environment and IT",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 11,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Dental Surgery",
+      "faculty": "Health Sciences",
+      "duration_years": 5,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Selection based on Grade 11 final examination results.",
+      "source_page": 12,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Oral Hygiene",
+      "faculty": "Health Sciences",
+      "duration_years": 3,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Selection based on Grade 11 final examination results.",
+      "source_page": 12,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Dietetics",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Selection based on Grade 11 final examination results.",
+      "source_page": 12,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Nursing Science",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Life Sciences"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Requires Life Sciences (NOT Physical Sciences); selection based on Grade 11 final examination results.",
+      "source_page": 12,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Occupational Therapy",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Selection based on Grade 11 final examination results.",
+      "source_page": 12,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Physiotherapy",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Selection based on Grade 11 final examination results.",
+      "source_page": 12,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Radiography in Diagnostics",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Selection based on Grade 11 final examination results.",
+      "source_page": 12,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Clinical Medical Practice",
+      "faculty": "Health Sciences",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Physical Sciences", "Life Sciences"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Also referred to as BCMP. Physical Sciences or Life Sciences accepted. Selection based on Grade 11 results and Biographical Information Form.",
+      "source_page": 12,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Medicine and Surgery",
+      "faculty": "Health Sciences",
+      "duration_years": 6,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Also referred to as MBChB. Selection based on Grade 11 final examination results. Applicants from countries with their own medical schools cannot apply.",
+      "source_page": 12,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Sports Science",
+      "faculty": "Health Sciences",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Physical Sciences", "Life Sciences"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Physical Sciences or Life Sciences accepted. Selection based on Grade 11 final examination results. BSc Honours in Sport Science or Biokinetics required to qualify as sports scientist or biokineticist.",
+      "source_page": 12,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts in Speech-Language Pathology",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Only 50 students admitted per year; selection based on academic achievement; conditional selection process starts in August.",
+      "source_page": 13,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts in Audiology",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Only 50 students admitted per year; selection based on academic achievement; conditional selection process starts in August.",
+      "source_page": 13,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts in Information Design",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Online portfolio required by 30 June alongside UP application. Conditional admission based on APS 30 from Grade 11; final admission confirmed with APS 28 in Grade 12.",
+      "source_page": 13,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Conditional admission based on APS 30 from Grade 11; final admission requires APS 28 in Grade 12.",
+      "source_page": 13,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Work",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Conditional admission based on APS 30 from Grade 11; final admission requires APS 28 in Grade 12. Departmental selection in second year includes aptitude test and interview with a minimum average of 60% in social work first-year modules.",
+      "source_page": 13,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts specialising in Languages",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Conditional admission based on APS 30 from Grade 11; final admission requires APS 28 in Grade 12.",
+      "source_page": 13,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science specialising in Industrial Sociology and Labour Studies",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Conditional admission based on APS 30 from Grade 11; final admission requires APS 28 in Grade 12.",
+      "source_page": 13,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science in Heritage and Cultural Sciences",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Option: Heritage and Cultural Tourism. Possible name change to Bachelor of Social Science specialising in Heritage and Cultural Tourism. Conditional admission based on APS 30 from Grade 11; final admission requires APS 28 in Grade 12.",
+      "source_page": 13,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Music [4 year]",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Music: level 4 (50–59%) or Grade VII Practical + Grade V Theory (UNISA/Royal Schools/Trinity). Practical audition (15 min, three style periods, min 60%) and online theoretical test (min 60%) required. Final admission requires APS 28 in Grade 12.",
+      "source_page": 14,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Music [5 year]",
+      "faculty": "Humanities",
+      "duration_years": 5,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Foundation 5-year programme. Music: level 4 or Grade V Practical + Grade III Theory; audition (10 min, min 50%) and theoretical test (min 50%) required. Admitted students may not apply for any other degree programme except Bachelor of Music.",
+      "source_page": 14,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Drama [3 year]",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Conditional admission based on APS 30 from Grade 11; final admission requires APS 28 in Grade 12. Admissions take place in August.",
+      "source_page": 14,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Drama [4 year]",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Foundation 4-year programme; first year is a foundation year; audition required. Applicants who meet the 3-year programme criteria must apply for that programme instead.",
+      "source_page": 14,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts specialising in Philosophy, Politics and Economics",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Students with APS 32, Mathematics level 4, and English level 5 may be admitted to another degree first and transfer after passing STC 110 and STC 122.",
+      "source_page": 14,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Political Science specialising in International Studies",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Conditional admission based on APS 30 from Grade 11; final admission requires APS 28 in Grade 12.",
+      "source_page": 14,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Political Science specialising in Political Studies",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Conditional admission based on APS 30 from Grade 11; final admission requires APS 28 in Grade 12.",
+      "source_page": 14,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts in Fine Arts [4 year]",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Portfolio and competency test (conceptualisation, drawing, interview, A4 portfolio) required with 60% in each component. Conditional admission based on APS 30 from Grade 11; final admission requires APS 28 in Grade 12. Admissions in July and September.",
+      "source_page": 14,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts in Fine Arts [5 year]",
+      "faculty": "Humanities",
+      "duration_years": 5,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Foundation 5-year programme. Competency test (conceptualisation, drawing, interview, A4 portfolio) required with 50% in each component.",
+      "source_page": 14,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts specialising in Visual Studies",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Conditional admission based on APS 30 from Grade 11; final admission requires APS 28 in Grade 12.",
+      "source_page": 14,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Laws",
+      "faculty": "Law",
+      "duration_years": 4,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "Also referred to as LLB. Applicants are urged to apply as early as possible from 1 April.",
+      "source_page": 15,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce specialising in Law",
+      "faculty": "Law",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Also referred to as BCom (Law). Also listed in Faculty of Economic and Management Sciences.",
+      "source_page": 15,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts specialising in Law",
+      "faculty": "Law",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Also referred to as BA (Law). Also listed in Faculty of Humanities. A BA (Law) degree together with an LLB degree is required to practice as a lawyer.",
+      "source_page": 15,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Theology",
+      "faculty": "Theology and Religion",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 15,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Divinity",
+      "faculty": "Theology and Religion",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 15,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Diploma in Theology",
+      "faculty": "Theology and Religion",
+      "duration_years": 3,
+      "min_aps": 24,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Intended for candidates who completed NSC/IEB without required university admission (Diploma Studies endorsement).",
+      "source_page": 15,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Agriculture in Agricultural Economics and Agribusiness Management",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Agriculture in Animal Science",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Agriculture in Applied Plant and Soil Sciences",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Agriculture in Plant Pathology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Food Management: Culinary Science",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Food Management: Nutritional Science",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Interfaculty programme between Natural and Agricultural Sciences and Health Sciences.",
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Food Science",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Biochemistry",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Biotechnology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Ecology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Entomology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Genetics",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Human Genetics",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Human Physiology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Human Physiology, Genetics and Psychology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Medical Sciences",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Microbiology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Plant Science",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Zoology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 17,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Consumer Science specialising in Clothing Retail Management",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Consumer Science specialising in Food Management",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": "02133186",
+      "name": "Bachelor of Science in Actuarial and Financial Mathematics",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 36,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 7
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Mathematics",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Applied Mathematics",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Mathematical Statistics",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Chemistry",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Environmental and Engineering Geology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Geography",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Option: Geography and Environmental Science.",
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Geoinformatics",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Geology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Meteorology",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Physics",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Mathematics [4-year extended]",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 65
+          }
+        ]
+      },
+      "notes": "Extended 4-year programme with additional academic support. Physical Sciences not required. Eligible for transfer to 4-year BEng after first year if Mathematics and Physical Sciences ≥70% and Languages ≥65%.",
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Chemistry [4-year extended]",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_mark": 58
+          }
+        ]
+      },
+      "notes": "Extended 4-year programme with additional academic support.",
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Geoinformatics [4-year extended]",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_mark": 58
+          }
+        ]
+      },
+      "notes": "Extended 4-year programme with additional academic support.",
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Geology [4-year extended]",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_mark": 58
+          }
+        ]
+      },
+      "notes": "Extended 4-year programme with additional academic support.",
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Meteorology [4-year extended]",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_mark": 58
+          }
+        ]
+      },
+      "notes": "Extended 4-year programme with additional academic support.",
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Physics [4-year extended]",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_mark": 58
+          }
+        ]
+      },
+      "notes": "Extended 4-year programme with additional academic support.",
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Agriculture in Applied Plant and Soil Sciences [5-year extended]",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 5,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_mark": 58
+          }
+        ]
+      },
+      "notes": "Extended 5-year programme with additional academic support.",
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Agriculture in Plant Pathology [5-year extended]",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 5,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_mark": 58
+          }
+        ]
+      },
+      "notes": "Extended 5-year programme with additional academic support.",
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Ecology [4-year extended]",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_mark": 58
+          }
+        ]
+      },
+      "notes": "Extended 4-year programme with additional academic support.",
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Human Physiology [4-year extended]",
+      "faculty": "Natural and Agricultural Sciences",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_mark": 58
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_mark": 58
+          }
+        ]
+      },
+      "notes": "Extended 4-year programme with additional academic support.",
+      "source_page": 19,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Veterinary Science",
+      "faculty": "Veterinary Science",
+      "duration_years": 6,
+      "min_aps": 35,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 5
+          },
+          {
+            "subjects": ["Physical Sciences"],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Selection based on Merit Point Score; Mathematical Literacy and Technical Mathematics not accepted. Faculty close date is 31 May 2026.",
+      "source_page": 20,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Veterinary Nursing",
+      "faculty": "Veterinary Science",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": ["English Home Language", "English First Additional Language"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Mathematics"],
+            "min_level": 4
+          },
+          {
+            "subjects": ["Physical Sciences", "Life Sciences"],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Physical Sciences or Life Sciences accepted. Faculty close date is 31 May 2026.",
+      "source_page": 20,
+      "is_active": true
+    }
+  ]
+}

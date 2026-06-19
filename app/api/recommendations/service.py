@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import uuid
-from datetime import datetime, timezone
 from typing import Optional
 
 from fastapi import HTTPException
@@ -18,6 +17,7 @@ from app.api.recommendations.schemas import (
     UnmetRule,
 )
 from app.api.recommendations.scoring import compute_aps, evaluate
+from app.intake import active_intake_year
 from app.models.academic_record import AcademicRecord
 from app.models.faculty import Faculty
 from app.models.programme import Programme
@@ -36,12 +36,6 @@ _STATUS_ORDER: dict[str, int] = {
     MatchStatus.BORDERLINE: 1,
     MatchStatus.NOT_YET: 2,
 }
-
-
-def _default_intake_year() -> int:
-    # SA undergraduate applications run April–June each year for the following
-    # year's intake, so the active cycle is always current_year + 1.
-    return datetime.now(timezone.utc).year + 1
 
 
 def _get_profile(session: Session, user_id: str) -> StudentProfile:
@@ -115,7 +109,7 @@ def get_recommendations(
     if not university:
         raise HTTPException(status_code=404, detail="university_not_found")
 
-    active_year = intake_year or _default_intake_year()
+    active_year = intake_year or active_intake_year()
     faculties = _load_faculties(session, university_id)
     programmes = _load_active_programmes(session, university_id, active_year)
 
@@ -178,7 +172,7 @@ def list_university_programmes(
     if not university:
         raise HTTPException(status_code=404, detail="university_not_found")
 
-    active_year = intake_year or _default_intake_year()
+    active_year = intake_year or active_intake_year()
     faculties = _load_faculties(session, university_id)
     programmes = _load_active_programmes(session, university_id, active_year)
 

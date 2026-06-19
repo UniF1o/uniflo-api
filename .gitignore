@@ -211,3 +211,7 @@ __marimo__/
 
 # Playwright MCP scratch (snapshots, console logs, page captures)
 .playwright-mcp/
+
+# Raw prospectus PDFs + transcription scratch — provenance only, not committed.
+# The reviewed JSON under data/programmes/ is the source of truth in-repo.
+uni_data/
