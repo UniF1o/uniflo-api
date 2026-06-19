@@ -1,17 +1,18 @@
 """
-Seed UP 2027 programme admission requirements.
+Seed university programme admission requirements from data/programmes/<uni>.json.
 
-Reads data/programmes/up.json, upserts faculties and programmes into the DB,
-and sets University of Pretoria's scoring_method to "up_aps".
-
-Idempotent — safe to run multiple times.
+Upserts faculties and programmes into the DB and sets the university's
+scoring_method. Idempotent — safe to run multiple times; upserts on
+(university_id, qualification_code, intake_year), falling back to (name, intake_year).
 
 Refuses to seed a prospectus whose intake_year is behind the active application
 cycle (stale data → wrong/empty recommendations). Pass --allow-stale to override
 for a deliberate backfill.
 
 Run with:
-    python scripts/seed_programmes.py
+    python scripts/seed_programmes.py up.json
+    python scripts/seed_programmes.py uj.json
+    python scripts/seed_programmes.py           # seeds every registered file
 """
 
 import argparse
@@ -29,14 +30,18 @@ from app.intake import active_intake_year
 from app.models import Faculty, Programme, University
 from app.programme_data import assess
 
-DATA_FILE = os.path.join(
+PROGRAMMES_DIR = os.path.join(
     os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
     "data",
     "programmes",
-    "up.json",
 )
 
-UNIVERSITY_NAME = "University of Pretoria"
+# Each data file is bound to one university name (resolved in the DB) and the
+# APS scoring_method to apply. Add a row here when transcribing a new university.
+REGISTRY: dict[str, dict[str, str]] = {
+    "up.json": {"university": "University of Pretoria", "scoring_method": "up_aps"},
+    "uj.json": {"university": "University of Johannesburg", "scoring_method": "up_aps"},
+}
 
 
 def _parse_date(s: str | None) -> date | None:
@@ -45,8 +50,17 @@ def _parse_date(s: str | None) -> date | None:
     return date.fromisoformat(s)
 
 
-def seed(allow_stale: bool = False) -> None:
-    with open(DATA_FILE, encoding="utf-8") as f:
+def seed_file(filename: str, allow_stale: bool = False) -> None:
+    key = os.path.basename(filename)
+    entry = REGISTRY.get(key)
+    if entry is None:
+        print(f"ERROR: '{key}' is not registered in seed_programmes.REGISTRY.")
+        sys.exit(1)
+    university_name = entry["university"]
+    scoring_method = entry["scoring_method"]
+
+    path = os.path.join(PROGRAMMES_DIR, key)
+    with open(path, encoding="utf-8") as f:
         data = json.load(f)
 
     intake_year: int = data["intake_year"]
@@ -56,6 +70,7 @@ def seed(allow_stale: bool = False) -> None:
 
     active_year = active_intake_year()
     status, message = assess(intake_year, active_year)
+    print(f"\n=== {key} → {university_name} ===")
     print(f"Freshness check: {message}")
     if status == "stale":
         if not allow_stale:
@@ -70,15 +85,15 @@ def seed(allow_stale: bool = False) -> None:
     engine = get_engine()
     with Session(engine) as session:
         uni = session.exec(
-            select(University).where(University.name == UNIVERSITY_NAME)
+            select(University).where(University.name == university_name)
         ).first()
         if not uni:
-            print(f"ERROR: university '{UNIVERSITY_NAME}' not found — run seed_universities.py first")
+            print(f"ERROR: university '{university_name}' not found — run seed_universities.py first")
             sys.exit(1)
 
-        uni.scoring_method = "up_aps"
+        uni.scoring_method = scoring_method
         session.add(uni)
-        print(f"Set {UNIVERSITY_NAME}.scoring_method = 'up_aps'")
+        print(f"Set {university_name}.scoring_method = '{scoring_method}'")
 
         faculty_cache: dict[str, Faculty] = {}
 
@@ -167,15 +182,25 @@ def seed(allow_stale: bool = False) -> None:
                 print(f"    Created: {prog_name}")
 
         session.commit()
-        print(f"\nDone — {len(programmes_data)} programmes processed for {UNIVERSITY_NAME} intake {intake_year}.")
+        print(f"Done — {len(programmes_data)} programmes processed for {university_name} intake {intake_year}.")
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Seed UP programme admission requirements.")
+    parser = argparse.ArgumentParser(
+        description="Seed university programme admission requirements."
+    )
+    parser.add_argument(
+        "file",
+        nargs="?",
+        help="data/programmes file to seed (e.g. up.json, uj.json). Omit to seed all registered files.",
+    )
     parser.add_argument(
         "--allow-stale",
         action="store_true",
         help="seed even if the prospectus intake_year is behind the active cycle",
     )
     args = parser.parse_args()
-    seed(allow_stale=args.allow_stale)
+
+    targets = [args.file] if args.file else list(REGISTRY)
+    for target in targets:
+        seed_file(target, allow_stale=args.allow_stale)

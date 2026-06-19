@@ -1,0 +1,5429 @@
+{
+  "intake_year": 2027,
+  "default_close_date": "2026-10-31",
+  "faculty_overrides": {},
+  "transcription_notes": "Transcribed from the UJ 2027 Undergraduate Prospectus (publication March 2026), pages 30-94. Scope: bachelor + extended degrees across all 8 faculties; diplomas, extended diplomas and online programmes deferred to a later pass. Subject names normalised to UniFlo's NSC list (Physical Sciences, Life Sciences, English Home/First Additional Language). 'Technical Mathematics'/'Technical Sciences' and the named-language subjects (Afrikaans/IsiZulu/Sepedi Home/First Additional Language) are used where the prospectus accepts them and must be checked against the frozen NSC list. Conditional APS (e.g. 25-with-Maths / 26-with-Maths-Lit) encoded via requirements.aps_rule; min_aps stores the Maths-route value. Subject alternatives at different levels (e.g. Maths 60% OR Maths Lit 50%) encoded via requirements.subject_rules[].options. Where Science major-combinations list a module-dependent higher level, the admission floor is encoded. BEd Senior-Phase/FET teaching-subject combinations are simplified to the core gating subjects; see notes per entry.",
+  "programmes": [
+    {
+      "qualification_code": "B8BA3Q",
+      "name": "Bachelor of Architecture",
+      "faculty": "Art, Design and Architecture",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 32,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B8CD2Q",
+      "name": "BA (Communication Design)",
+      "faculty": "Art, Design and Architecture",
+      "duration_years": 3,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 4
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 26
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 32,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B8DM3Q",
+      "name": "BA (Digital Media Design)",
+      "faculty": "Art, Design and Architecture",
+      "duration_years": 3,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 4
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 26
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 32,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B8ID1Q",
+      "name": "BA (Industrial Design)",
+      "faculty": "Art, Design and Architecture",
+      "duration_years": 3,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 26
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 32,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B8BA6Q",
+      "name": "BA (Interior Design)",
+      "faculty": "Art, Design and Architecture",
+      "duration_years": 3,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 26
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 33,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B8FD1Q",
+      "name": "BA (Fashion Design)",
+      "faculty": "Art, Design and Architecture",
+      "duration_years": 3,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 26
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 33,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B8BA7Q",
+      "name": "BA (Visual Art)",
+      "faculty": "Art, Design and Architecture",
+      "duration_years": 3,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 3
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Technical Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 26
+            }
+          ]
+        }
+      },
+      "notes": "Maths/Tech Maths route APS 25, Maths Lit route APS 26. International maths/maths-lit requirement may be waived if entrance requirements and APS are intact.",
+      "source_page": 33,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34CAQ",
+      "name": "Bachelor of Accounting (Chartered Accountancy)",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 33,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Maths Lit and Technical Maths not accepted.",
+      "source_page": 40,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34HNQ",
+      "name": "Bachelor of Hospitality Management",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 26
+            },
+            {
+              "with_subject": "Technical Mathematics",
+              "min_aps": 26
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 28
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 40,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34HRQ",
+      "name": "Bachelor of Human Resource Management",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 40,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34TDQ",
+      "name": "Bachelor of Tourism Development and Management",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 3
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 26
+            },
+            {
+              "with_subject": "Technical Mathematics",
+              "min_aps": 26
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 28
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 40,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34PKQ",
+      "name": "BA Public Management and Governance",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 3
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 26
+            },
+            {
+              "with_subject": "Technical Mathematics",
+              "min_aps": 26
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 28
+            }
+          ]
+        }
+      },
+      "notes": "Also coded B34PSQ (Soweto campus).",
+      "source_page": 41,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34A5Q",
+      "name": "BCom Accounting",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Maths Lit and Technical Maths not accepted. Does not give direct access to the PGDip in Accounting Science.",
+      "source_page": 41,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34BMQ",
+      "name": "BCom Business Management",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Maths Lit not accepted.",
+      "source_page": 41,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B3N14Q",
+      "name": "BCom Economics and Econometrics",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Maths Lit and Technical Maths not accepted.",
+      "source_page": 41,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B1CEMQ",
+      "name": "BCom Entrepreneurial Management",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Maths Lit not accepted.",
+      "source_page": 41,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34F5Q",
+      "name": "BCom Finance",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Maths Lit and Technical Maths not accepted.",
+      "source_page": 41,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34IPQ",
+      "name": "BCom Industrial Psychology",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Maths Lit not accepted.",
+      "source_page": 41,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34IMQ",
+      "name": "BCom Information Management",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 6
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 26
+            },
+            {
+              "with_subject": "Technical Mathematics",
+              "min_aps": 26
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 28
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 42,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B1CISQ",
+      "name": "BCom Information Systems",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Maths Lit not accepted.",
+      "source_page": 42,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B1CMMQ",
+      "name": "BCom Marketing Management",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Maths Lit not accepted.",
+      "source_page": 42,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34TLQ",
+      "name": "BCom Transport and Logistics Management",
+      "faculty": "Business and Economics",
+      "duration_years": 3,
+      "min_aps": 27,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Maths Lit not accepted.",
+      "source_page": 42,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34AEQ",
+      "name": "BCom Accounting (Extended)",
+      "faculty": "Business and Economics",
+      "duration_years": 4,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 6
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 28
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 43,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34BEQ",
+      "name": "BCom Business Management (Extended)",
+      "faculty": "Business and Economics",
+      "duration_years": 4,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 6
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 3
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Technical Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 28
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 43,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B3NE4Q",
+      "name": "BCom Economics and Econometrics (Extended)",
+      "faculty": "Business and Economics",
+      "duration_years": 4,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 6
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 28
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 43,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B34FEQ",
+      "name": "BCom Finance (Extended)",
+      "faculty": "Business and Economics",
+      "duration_years": 4,
+      "min_aps": 25,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 6
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 25
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 28
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 43,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5BFPQ",
+      "name": "BEd Foundation Phase Teaching (Grade R-3)",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 54,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5BITQ",
+      "name": "BEd Intermediate Phase Teaching (Grade 4-7)",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 54,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5BSAQ",
+      "name": "BEd Senior Phase & FET: Accounting",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Commerce education specialisation (Accounting).",
+      "source_page": 54,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5BSBQ",
+      "name": "BEd Senior Phase & FET: Business Management",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Commerce education specialisation.",
+      "source_page": 54,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5BSEQ",
+      "name": "BEd Senior Phase & FET: Economics",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Commerce education specialisation.",
+      "source_page": 54,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5LOPQ",
+      "name": "BEd Senior Phase & FET: Life Orientation (Psychology)",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 54,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5SGEQ",
+      "name": "BEd Senior Phase & FET: Geography",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Geography"
+            ],
+            "min_level": 3
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 6
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Complex teaching-subject combination (Geography plus a science/maths path); see prospectus p55 for full alternatives.",
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5SLSQ",
+      "name": "BEd Senior Phase & FET: Life Sciences",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 6
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Teaching-subject combination; see prospectus p55 for full alternatives.",
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5SMMQ",
+      "name": "BEd Senior Phase & FET: Mathematics",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 6
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Mathematics teaching specialisation.",
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5SPSQ",
+      "name": "BEd Senior Phase & FET: Physical Sciences",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Physical Sciences teaching specialisation.",
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5LAEQ",
+      "name": "BEd Senior Phase & FET: English",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "English language teaching specialisation.",
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5LAFQ",
+      "name": "BEd Senior Phase & FET: Afrikaans",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Afrikaans Home Language",
+                "min_level": 4
+              },
+              {
+                "subject": "Afrikaans First Additional Language",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Afrikaans language teaching specialisation.",
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5LAZQ",
+      "name": "BEd Senior Phase & FET: IsiZulu",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "IsiZulu Home Language",
+                "min_level": 4
+              },
+              {
+                "subject": "IsiZulu First Additional Language",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "IsiZulu language teaching specialisation.",
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B5LASQ",
+      "name": "BEd Senior Phase & FET: Sepedi",
+      "faculty": "Education",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_level": 5
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_level": 6
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Sepedi Home Language",
+                "min_level": 4
+              },
+              {
+                "subject": "Sepedi First Additional Language",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Sepedi language teaching specialisation.",
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6CS0Q",
+      "name": "BEng Civil Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6ES0Q",
+      "name": "BEng Electrical and Electronic Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6MS0Q",
+      "name": "BEng Mechanical Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6CE1Q",
+      "name": "BEngTech Chemical Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6CV3Q",
+      "name": "BEngTech Civil Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6EL1Q",
+      "name": "BEngTech Electrical Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6EXTQ",
+      "name": "BEngTech Extraction Metallurgy",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6IN2Q",
+      "name": "BEngTech Industrial Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6MC2Q",
+      "name": "BEngTech Mechanical Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6MINQ",
+      "name": "BEngTech Mining Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 23,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6PY2Q",
+      "name": "BEngTech Physical Metallurgy",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 60,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6SU0Q",
+      "name": "Bachelor of Mine Surveying",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 23,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 61,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6CN0Q",
+      "name": "BSc Construction",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 61,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6UP0Q",
+      "name": "Bachelor of Urban and Regional Planning",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 3,
+      "min_aps": 27,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Geography"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 61,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6SC0Q",
+      "name": "BSc Construction (Extended)",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 63,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6CX3Q",
+      "name": "BEngTech Civil Engineering (Extended)",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Physical Sciences",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Sciences",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 63,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6L1XQ",
+      "name": "BEngTech Electrical Engineering (Extended)",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 63,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6EX0Q",
+      "name": "BEngTech Extraction Metallurgy (Extended)",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 4,
+      "min_aps": 22,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 63,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6IX2Q",
+      "name": "BEngTech Industrial Engineering (Extended)",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 4,
+      "min_aps": 24,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 63,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6MX2Q",
+      "name": "BEngTech Mechanical Engineering (Extended)",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 4,
+      "min_aps": 24,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 63,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B6PX2Q",
+      "name": "BEngTech Physical Metallurgy (Extended)",
+      "faculty": "Engineering and the Built Environment",
+      "duration_years": 4,
+      "min_aps": 22,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 63,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9S15Q",
+      "name": "Bachelor of Biokinetics",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 32,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 32
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 33
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 66,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9M01Q",
+      "name": "Bachelor of Diagnostic Radiography",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Mathematics required (Maths Lit not accepted); Technical Maths/Science not accepted.",
+      "source_page": 66,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9M03Q",
+      "name": "Bachelor of Diagnostic Ultrasound",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Mathematics required; Technical Maths/Science not accepted.",
+      "source_page": 66,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9M02Q",
+      "name": "Bachelor of Nuclear Medicine",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Mathematics required; Technical Maths/Science not accepted.",
+      "source_page": 66,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9M04Q",
+      "name": "Bachelor of Radiation Therapy",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Mathematics required; Technical Maths/Science not accepted.",
+      "source_page": 66,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9C01Q",
+      "name": "Bachelor of Health Sciences: Chiropractic",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Selection: questionnaire, two practitioner recommendations, interview.",
+      "source_page": 67,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9CM1Q",
+      "name": "Bachelor of Health Sciences: Complementary Medicine",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Selection includes assignment, clinic visit and practitioner recommendation. Upgraded matric results not accepted.",
+      "source_page": 67,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9E01Q",
+      "name": "Bachelor of Health Sciences: Emergency Medical Care",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 27,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Must pass fitness assessment, phobias evaluation and medical examination.",
+      "source_page": 67,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9B01Q",
+      "name": "Bachelor of Health Sciences: Medical Laboratory Science",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 67,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9P01Q",
+      "name": "Bachelor of Health Sciences: Podiatry",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 28,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 67,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9N02Q",
+      "name": "Bachelor of Nursing",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 68,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9O02Q",
+      "name": "Bachelor of Optometry",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 68,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9ENV1",
+      "name": "Bachelor of Environmental Health",
+      "faculty": "Health Sciences",
+      "duration_years": 4,
+      "min_aps": 24,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Maths Lit not accepted.",
+      "source_page": 68,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9SE1Q",
+      "name": "Bachelor of Health Sciences: Sport and Exercise Science",
+      "faculty": "Health Sciences",
+      "duration_years": 3,
+      "min_aps": 27,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 4
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 4
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 27
+            },
+            {
+              "with_subject": "Technical Mathematics",
+              "min_aps": 27
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 28
+            }
+          ]
+        }
+      },
+      "notes": null,
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B9S14Q",
+      "name": "BCom Sport Management",
+      "faculty": "Health Sciences",
+      "duration_years": 3,
+      "min_aps": 23,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Mathematics required (Maths Lit not accepted).",
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B7025Q",
+      "name": "Bachelor of Social Work",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 74,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B7023Q",
+      "name": "Bachelor of Arts (BA)",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 27,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths not accepted. If Mathematics is taken as a major, Maths 4 (50%) is required for module registration.",
+      "source_page": 75,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B7026Q",
+      "name": "BA Language Practice",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 27,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 75,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B7024Q",
+      "name": "BA Politics, Economics and Technology",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 27,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Mathematics required.",
+      "source_page": 75,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B7015Q",
+      "name": "BA Community Development and Leadership",
+      "faculty": "Humanities",
+      "duration_years": 3,
+      "min_aps": 27,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 75,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B7EX2Q",
+      "name": "BA Development Studies (Extended)",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 24,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Extended programme. APS 24-26 with English 60%, or 27 with English 50% (English level sets the APS band). Interview required.",
+      "source_page": 76,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B7EX3Q",
+      "name": "BA Linguistics (Extended)",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 24,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Extended programme. APS 24-26 with English 60%, or 27 with English 50% (English level sets the APS band). Interview required.",
+      "source_page": 76,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B7EX4Q",
+      "name": "BA Linguistics and Language Practice (Extended)",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 24,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Extended programme. APS 24-26 with English 60%, or 27 with English 50% (English level sets the APS band). Interview required.",
+      "source_page": 76,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B7EX5Q",
+      "name": "BA Strategic Communication (Extended)",
+      "faculty": "Humanities",
+      "duration_years": 4,
+      "min_aps": 24,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Extended programme. APS 24-26 with English 60%, or 27 with English 50% (English level sets the APS band). Interview required.",
+      "source_page": 76,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B4A01Q",
+      "name": "BA (Law)",
+      "faculty": "Law",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 4
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 31
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 32
+            }
+          ]
+        }
+      },
+      "notes": "Also requires a second recognised language at level 4 (50%); waived for international applicants without a second language.",
+      "source_page": 82,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B4C01Q",
+      "name": "BCom (Law)",
+      "faculty": "Law",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Mathematics required (Maths Lit not accepted). Also requires a second recognised language at level 4 (50%); waived for international applicants without a second language.",
+      "source_page": 82,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B4L03Q",
+      "name": "LLB",
+      "faculty": "Law",
+      "duration_years": 4,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 4
+              }
+            ]
+          }
+        ],
+        "aps_rule": {
+          "alternatives": [
+            {
+              "with_subject": "Mathematics",
+              "min_aps": 31
+            },
+            {
+              "with_subject": "Mathematical Literacy",
+              "min_aps": 32
+            }
+          ]
+        }
+      },
+      "notes": "Also requires a second recognised language at level 4 (50%); waived for international applicants without a second language.",
+      "source_page": 82,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2I01Q",
+      "name": "BSc Information Technology",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 86,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2I02Q",
+      "name": "BSc Computer Science and Informatics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 86,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2I04Q",
+      "name": "BSc Computer Science and Informatics (Artificial Intelligence)",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 7
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 86,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L10Q",
+      "name": "BSc Life and Environmental Sciences: Biochemistry and Botany",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L11Q",
+      "name": "BSc Life and Environmental Sciences: Botany and Chemistry",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L12Q",
+      "name": "BSc Life and Environmental Sciences: Botany and Zoology",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L13Q",
+      "name": "BSc Life and Environmental Sciences: Zoology and Biochemistry",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L14Q",
+      "name": "BSc Life and Environmental Sciences: Zoology and Chemistry",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L15Q",
+      "name": "BSc Life and Environmental Sciences: Zoology and Environmental Management",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L16Q",
+      "name": "BSc Life and Environmental Sciences: Zoology and Geography",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L17Q",
+      "name": "BSc Life and Environmental Sciences: Zoology and Physiology",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L18Q",
+      "name": "BSc Life and Environmental Sciences: Physiology and Biochemistry",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L26Q",
+      "name": "BSc Life and Environmental Sciences: Physiology and Psychology",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L20Q",
+      "name": "BSc Life and Environmental Sciences: Geography and Environmental Management",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L24Q",
+      "name": "BSc Life and Environmental Sciences: Geology and Environmental Management",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2L25Q",
+      "name": "BSc Life and Environmental Sciences: Geology and Geography",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 30,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 87,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M40Q",
+      "name": "BSc Mathematical Sciences: Applied Mathematics and Computer Science",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M41Q",
+      "name": "BSc Mathematical Sciences: Applied Mathematics and Mathematical Statistics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M42Q",
+      "name": "BSc Mathematical Sciences: Applied Mathematics and Mathematics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M43Q",
+      "name": "BSc Mathematical Sciences: Computational Science",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 33,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 7
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M44Q",
+      "name": "BSc Mathematical Sciences: Mathematical Statistics and Computer Science",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M45Q",
+      "name": "BSc Mathematical Sciences: Mathematics and Computer Science",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M46Q",
+      "name": "BSc Mathematical Sciences: Mathematics and Informatics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M47Q",
+      "name": "BSc Mathematical Sciences: Mathematics and Mathematical Statistics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M54Q",
+      "name": "BSc Mathematical Sciences: Mathematics and Psychology",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M55Q",
+      "name": "BSc Mathematical Sciences: Mathematics and Mathematical Statistics (Financial Orientation)",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 33,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M56Q",
+      "name": "BSc Mathematical Sciences: Mathematical Statistics and Economics (Financial Orientation)",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 33,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M57Q",
+      "name": "BSc Mathematical Sciences: Mathematics and Economics (Financial Orientation)",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 33,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2M52Q",
+      "name": "BSc Mathematical Sciences: Actuarial Science",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 40,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 7
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 89,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2P70Q",
+      "name": "BSc Physical Sciences: Biochemistry and Chemistry",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 90,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2P71Q",
+      "name": "BSc Physical Sciences: Chemistry and Mathematics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 90,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2P72Q",
+      "name": "BSc Physical Sciences: Chemistry and Physics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 90,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2P81Q",
+      "name": "BSc Physical Sciences: Geology and Chemistry",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 90,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2P82Q",
+      "name": "BSc Physical Sciences: Geology and Mathematics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 90,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2P83Q",
+      "name": "BSc Physical Sciences: Geology and Physics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 90,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2P77Q",
+      "name": "BSc Physical Sciences: Physics and Applied Mathematics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 90,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2P78Q",
+      "name": "BSc Physical Sciences: Physics and Mathematics",
+      "faculty": "Science",
+      "duration_years": 3,
+      "min_aps": 31,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 90,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E02Q",
+      "name": "BSc Information Technology (Extended): Computer Science and Informatics",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E10Q",
+      "name": "BSc Life and Environmental Sciences (Extended): Biochemistry and Botany",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E11Q",
+      "name": "BSc Life and Environmental Sciences (Extended): Botany and Chemistry",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E12Q",
+      "name": "BSc Life and Environmental Sciences (Extended): Botany and Zoology",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E13Q",
+      "name": "BSc Life and Environmental Sciences (Extended): Geography and Environmental Management",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E14Q",
+      "name": "BSc Life and Environmental Sciences (Extended): Physiology and Biochemistry",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E22Q",
+      "name": "BSc Life and Environmental Sciences (Extended): Physiology and Psychology",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E17Q",
+      "name": "BSc Life and Environmental Sciences (Extended): Zoology and Biochemistry",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E18Q",
+      "name": "BSc Life and Environmental Sciences (Extended): Zoology and Chemistry",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E19Q",
+      "name": "BSc Life and Environmental Sciences (Extended): Zoology and Environmental Management",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E20Q",
+      "name": "BSc Life and Environmental Sciences (Extended): Zoology and Geography",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 91,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E40Q",
+      "name": "BSc Mathematical Sciences (Extended): Applied Mathematics and Computer Science",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 93,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E41Q",
+      "name": "BSc Mathematical Sciences (Extended): Applied Mathematics and Mathematical Statistics",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 93,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E42Q",
+      "name": "BSc Mathematical Sciences (Extended): Applied Mathematics and Mathematics",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 93,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E43Q",
+      "name": "BSc Mathematical Sciences (Extended): Mathematical Statistics and Computer Science",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 93,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E44Q",
+      "name": "BSc Mathematical Sciences (Extended): Mathematics and Computer Science",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 93,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E45Q",
+      "name": "BSc Mathematical Sciences (Extended): Mathematics and Informatics",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 93,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E46Q",
+      "name": "BSc Mathematical Sciences (Extended): Mathematics and Mathematical Statistics",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 93,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E49Q",
+      "name": "BSc Mathematical Sciences (Extended): Mathematics and Psychology",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 93,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E70Q",
+      "name": "BSc Physical Sciences (Extended): Biochemistry and Chemistry",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 94,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E71Q",
+      "name": "BSc Physical Sciences (Extended): Chemistry and Mathematics",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 94,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E72Q",
+      "name": "BSc Physical Sciences (Extended): Chemistry and Physics",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 94,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E73Q",
+      "name": "BSc Physical Sciences (Extended): Physics and Applied Mathematics",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 94,
+      "is_active": true
+    },
+    {
+      "qualification_code": "B2E74Q",
+      "name": "BSc Physical Sciences (Extended): Physics and Mathematics",
+      "faculty": "Science",
+      "duration_years": 4,
+      "min_aps": 26,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Technical Maths and Technical Science not accepted. Some major-combinations require a higher Maths/Physical Sciences level depending on the module stream chosen; the admission floor is encoded.",
+      "source_page": 94,
+      "is_active": true
+    }
+  ]
+}
