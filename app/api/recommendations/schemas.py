@@ -28,6 +28,10 @@ class ProgrammeMatch(BaseModel):
     name: str
     faculty: Optional[str]
     qualification_code: Optional[str]
+    # "degree" | "diploma" | "higher_certificate". Extended programmes are not a
+    # separate type — distinguish them by duration_years (4 vs 3).
+    qualification_type: Optional[str] = None
+    duration_years: Optional[int] = None
     min_aps: Optional[int]
     status: MatchStatus
     unmet_rules: list[UnmetRule]
@@ -52,6 +56,8 @@ class ProgrammeCatalogueItem(BaseModel):
     id: str
     name: str
     qualification_code: Optional[str]
+    qualification_type: Optional[str] = None
+    duration_years: Optional[int] = None
     min_aps: Optional[int]
     notes: Optional[str]
 

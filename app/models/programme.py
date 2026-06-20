@@ -20,6 +20,10 @@ class Programme(SQLModel, table=True):
     name: str = Field(nullable=False)
     qualification_code: Optional[str] = Field(default=None, nullable=True)
     intake_year: int = Field(nullable=False)
+    # "degree" | "diploma" | "higher_certificate". Extended programmes are not a
+    # separate type — the foundation year is captured by duration_years (4 vs 3).
+    qualification_type: Optional[str] = Field(default=None, nullable=True)
+    duration_years: Optional[int] = Field(default=None, nullable=True)
     min_aps: Optional[int] = Field(default=None, nullable=True)
     # subject_rules: list of {subjects, min_mark?, min_level?}
     requirements: Any = Field(
