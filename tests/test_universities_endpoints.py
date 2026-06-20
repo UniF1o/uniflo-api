@@ -11,7 +11,7 @@ client = TestClient(app)
 VALID_UNIVERSITY_ID = uuid.uuid4()
 
 
-def make_mock_university(name="University of Cape Town", is_active=True):
+def make_mock_university(name="University of Cape Town", is_active=True, scoring_method="uct_fps"):
     mock_uni = MagicMock()
     mock_uni.id = VALID_UNIVERSITY_ID
     mock_uni.name = name
@@ -20,6 +20,7 @@ def make_mock_university(name="University of Cape Town", is_active=True):
     mock_uni.open_date = "2026-04-01"
     mock_uni.close_date = "2026-09-30"
     mock_uni.is_active = is_active
+    mock_uni.scoring_method = scoring_method
     return mock_uni
 
 
@@ -117,6 +118,24 @@ def test_get_university_invalid_uuid():
     app.dependency_overrides[get_session] = lambda: mock_session
     response = client.get("/universities/not-a-uuid")
     assert response.status_code == 422
+
+
+# GET /universities includes scoring_method so the frontend can label the score
+def test_list_universities_includes_scoring_method():
+    mock_session = MagicMock()
+    mock_session.exec.return_value.all.return_value = [
+        make_mock_university("University of Cape Town", scoring_method="uct_fps"),
+        make_mock_university("University of Pretoria", scoring_method="up_aps"),
+    ]
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    response = client.get("/universities")
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    items = response.json()["items"]
+    assert items[0]["scoring_method"] == "uct_fps"
+    assert items[1]["scoring_method"] == "up_aps"
 
 
 # GET /universities is public — no token required
