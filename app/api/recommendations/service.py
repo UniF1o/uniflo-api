@@ -27,8 +27,10 @@ from app.models.university import University
 # Preference order for "best available" record selection.
 _RECORD_PREFERENCE = ["grade_12_june", "grade_12_april", "grade_11_final"]
 
-# Maximum possible APS per scoring method (best-6 at level 7).
-_APS_MAX: dict[str, int] = {"up_aps": 42}
+# Maximum possible APS per scoring method.
+# up_aps: best 6 at level 7 = 42. wits_aps: best 6 others (Eng+Maths at 8+2, four
+# more at 8 = 52) + Life Orientation at 4 = 56.
+_APS_MAX: dict[str, int] = {"up_aps": 42, "wits_aps": 56}
 
 # Status sort order for the response.
 _STATUS_ORDER: dict[str, int] = {

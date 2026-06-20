@@ -76,10 +76,68 @@ def _up_aps(subjects: list[SubjectIn]) -> int:
     return sum(levels[:6])
 
 
+# Subjects that earn Wits's +2 APS bonus (at >= 60%).
+_WITS_BONUS_SUBJECTS = {
+    "English Home Language",
+    "English First Additional Language",
+    "Mathematics",
+}
+
+
+def _wits_level(mark: int) -> int:
+    """Wits uses an 8-point scale (90-100 -> 8); marks below 40% score 0."""
+    if mark >= 90:
+        return 8
+    if mark >= 80:
+        return 7
+    if mark >= 70:
+        return 6
+    if mark >= 60:
+        return 5
+    if mark >= 50:
+        return 4
+    if mark >= 40:
+        return 3
+    return 0
+
+
+def _wits_subject_points(name: str, mark: int) -> int:
+    """Wits points for a non-LO subject: face-value level, +2 for English and
+    Mathematics at >= 60% (the bonus does not apply below level 5)."""
+    lvl = _wits_level(mark)
+    if lvl == 0:
+        return 0
+    if name in _WITS_BONUS_SUBJECTS and mark >= 60:
+        return lvl + 2
+    return lvl
+
+
+def _wits_lo_points(mark: int) -> int:
+    """Life Orientation counts at a reduced weight: 8->4, 7->3, 6->2, 5->1, else 0."""
+    return {8: 4, 7: 3, 6: 2, 5: 1}.get(_wits_level(mark), 0)
+
+
+def _wits_aps(subjects: list[SubjectIn]) -> int:
+    """Wits APS: best seven subjects INCLUDING Life Orientation. LO is always
+    counted (at its reduced weight); the remaining slots take the best six of the
+    other subjects, with the English/Mathematics +2 bonus applied. Marks drive the
+    8-point scale, so nsc_level (max 7) is not used here."""
+    lo = next((s for s in subjects if s.name == _LIFE_ORIENTATION), None)
+    lo_points = _wits_lo_points(lo.mark) if lo else 0
+    others = sorted(
+        (_wits_subject_points(s.name, s.mark)
+         for s in subjects if s.name != _LIFE_ORIENTATION),
+        reverse=True,
+    )
+    return lo_points + sum(others[:6])
+
+
 def compute_aps(subjects: list[SubjectIn], method: str = "up_aps") -> int:
     """Compute a student's APS using the named university scoring method."""
     if method == "up_aps":
         return _up_aps(subjects)
+    if method == "wits_aps":
+        return _wits_aps(subjects)
     raise ValueError(f"Unknown scoring method: {method!r}")
 
 
