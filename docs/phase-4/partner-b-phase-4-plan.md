@@ -168,6 +168,17 @@ matching), grouped by faculty. The recommendation page can use it, and it is the
 endpoint the Phase 5 structured-selection picker (uni → faculty → course) will read.
 Building it here means Phase 5 adds a UI, not a backend.
 
+**Contract addition (2026-06-20, PR #61):** `GET /universities` now exposes
+`scoring_method` on each `UniversityRead` item (nullable string). Motivation:
+`aps`/`aps_max` in the recommendations response have no label — UP/UJ/Wits score
+on an NSC level scale (called "APS"), while UCT uses a percentage-sum
+("Faculty Points Score" / "FPS") out of 600. Without this field the frontend had
+no way to label the score correctly per university; it would have had to hardcode
+university IDs. The field is already on the `University` model (added #53); this
+change makes it visible in the public response. The frontend maps it:
+`up_aps`/`wits_aps`/`uj_aps` → "APS", `uct_fps` → "FPS". No migration — the
+column already exists.
+
 ### 2. Confirm the pilot university and the data path
 
 - **Pilot = UP — confirmed in prod.** UP is seeded and live in prod `/universities`
