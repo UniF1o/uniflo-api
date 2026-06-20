@@ -1,0 +1,1780 @@
+{
+  "intake_year": 2027,
+  "default_close_date": "2026-09-30",
+  "faculty_overrides": {
+    "Health Sciences": {
+      "close_date": "2026-06-30"
+    }
+  },
+  "transcription_notes": "Transcribed from the Wits 2027 Guide for Undergraduate Applicants, 'Admissions by Faculty' tables (pages 16, 18, 20, 22, 24). Scope: full-time bachelor degrees across all 5 faculties; part-time and graduate-entry (2-/3-year LLB, GEMP/GEPP) programmes excluded. Wits gives no programme codes in this guide so qualification_code is null. scoring_method = wits_aps (8-point scale, +2 on English/Maths at >=60%, Life Orientation at reduced weight, best 7 incl LO). Health Sciences programmes have no APS (selection by Composite Index = 60% academics + 40% NBT) so min_aps is null and only subject rules gate. NBT and audition/portfolio/job-shadowing requirements are captured in notes (non-gating). 'Life Sciences AND/OR Physical Sciences' encoded as an at-least-one option rule. Per-programme closing-date exceptions (Architecture, Film & TV, Speech-Language Pathology, Audiology = 30 June 2026) are noted on those entries; the faculty close_date holds the general date.",
+  "programmes": [
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce (General; Politics, Philosophy & Economics; Information Systems)",
+      "faculty": "Commerce, Law and Management",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 38,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Accounting Science (BAccSci)",
+      "faculty": "Commerce, Law and Management",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 44,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce (Accounting)",
+      "faculty": "Commerce, Law and Management",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 38,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Economic Science (BEconSci)",
+      "faculty": "Commerce, Law and Management",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 7
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce (Financial Sciences)",
+      "faculty": "Commerce, Law and Management",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 7
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce (Law)",
+      "faculty": "Commerce, Law and Management",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 43,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Laws (LLB, four-year stream)",
+      "faculty": "Commerce, Law and Management",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 46,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 6
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 5
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 6
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "Maths Literacy accepted (level 6) as an alternative to Mathematics (level 5).",
+      "source_page": 16,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Engineering: Chemical Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Engineering: Metallurgy and Materials Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Engineering: Civil Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Engineering: Electrical Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Engineering Science in Biomedical Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Engineering Science in Digital Arts",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Engineering: Aeronautical Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Engineering: Industrial Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Engineering: Mechanical Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Engineering: Mining Engineering",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Architectural Studies (BAS)",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Selection: written & graphic exercise and possible interview; applicants with APS 30-33 may be accepted on exceptional selection scores. Closing date 30 June 2026.",
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Urban and Regional Planning",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 36,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Construction Studies",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 36,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Property Studies",
+      "faculty": "Engineering and the Built Environment",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 36,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 18,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Health Sciences (Biomedical Sciences / Biokinetics / Health Systems Sciences)",
+      "faculty": "Health Sciences",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": null,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Life Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "All applicants must write the National Benchmark Test (NBT). Selection uses a Composite Index (60% academic results + 40% NBT).",
+      "source_page": 20,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Clinical Medical Practice (BCMP)",
+      "faculty": "Health Sciences",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": null,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 7
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Life Sciences",
+                "min_level": 4
+              },
+              {
+                "subject": "Physical Sciences",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "All applicants must write the National Benchmark Test (NBT). Selection uses a Composite Index (60% academic results + 40% NBT).",
+      "source_page": 20,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Medicine and Bachelor of Surgery (MBBCh)",
+      "faculty": "Health Sciences",
+      "qualification_type": "degree",
+      "duration_years": 6,
+      "min_aps": null,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Life Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "All applicants must write the National Benchmark Test (NBT). Selection uses a Composite Index (60% academic results + 40% NBT).",
+      "source_page": 20,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Dental Science (BDS)",
+      "faculty": "Health Sciences",
+      "qualification_type": "degree",
+      "duration_years": 5,
+      "min_aps": null,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Life Sciences"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "All applicants must write the National Benchmark Test (NBT). Selection uses a Composite Index (60% academic results + 40% NBT). Requires both Life Sciences and Physical Sciences. Requires a job-shadowing certificate of attendance (min 16 hours).",
+      "source_page": 20,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Oral Health Sciences (BOHS)",
+      "faculty": "Health Sciences",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": null,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 7
+              }
+            ]
+          },
+          {
+            "options": [
+              {
+                "subject": "Life Sciences",
+                "min_level": 4
+              },
+              {
+                "subject": "Physical Sciences",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "All applicants must write the National Benchmark Test (NBT). Selection uses a Composite Index (60% academic results + 40% NBT). Requires a job-shadowing certificate of attendance (min 16 hours).",
+      "source_page": 20,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Nursing (BNurs)",
+      "faculty": "Health Sciences",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": null,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Life Sciences",
+                "min_level": 4
+              },
+              {
+                "subject": "Physical Sciences",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "All applicants must write the National Benchmark Test (NBT). Selection uses a Composite Index (60% academic results + 40% NBT).",
+      "source_page": 20,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Pharmacy (BPharm)",
+      "faculty": "Health Sciences",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": null,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Life Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "All applicants must write the National Benchmark Test (NBT). Selection uses a Composite Index (60% academic results + 40% NBT).",
+      "source_page": 20,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Occupational Therapy",
+      "faculty": "Health Sciences",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": null,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 4
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          },
+          {
+            "options": [
+              {
+                "subject": "Life Sciences",
+                "min_level": 4
+              },
+              {
+                "subject": "Physical Sciences",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "All applicants must write the National Benchmark Test (NBT). Selection uses a Composite Index (60% academic results + 40% NBT). Requires a job-shadowing certificate of attendance (min 16 hours).",
+      "source_page": 20,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Physiotherapy",
+      "faculty": "Health Sciences",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": null,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Life Sciences",
+                "min_level": 5
+              },
+              {
+                "subject": "Physical Sciences",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "All applicants must write the National Benchmark Test (NBT). Selection uses a Composite Index (60% academic results + 40% NBT). Requires a job-shadowing certificate of attendance (min 16 hours).",
+      "source_page": 20,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts (BA)",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 36,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts (Law)",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 43,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 3
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 4
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts in Digital Arts",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 36,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Wits School of Arts selection: interview/audition/portfolio/written assignment.",
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts in Theatre and Performance",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Wits School of Arts selection: interview/audition/portfolio/written assignment.",
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts in Film and Television",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "WSoA selection (audition/portfolio). Closing date 30 June 2026.",
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts in Fine Arts",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Wits School of Arts selection: interview/audition/portfolio/written assignment.",
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Music",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Wits School of Arts selection: interview/audition/portfolio/written assignment.",
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Education: Foundation Phase Teaching",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 37,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Education: Intermediate Phase Teaching",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 37,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "options": [
+              {
+                "subject": "Mathematics",
+                "min_level": 4
+              },
+              {
+                "subject": "Mathematical Literacy",
+                "min_level": 5
+              },
+              {
+                "subject": "Technical Mathematics",
+                "min_level": 5
+              }
+            ]
+          }
+        ]
+      },
+      "notes": null,
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Education: Senior Phase and FET Teaching",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 37,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "A compulsory teaching subject is required (e.g. Physical Sciences, Life Sciences, EGD, Geography, History, IsiZulu, Sesotho, Information Technology, Mechanical Technology, Mathematics or Technical Mathematics).",
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Speech-Language Pathology",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Must write the NBT. Closing date 30 June 2026.",
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Audiology",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 34,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 4
+          }
+        ]
+      },
+      "notes": "Must write the NBT. Closing date 30 June 2026.",
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Work",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 36,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "Only 60 first-year places; selection on academic merit within school quintiles.",
+      "source_page": 22,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science (General)",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Biological Sciences",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 43,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Geographical and Archaeological Sciences",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Geospatial Sciences",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Environmental Studies",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Geological Sciences",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Actuarial Science",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 44,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 7
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 7
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 7
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT). High subject minimums per the 2027 guide (English/Maths/Physical Sciences level 7) — verify before relying on for borderline cases.",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Computational and Applied Mathematics",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 44,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Computer Science",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 44,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Mathematical Sciences",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 44,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 7
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 7
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 7
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT). High subject minimums per the 2027 guide (level 7) — verify.",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Physical Sciences (Chemistry/Physics)",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 42,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 5
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Chemistry with Chemical Engineering",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 43,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science in Astronomy and Astrophysics",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 43,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_level": 5
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_level": 6
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_level": 6
+          }
+        ]
+      },
+      "notes": "All Faculty of Science applicants must write the National Benchmark Test (NBT).",
+      "source_page": 24,
+      "is_active": true
+    }
+  ]
+}
