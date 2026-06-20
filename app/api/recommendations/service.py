@@ -139,6 +139,8 @@ def get_recommendations(
                 name=prog.name,
                 faculty=faculty.name if faculty else None,
                 qualification_code=prog.qualification_code,
+                qualification_type=prog.qualification_type,
+                duration_years=prog.duration_years,
                 min_aps=prog.min_aps,
                 status=result.status,
                 unmet_rules=[
@@ -194,6 +196,8 @@ def list_university_programmes(
                         id=str(p.id),
                         name=p.name,
                         qualification_code=p.qualification_code,
+                        qualification_type=p.qualification_type,
+                        duration_years=p.duration_years,
                         min_aps=p.min_aps,
                         notes=p.notes,
                     )

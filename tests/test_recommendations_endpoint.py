@@ -55,6 +55,8 @@ def _make_recommendations_response():
                 name="BEng (Civil Engineering) ENGAGE",
                 faculty="Engineering, Built Environment and IT",
                 qualification_code="12136017",
+                qualification_type="degree",
+                duration_years=5,
                 min_aps=33,
                 status=MatchStatus.QUALIFIES,
                 unmet_rules=[],
@@ -130,6 +132,9 @@ def test_recommendations_happy_path_three_buckets():
     assert data["aps_max"] == 42
     assert data["record_type_used"] == "grade_12_june"
     assert len(data["programmes"]) == 3
+    # new fields round-trip
+    assert data["programmes"][0]["qualification_type"] == "degree"
+    assert data["programmes"][0]["duration_years"] == 5
 
 
 def test_recommendations_sort_order_qualifies_borderline_not_yet():
@@ -248,13 +253,17 @@ def _make_catalogue_response():
                         id=PROGRAMME_ID_1,
                         name="BEng (Civil Engineering) ENGAGE",
                         qualification_code="12136017",
+                        qualification_type="degree",
+                        duration_years=5,
                         min_aps=33,
                         notes=None,
                     ),
                     ProgrammeCatalogueItem(
                         id=PROGRAMME_ID_2,
-                        name="BEng (Civil Engineering)",
-                        qualification_code="12130017",
+                        name="Diploma in Architecture",
+                        qualification_code="D8AT1Q",
+                        qualification_type="diploma",
+                        duration_years=3,
                         min_aps=35,
                         notes=None,
                     ),
@@ -286,6 +295,10 @@ def test_catalogue_happy_path():
     faculty = data["faculties"][0]
     assert faculty["faculty_name"] == "Engineering, Built Environment and IT"
     assert len(faculty["programmes"]) == 2
+    # qualification_type / duration_years exposed in the catalogue
+    assert faculty["programmes"][0]["qualification_type"] == "degree"
+    assert faculty["programmes"][0]["duration_years"] == 5
+    assert faculty["programmes"][1]["qualification_type"] == "diploma"
 
 
 def test_catalogue_404_unknown_university():

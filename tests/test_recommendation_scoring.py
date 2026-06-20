@@ -354,3 +354,158 @@ def test_evaluate_subject_rule_via_min_level():
     subjects_fail = [SubjectIn(name="Mathematics", mark=59)]
     assert evaluate(subjects_pass, 0, prog).status == "qualifies"
     assert evaluate(subjects_fail, 0, prog).status != "qualifies"
+
+
+# ---------------------------------------------------------------------------
+# evaluate — per-option subject levels (UJ shape: Maths@5 OR Maths Lit@4)
+# ---------------------------------------------------------------------------
+
+# UJ pattern: Mathematics at level 5 (60%) OR Mathematical Literacy at level 4 (50%).
+_MATHS_OR_MATHSLIT = {
+    "options": [
+        {"subject": "Mathematics", "min_level": 5},
+        {"subject": "Mathematical Literacy", "min_level": 4},
+    ]
+}
+
+
+def test_evaluate_options_maths_path_qualifies():
+    prog = _prog(None, [_MATHS_OR_MATHSLIT])
+    subjects = [SubjectIn(name="Mathematics", mark=60)]
+    assert evaluate(subjects, 0, prog).status == "qualifies"
+
+
+def test_evaluate_options_mathslit_path_qualifies_at_its_lower_level():
+    """Maths Lit 50% satisfies the rule via its own (lower) level, even though
+    50% would NOT satisfy the Mathematics option."""
+    prog = _prog(None, [_MATHS_OR_MATHSLIT])
+    subjects = [SubjectIn(name="Mathematical Literacy", mark=50)]
+    assert evaluate(subjects, 0, prog).status == "qualifies"
+
+
+def test_evaluate_options_maths_at_50_does_not_qualify():
+    """Mathematics at 50% must NOT pass a rule requiring Maths 60% — the
+    Maths-Lit option's lower threshold doesn't apply to Mathematics."""
+    prog = _prog(None, [_MATHS_OR_MATHSLIT])
+    subjects = [SubjectIn(name="Mathematics", mark=50)]
+    result = evaluate(subjects, 0, prog)
+    assert result.status != "qualifies"
+    assert result.unmet_rules[0].have == "Mathematics 50%"
+    assert result.unmet_rules[0].shortfall == "10%"
+
+
+def test_evaluate_options_mathslit_below_level_borderline():
+    """Maths Lit 45% (5% short of its 50% option) is the only failing rule with
+    APS met → borderline; requirement string lists both options."""
+    prog = _prog(None, [_MATHS_OR_MATHSLIT])
+    subjects = [SubjectIn(name="Mathematical Literacy", mark=45)]
+    result = evaluate(subjects, 0, prog)
+    assert result.status == "borderline"
+    rule = result.unmet_rules[0]
+    assert rule.requirement == "Mathematics 60% or Mathematical Literacy 50%"
+    assert rule.have == "Mathematical Literacy 45%"
+    assert rule.shortfall == "5%"
+
+
+def test_evaluate_options_picks_closest_path():
+    """With both subjects held but neither passing, the smallest shortfall (the
+    student's closest path) is reported."""
+    prog = _prog(None, [_MATHS_OR_MATHSLIT])
+    subjects = [
+        SubjectIn(name="Mathematics", mark=55),  # 5% short of 60
+        SubjectIn(name="Mathematical Literacy", mark=40),  # 10% short of 50
+    ]
+    result = evaluate(subjects, 0, prog)
+    assert result.status == "borderline"
+    assert result.unmet_rules[0].have == "Mathematics 55%"
+    assert result.unmet_rules[0].shortfall == "5%"
+
+
+def test_evaluate_options_none_captured_not_yet():
+    prog = _prog(None, [_MATHS_OR_MATHSLIT])
+    subjects = [SubjectIn(name="Physical Sciences", mark=70)]
+    result = evaluate(subjects, 0, prog)
+    assert result.status == "not_yet"
+    assert "not captured" in result.unmet_rules[0].have
+
+
+# ---------------------------------------------------------------------------
+# evaluate — conditional APS (UJ shape: 25 with Maths / 26 with Maths Lit)
+# ---------------------------------------------------------------------------
+
+# A trivially-satisfied maths subject rule so these tests isolate the APS logic.
+_MATHS_OR_MATHSLIT_EASY = {
+    "options": [
+        {"subject": "Mathematics", "min_level": 3},
+        {"subject": "Mathematical Literacy", "min_level": 3},
+    ]
+}
+_APS_RULE = {
+    "alternatives": [
+        {"with_subject": "Mathematics", "min_aps": 25},
+        {"with_subject": "Mathematical Literacy", "min_aps": 26},
+    ]
+}
+
+
+def _prog_conditional_aps():
+    # Stored min_aps is the representative (Maths-path) value; aps_rule refines it.
+    return SimpleNamespace(
+        min_aps=25,
+        requirements={"subject_rules": [_MATHS_OR_MATHSLIT_EASY], "aps_rule": _APS_RULE},
+    )
+
+
+# Six subjects → APS 25 (levels 4,4,4,4,4,5), holding Mathematics.
+_MATHS_APS25 = [
+    SubjectIn(name="Mathematics", mark=55),
+    SubjectIn(name="English First Additional Language", mark=55),
+    SubjectIn(name="Physical Sciences", mark=55),
+    SubjectIn(name="Life Sciences", mark=55),
+    SubjectIn(name="Accounting", mark=55),
+    SubjectIn(name="Geography", mark=60),
+]
+# Same shape but holding Mathematical Literacy instead → APS 25.
+_MATHSLIT_APS25 = [
+    SubjectIn(name="Mathematical Literacy", mark=55),
+    SubjectIn(name="English First Additional Language", mark=55),
+    SubjectIn(name="Physical Sciences", mark=55),
+    SubjectIn(name="Life Sciences", mark=55),
+    SubjectIn(name="Accounting", mark=55),
+    SubjectIn(name="Geography", mark=60),
+]
+# Maths Lit holder with APS 26 (Geography bumped to level 6).
+_MATHSLIT_APS26 = [
+    SubjectIn(name="Mathematical Literacy", mark=55),
+    SubjectIn(name="English First Additional Language", mark=55),
+    SubjectIn(name="Physical Sciences", mark=55),
+    SubjectIn(name="Life Sciences", mark=55),
+    SubjectIn(name="Accounting", mark=55),
+    SubjectIn(name="Geography", mark=70),
+]
+
+
+def test_conditional_aps_maths_holder_threshold_is_25():
+    aps = compute_aps(_MATHS_APS25)
+    assert aps == 25
+    result = evaluate(_MATHS_APS25, aps, _prog_conditional_aps())
+    assert result.status == "qualifies"
+
+
+def test_conditional_aps_mathslit_holder_threshold_is_26():
+    """A Maths-Lit holder faces the higher 26 threshold, so APS 25 is 1 short."""
+    aps = compute_aps(_MATHSLIT_APS25)
+    assert aps == 25
+    result = evaluate(_MATHSLIT_APS25, aps, _prog_conditional_aps())
+    assert result.status == "borderline"
+    rule = result.unmet_rules[0]
+    assert rule.requirement == "APS 26"
+    assert rule.have == "APS 25"
+    assert rule.shortfall == "1 point"
+
+
+def test_conditional_aps_mathslit_holder_meets_26():
+    aps = compute_aps(_MATHSLIT_APS26)
+    assert aps == 26
+    result = evaluate(_MATHSLIT_APS26, aps, _prog_conditional_aps())
+    assert result.status == "qualifies"

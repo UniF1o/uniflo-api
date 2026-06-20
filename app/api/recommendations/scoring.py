@@ -109,7 +109,7 @@ class MatchResult:
 
 
 def _effective_min_mark(rule: dict[str, Any]) -> int:
-    """Return the minimum percentage mark for a subject rule.
+    """Return the minimum percentage mark for a subject rule (or one option).
     Uses min_mark directly; falls back to the bottom of min_level's band."""
     if "min_mark" in rule:
         return int(rule["min_mark"])
@@ -132,10 +132,110 @@ def _best_for_rule(
     return best_name, best_mark
 
 
+def _student_mark(subjects: list[SubjectIn], name: str) -> int | None:
+    """The student's best captured mark for a named subject, or None."""
+    marks = [s.mark for s in subjects if s.name == name]
+    return max(marks) if marks else None
+
+
 def _requirement_str(accepted: list[str], min_mark: int) -> str:
     if len(accepted) == 1:
         return f"{accepted[0]} {min_mark}%"
     return f"{' / '.join(accepted)} {min_mark}%"
+
+
+def _eval_rule(
+    subjects: list[SubjectIn], rule: dict[str, Any]
+) -> tuple[bool, UnmetRule | None, int]:
+    """Evaluate one subject rule. Returns (passed, unmet_or_None, shortfall_pct).
+
+    Two rule shapes are supported:
+      legacy  — {"subjects": [...], "min_mark"|"min_level"}: any listed subject
+                satisfies the *shared* threshold.
+      options — {"options": [{"subject": ..., "min_mark"|"min_level"}, ...]}: any
+                option satisfies *its own* threshold (e.g. Maths 60% OR Maths Lit 50%).
+    """
+    if "options" in rule:
+        options: list[dict[str, Any]] = rule["options"]
+        req_parts: list[str] = []
+        best_shortfall: int | None = None
+        best_have: tuple[str, int] | None = None
+        for opt in options:
+            subj = opt["subject"]
+            opt_min = _effective_min_mark(opt)
+            req_parts.append(f"{subj} {opt_min}%")
+            mark = _student_mark(subjects, subj)
+            if mark is None:
+                continue
+            shortfall = max(0, opt_min - mark)
+            if best_shortfall is None or shortfall < best_shortfall:
+                best_shortfall = shortfall
+                best_have = (subj, mark)
+        requirement = " or ".join(req_parts)
+        if best_shortfall == 0:
+            return True, None, 0
+        if best_have is not None:
+            have = f"{best_have[0]} {best_have[1]}%"
+            shortfall_pct = best_shortfall  # type: ignore[assignment]
+        else:
+            # None of the option subjects were captured.
+            have = f"{options[0]['subject']} not captured"
+            shortfall_pct = _effective_min_mark(options[0])
+        return (
+            False,
+            UnmetRule(requirement=requirement, have=have, shortfall=f"{shortfall_pct}%"),
+            shortfall_pct,
+        )
+
+    accepted: list[str] = rule.get("subjects", [])
+    min_mark = _effective_min_mark(rule)
+    best_name, best_mark = _best_for_rule(subjects, accepted)
+    if best_mark < min_mark:
+        shortfall_pct = min_mark - best_mark
+        have_str = (
+            f"{best_name} {best_mark}%"
+            if best_name is not None
+            else f"{accepted[0] if accepted else 'subject'} not captured"
+        )
+        return (
+            False,
+            UnmetRule(
+                requirement=_requirement_str(accepted, min_mark),
+                have=have_str,
+                shortfall=f"{shortfall_pct}%",
+            ),
+            shortfall_pct,
+        )
+    return True, None, 0
+
+
+def _effective_min_aps(
+    subjects: list[SubjectIn], requirements: dict[str, Any], default_min_aps: int | None
+) -> int | None:
+    """Resolve the APS threshold, honouring a conditional aps_rule if present.
+
+    aps_rule shape:
+        {"alternatives": [{"with_subject": "Mathematics", "min_aps": 25},
+                          {"with_subject": "Mathematical Literacy", "min_aps": 26}]}
+    Picks the most favourable (lowest) threshold among alternatives whose
+    with_subject the student holds. Falls back to the programme's stored min_aps
+    when the student holds none of the conditioning subjects (the subject rules
+    will flag the missing maths separately)."""
+    aps_rule = requirements.get("aps_rule")
+    if not aps_rule:
+        return default_min_aps
+    alternatives: list[dict[str, Any]] = aps_rule.get("alternatives", [])
+    applicable = [
+        int(alt["min_aps"])
+        for alt in alternatives
+        if alt.get("with_subject") is None
+        or _student_mark(subjects, alt["with_subject"]) is not None
+    ]
+    if applicable:
+        return min(applicable)
+    if default_min_aps is not None:
+        return default_min_aps
+    return max((int(a["min_aps"]) for a in alternatives), default=None)
 
 
 # ---------------------------------------------------------------------------
@@ -149,7 +249,11 @@ def evaluate(subjects: list[SubjectIn], aps: int, programme: Any) -> MatchResult
 
     programme: any object with .min_aps (int | None) and .requirements (dict).
     requirements shape:
-        {"subject_rules": [{"subjects": [...], "min_mark": int, "min_level"?: int}]}
+        {"subject_rules": [
+            {"subjects": [...], "min_mark": int, "min_level"?: int}
+            | {"options": [{"subject": ..., "min_mark"|"min_level"}, ...]}
+         ],
+         "aps_rule"?: {"alternatives": [{"with_subject": ..., "min_aps": int}, ...]}}
 
     Status rules:
       qualifies  — all subject rules met AND aps >= min_aps
@@ -160,29 +264,14 @@ def evaluate(subjects: list[SubjectIn], aps: int, programme: Any) -> MatchResult
     """
     requirements: dict[str, Any] = programme.requirements or {}
     subject_rules: list[dict[str, Any]] = requirements.get("subject_rules", [])
-    min_aps: int | None = programme.min_aps
+    min_aps: int | None = _effective_min_aps(subjects, requirements, programme.min_aps)
 
     # Evaluate subject rules; collect failures as (UnmetRule, shortfall_pct).
     failed: list[tuple[UnmetRule, int]] = []
     for rule in subject_rules:
-        accepted: list[str] = rule.get("subjects", [])
-        min_mark = _effective_min_mark(rule)
-        best_name, best_mark = _best_for_rule(subjects, accepted)
-        if best_mark < min_mark:
-            shortfall_pct = min_mark - best_mark
-            have_str = (
-                f"{best_name} {best_mark}%"
-                if best_name is not None
-                else f"{accepted[0] if accepted else 'subject'} not captured"
-            )
-            failed.append((
-                UnmetRule(
-                    requirement=_requirement_str(accepted, min_mark),
-                    have=have_str,
-                    shortfall=f"{shortfall_pct}%",
-                ),
-                shortfall_pct,
-            ))
+        passed, unmet, shortfall_pct = _eval_rule(subjects, rule)
+        if not passed and unmet is not None:
+            failed.append((unmet, shortfall_pct))
 
     aps_shortfall = max(0, (min_aps - aps) if min_aps is not None else 0)
     subjects_pass = not failed
