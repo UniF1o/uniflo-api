@@ -16,7 +16,7 @@ from app.api.recommendations.schemas import (
     RecommendationsResponse,
     UnmetRule,
 )
-from app.api.recommendations.scoring import compute_aps, evaluate
+from app.api.recommendations.scoring import aps_margin_for, compute_aps, evaluate
 from app.intake import active_intake_year
 from app.models.academic_record import AcademicRecord
 from app.models.faculty import Faculty
@@ -29,8 +29,10 @@ _RECORD_PREFERENCE = ["grade_12_june", "grade_12_april", "grade_11_final"]
 
 # Maximum possible APS per scoring method.
 # up_aps: best 6 at level 7 = 42. wits_aps: best 6 others (Eng+Maths at 8+2, four
-# more at 8 = 52) + Life Orientation at 4 = 56.
-_APS_MAX: dict[str, int] = {"up_aps": 42, "wits_aps": 56}
+# more at 8 = 52) + Life Orientation at 4 = 56. uct_fps: the headline figure is the
+# base APS out of 600 (English + 5 best others as percentages); Science FPS (/800)
+# and Health FPS (/900) are per-programme and evaluated internally.
+_APS_MAX: dict[str, int] = {"up_aps": 42, "wits_aps": 56, "uct_fps": 600}
 
 # Status sort order for the response.
 _STATUS_ORDER: dict[str, int] = {
@@ -119,10 +121,11 @@ def get_recommendations(
     method = university.scoring_method or "up_aps"
     aps = compute_aps(subjects, method)
     aps_max = _APS_MAX.get(method, 42)
+    margin = aps_margin_for(method)
 
     matches: list[tuple[Programme, object]] = []
     for prog in programmes:
-        result = evaluate(subjects, aps, prog)
+        result = evaluate(subjects, aps, prog, aps_margin=margin)
         matches.append((prog, result))
 
     def _sort_key(item: tuple[Programme, object]) -> tuple[int, int]:

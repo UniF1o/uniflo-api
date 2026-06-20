@@ -132,13 +132,74 @@ def _wits_aps(subjects: list[SubjectIn]) -> int:
     return lo_points + sum(others[:6])
 
 
+# UCT sums percentages (not levels). English is always counted; marks < 40 score 0.
+_ENGLISH_NAMES = {"English Home Language", "English First Additional Language"}
+
+
+def _uct_points(mark: int) -> int:
+    """UCT scores a subject as its percentage; below 40% earns nothing."""
+    return mark if mark >= 40 else 0
+
+
+def _uct_base_aps(subjects: list[SubjectIn], required: tuple[str, ...] = ()) -> int:
+    """UCT APS (out of 600): English + the five best other subjects' percentages,
+    excluding Life Orientation (AP subjects are not tracked). Any programme-required
+    subjects are force-included among the five, per UCT's rule."""
+    eng = max((s.mark for s in subjects if s.name in _ENGLISH_NAMES), default=0)
+    others = [
+        s for s in subjects
+        if s.name not in _ENGLISH_NAMES and s.name != _LIFE_ORIENTATION
+    ]
+    req_set = set(required)
+    required_subs = [s for s in others if s.name in req_set]
+    nonrequired = sorted(
+        (s for s in others if s.name not in req_set), key=lambda s: s.mark, reverse=True
+    )
+    chosen = (required_subs + nonrequired)[:5]
+    return _uct_points(eng) + sum(_uct_points(s.mark) for s in chosen)
+
+
+def _uct_fps(subjects: list[SubjectIn], fps_config: dict[str, Any]) -> int:
+    """UCT Faculty Points Score for one programme. Base APS plus any faculty
+    adjustment: Science doubles Mathematics + Physical Sciences (config "double").
+    Health Sciences adds NBT scores — not computable here (no NBT captured) — so
+    Health programmes carry no fps cutoff (min_aps is null) and gate on subjects."""
+    required = tuple(fps_config.get("required", []))
+    total = _uct_base_aps(subjects, required)
+    for name in fps_config.get("double", []):
+        mark = _student_mark(subjects, name)
+        if mark is not None:
+            total += _uct_points(mark)
+    return total
+
+
 def compute_aps(subjects: list[SubjectIn], method: str = "up_aps") -> int:
-    """Compute a student's APS using the named university scoring method."""
+    """Compute a student's APS using the named university scoring method.
+
+    For uct_fps this returns the base APS out of 600 (the headline figure shown to
+    the student); per-programme FPS adjustments (e.g. Science doubling) are applied
+    inside evaluate() from each programme's requirements 'fps' block."""
     if method == "up_aps":
         return _up_aps(subjects)
     if method == "wits_aps":
         return _wits_aps(subjects)
+    if method == "uct_fps":
+        return _uct_base_aps(subjects)
     raise ValueError(f"Unknown scoring method: {method!r}")
+
+
+# Borderline APS margin per scoring method. Level-based APS (up/wits) uses a tight
+# 2-point band; UCT's percentage-sum FPS (out of 600+) uses ~5 points, mirroring
+# UCT's own Band-A/Band-C (EDU) gap.
+APS_BORDERLINE_MARGIN_BY_METHOD: dict[str, int] = {
+    "up_aps": APS_BORDERLINE_MARGIN,
+    "wits_aps": APS_BORDERLINE_MARGIN,
+    "uct_fps": 5,
+}
+
+
+def aps_margin_for(method: str) -> int:
+    return APS_BORDERLINE_MARGIN_BY_METHOD.get(method, APS_BORDERLINE_MARGIN)
 
 
 # ---------------------------------------------------------------------------
@@ -301,7 +362,12 @@ def _effective_min_aps(
 # ---------------------------------------------------------------------------
 
 
-def evaluate(subjects: list[SubjectIn], aps: int, programme: Any) -> MatchResult:
+def evaluate(
+    subjects: list[SubjectIn],
+    aps: int,
+    programme: Any,
+    aps_margin: int = APS_BORDERLINE_MARGIN,
+) -> MatchResult:
     """Evaluate whether a student qualifies, is borderline, or does not yet
     meet the requirements of a programme.
 
@@ -311,11 +377,18 @@ def evaluate(subjects: list[SubjectIn], aps: int, programme: Any) -> MatchResult
             {"subjects": [...], "min_mark": int, "min_level"?: int}
             | {"options": [{"subject": ..., "min_mark"|"min_level"}, ...]}
          ],
-         "aps_rule"?: {"alternatives": [{"with_subject": ..., "min_aps": int}, ...]}}
+         "aps_rule"?: {"alternatives": [{"with_subject": ..., "min_aps": int}, ...]},
+         "fps"?: {"required": [...], "double": [...]}}  # UCT per-programme FPS
+
+    aps_margin: how many points below min_aps still count as borderline (varies by
+    scoring method; see APS_BORDERLINE_MARGIN_BY_METHOD).
+
+    When a "fps" block is present (UCT), the programme score is recomputed from the
+    student's subjects for that faculty's formula instead of using the passed aps.
 
     Status rules:
-      qualifies  — all subject rules met AND aps >= min_aps
-      borderline — (all subject rules met AND 0 < aps_gap <= APS_BORDERLINE_MARGIN)
+      qualifies  — all subject rules met AND score >= min_aps
+      borderline — (all subject rules met AND 0 < aps_gap <= aps_margin)
                    OR (exactly 1 subject rule short by <= SUBJECT_BORDERLINE_MARGIN
                        AND aps_gap == 0)
       not_yet    — everything else
@@ -324,6 +397,10 @@ def evaluate(subjects: list[SubjectIn], aps: int, programme: Any) -> MatchResult
     subject_rules: list[dict[str, Any]] = requirements.get("subject_rules", [])
     min_aps: int | None = _effective_min_aps(subjects, requirements, programme.min_aps)
 
+    # UCT: recompute the per-programme FPS from the faculty formula.
+    fps_config = requirements.get("fps")
+    score = _uct_fps(subjects, fps_config) if fps_config else aps
+
     # Evaluate subject rules; collect failures as (UnmetRule, shortfall_pct).
     failed: list[tuple[UnmetRule, int]] = []
     for rule in subject_rules:
@@ -331,7 +408,7 @@ def evaluate(subjects: list[SubjectIn], aps: int, programme: Any) -> MatchResult
         if not passed and unmet is not None:
             failed.append((unmet, shortfall_pct))
 
-    aps_shortfall = max(0, (min_aps - aps) if min_aps is not None else 0)
+    aps_shortfall = max(0, (min_aps - score) if min_aps is not None else 0)
     subjects_pass = not failed
 
     # qualifies
@@ -339,14 +416,14 @@ def evaluate(subjects: list[SubjectIn], aps: int, programme: Any) -> MatchResult
         return MatchResult(status="qualifies")
 
     # borderline — only APS is short, within margin
-    if subjects_pass and 0 < aps_shortfall <= APS_BORDERLINE_MARGIN:
+    if subjects_pass and 0 < aps_shortfall <= aps_margin:
         pts = "point" if aps_shortfall == 1 else "points"
         return MatchResult(
             status="borderline",
             unmet_rules=[
                 UnmetRule(
                     requirement=f"APS {min_aps}",
-                    have=f"APS {aps}",
+                    have=f"APS {score}",
                     shortfall=f"{aps_shortfall} {pts}",
                 )
             ],
