@@ -42,6 +42,7 @@ REGISTRY: dict[str, dict[str, str]] = {
     "up.json": {"university": "University of Pretoria", "scoring_method": "up_aps"},
     "uj.json": {"university": "University of Johannesburg", "scoring_method": "up_aps"},
     "wits.json": {"university": "University of the Witwatersrand", "scoring_method": "wits_aps"},
+    "uct.json": {"university": "University of Cape Town", "scoring_method": "uct_fps"},
 }
 
 
