@@ -407,8 +407,8 @@ plain seed script.
   step (exit 1 on stale); the seed refuses stale data unless `--allow-stale`; tests
   cover the classifier plus a live tripwire that fails CI when the cycle rolls over and
   the prospectus is not refreshed.
-- [ ] **Human review (required):** Partner B reviews `up.json` in the PR diff
-  (PR #56), spot-checking entries against the prospectus, before merge/seed. Pay
+- [x] **Human review (done):** Partner B reviewed `up.json` in the PR diff
+  (PR #56, merged), spot-checking entries against the prospectus, before merge/seed. Pay
   special attention to the Built Environment trio (Construction Management, Real Estate,
   Quantity Surveying) — Physical Sciences requirement was ambiguous in extraction and is
   flagged in their `notes`.
@@ -419,7 +419,7 @@ plain seed script.
   `intake_year`); sets UP's `scoring_method = "up_aps"` and the file's `intake_year`.
   The `up.json` keeps `faculty` as a plain name string — the seed creates/links the
   faculty row. Run: `python scripts/seed_programmes.py`.
-- [ ] Apply against prod (`.env` is prod) only after the JSON is reviewed.
+- [x] Applied against prod — UP seeded: 9 faculties, 120 active programmes. See `task-4-seed-up-programmes.md`.
 
 **Squash commit:** `feat: seed UP programme admission requirements`
 
@@ -436,17 +436,20 @@ tasks, not out of scope** — UP ships and proves the pipeline first.
 
 Suggested ordering (most APS-like scoring first, bespoke last):
 
-- [x] **UJ** — transcribed (2027 prospectus, 149 bachelor + extended degrees, all 8
-  faculties) into `data/programmes/uj.json`. APS bands match UP, so it reuses
-  `up_aps` (no `uj_aps` needed). Required additively extending the engine for UJ's
-  conditional APS and per-option subject levels. PR open; human review + prod seed
-  still pending (Partner B gates). Research: `docs/phase-3/portal-research/uj.md`.
-- [ ] **Wits** — its own composite/APS with programme-specific subject rules; add
-  `wits_aps` if the points differ. Research: `docs/phase-3/portal-research/wits.md`.
-- [ ] **UCT** — bespoke **Faculty Points Score (FPS/WPS)** with weighted percentages,
-  plus NBT; needs a dedicated `uct_fps` function and a decision on how non-academic
-  requirements (NBT) are surfaced (see Risks). Do last. Research:
-  `docs/phase-3/portal-research/uct.md`.
+- [x] **UJ** — merged (#57) and seeded to prod (177 active = 149 degrees + 28
+  diplomas, all 8 faculties) into `data/programmes/uj.json`. Reuses `up_aps`;
+  required additively extending the engine for UJ's conditional APS and per-option
+  subject levels, plus the `qualification_type`/`duration_years` columns (migration
+  `e2a1c4b6d8f0`). See `task-5-uj.md`. Research: `docs/phase-3/portal-research/uj.md`.
+- [x] **Wits** — merged (#58) and seeded (56 degrees, 5 faculties). Added `wits_aps`
+  (8-point scale, +2 English/Maths bonus, Life Orientation reduced, best-7-incl-LO);
+  Health gates on subjects only (Composite Index). See `task-5-wits.md`. Research:
+  `docs/phase-3/portal-research/wits.md`.
+- [x] **UCT** — transcribed (29 degrees, all 6 faculties) with bespoke `uct_fps`
+  (percentage-sum APS/600; Science doubles Maths + Physical Sciences /800; Health
+  gates on the sub-minimum APS since NBT is uncomputable; WPS/redress non-computable
+  → unweighted FPS). Merged (#59) and seeded to prod (29 active, 6 faculties). See
+  `task-5-uct.md`. Research: `docs/phase-3/portal-research/uct.md`.
 
 For each: transcribe faculty-by-faculty, human-review the JSON in the PR, seed, and
 verify a `qualifies`/`not_yet` pair by hand against the prospectus. Write up in
@@ -463,9 +466,10 @@ transcribed. Correct requirements over coverage.
 
 Before sign-off, verify end-to-end against the live dev backend:
 
-- [ ] Migration applied to prod; `programmes` exists and `universities` has
-  `scoring_method`.
-- [ ] One UP faculty's programmes seeded and marked active.
+- [x] Migration applied to prod (head `e2a1c4b6d8f0`); `programmes` exists and
+  `universities` has `scoring_method`.
+- [x] All four universities seeded and marked active (UP 120, UJ 177, Wits 56,
+  UCT 29; all faculties, not just one).
 - [ ] As the test student (jane.doe.test26@gmail.com — already has a
   `grade_12_june` record), `GET /recommendations?university_id=<UP>` returns the
   three buckets with sensible APS and gap strings. Cross-check one `qualifies` and
@@ -475,11 +479,10 @@ Before sign-off, verify end-to-end against the live dev backend:
 - [ ] **Do not POST /applications** from the test account — that feeds the live
   Phase 3 automation worker against real UP portals.
 - [ ] OpenAPI spec regenerated and deployed so Partner A can run `npm run types:api`.
-- [ ] **Cross-check against the portal's real gate:** the UP portal runs the live
-  admission check itself (`(31100, 501)`; see `docs/phase-3/portal-research/up.md`).
-  Validate the engine on the documented known cases (e.g. APS 34 qualifies for
-  `12136017` but not `12130017`) so our pre-computation matches the portal's verdict.
-- [ ] `ruff`, `black --check`, `pytest` green.
+- [x] **Cross-check against the portal's real gate:** the APS-34-qualifies-`12136017`-
+  but-not-`12130017` case is encoded as a fixture in
+  `tests/test_recommendation_scoring.py`, so the engine matches the portal's verdict.
+- [x] `ruff` + `pytest` green (CI runs Ruff + Pytest; `black` is not in the CI gate).
 
 ---
 
