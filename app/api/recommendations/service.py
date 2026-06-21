@@ -157,6 +157,7 @@ def get_recommendations(
                     for r in result.unmet_rules
                 ],
                 notes=prog.notes,
+                combination=prog.combination,
             )
         )
 
@@ -205,6 +206,7 @@ def list_university_programmes(
                         duration_years=p.duration_years,
                         min_aps=p.min_aps,
                         notes=p.notes,
+                        combination=p.combination,
                     )
                     for p in progs
                 ],

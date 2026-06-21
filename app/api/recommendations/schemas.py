@@ -23,6 +23,16 @@ class UnmetRule(BaseModel):
     shortfall: str  # "7%"               |  "1 point"
 
 
+class ProgrammeCombination(BaseModel):
+    # Major-combination metadata for degrees where majors are chosen within the
+    # degree (e.g. UCT BSc/BA). Descriptive only — never affects match status.
+    majors_min: Optional[int] = None  # minimum majors to choose (e.g. BA = 2)
+    majors_max: Optional[int] = None  # maximum (e.g. BSc = 2; None = open)
+    co_majors: Optional[list[str]] = None  # must be paired with one of these
+    excludes: Optional[list[str]] = None  # cannot be paired with these
+    rule: Optional[str] = None  # human-readable summary for display
+
+
 class ProgrammeMatch(BaseModel):
     id: str
     name: str
@@ -36,6 +46,7 @@ class ProgrammeMatch(BaseModel):
     status: MatchStatus
     unmet_rules: list[UnmetRule]
     notes: Optional[str]  # non-academic requirements (NBT, portfolio…), shown not scored
+    combination: Optional[ProgrammeCombination] = None
 
 
 class RecommendationsResponse(BaseModel):
@@ -60,6 +71,7 @@ class ProgrammeCatalogueItem(BaseModel):
     duration_years: Optional[int] = None
     min_aps: Optional[int]
     notes: Optional[str]
+    combination: Optional[ProgrammeCombination] = None
 
 
 class FacultyGroup(BaseModel):

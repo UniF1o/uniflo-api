@@ -2,11 +2,11 @@
   "intake_year": 2027,
   "default_close_date": "2026-07-31",
   "faculty_overrides": {},
-  "transcription_notes": "Transcribed from the UCT 2027 Undergraduate Prospectus faculty admission tables (Commerce p27-30, Engineering p36-38, Health p43-45, Humanities p55-58, Law p62, Science p69-70). Scope: undergraduate degrees across all 6 faculties; Humanities diplomas/certificates (Music Performance, Theatre & Performance, ACET) and Health higher-certificate/advanced-diploma deferred. scoring_method = uct_fps (percentage-sum APS/600; Science doubles Maths + Physical Sciences /800; Health adds NBT /900). min_aps = each programme's Band A 'guaranteed admission' FPS. Health programmes are gated on the documented sub-minimum APS (out of 600) because the /900 FPS needs NBT scores not captured by UniFlo; WPS (disadvantage/redress) and NBT performance levels are non-computable and captured in notes. UCT publishes no programme codes here so qualification_code is null. Technical Mathematics/Technical Science are NOT accepted as substitutes for Mathematics/Physical Sciences.",
+  "transcription_notes": "Transcribed from the UCT 2027 Undergraduate Prospectus faculty admission tables (Commerce p27-30, Engineering p36-38, Health p43-45, Humanities p55-58, Law p62, Science p65-70). The five general degrees (BSc, BCom, BBusSc, BA, BSocSc) are split into one row per specialisation/major named '<Degree>: <major>' (UJ-style), each carrying the parent degree's admission requirements plus a structured `combination` object (majors_min/max, co_majors, excludes, rule). UCT admits to the degree (majors are open and combine), so these rows share one admission standard; combination metadata is descriptive and never gates matching. scoring_method = uct_fps (percentage-sum APS/600; Science doubles Maths + Physical Sciences /800; Health adds NBT /900 — gated here on the sub-minimum APS as NBT isn't captured). min_aps = Band A 'guaranteed admission' FPS. WPS (redress) and NBT levels are non-computable and noted. Humanities diplomas/certificates and Health higher-certificate/advanced-diploma deferred. UCT publishes no programme codes here so qualification_code is null. Technical Mathematics/Technical Science are NOT accepted substitutes for Mathematics/Physical Sciences.",
   "programmes": [
     {
       "qualification_code": null,
-      "name": "Bachelor of Commerce (BCom)",
+      "name": "Bachelor of Commerce: Financial Accounting (General)",
       "faculty": "Commerce",
       "qualification_type": "degree",
       "duration_years": 3,
@@ -38,13 +38,443 @@
           ]
         }
       },
-      "notes": "All applicants must write the NBT (Academic & Quantitative Literacy). Specialisations include Financial Accounting (General / Chartered Accountant), Economics (incl. with Law, with Finance, & Statistics), Finance, Information Systems (incl. & Finance), Management Studies, Marketing, and Industrial & Organisational Psychology. (Computer Science / Statistics & Data Science and Actuarial Science / Quantitative Finance have separate, higher entry requirements — see those entries.) min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 27,
       "is_active": true
     },
     {
       "qualification_code": null,
-      "name": "Bachelor of Business Science (BBusSc)",
+      "name": "Bachelor of Commerce: Financial Accounting (Chartered Accountant)",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Economics",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Economics with Law",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Economics with Finance",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Economics & Statistics",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Finance",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Information Systems",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Information Systems & Finance",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Management Studies",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Marketing",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Industrial & Organisational Psychology",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Business Science: Economics",
       "faculty": "Commerce",
       "qualification_type": "degree",
       "duration_years": 4,
@@ -76,13 +506,326 @@
           ]
         }
       },
-      "notes": "All applicants must write the NBT (Academic & Quantitative Literacy). Specialisations include Economics, Economics with Law, Finance (Investment & Banking), Finance with Accounting, Information Systems, Marketing, and Industrial & Organisational Psychology. (Computer Science / Statistics & Data Science and Actuarial Science / Quantitative Finance have separate entries.) min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 27,
       "is_active": true
     },
     {
       "qualification_code": null,
-      "name": "BCom / BBusSc: Computer Science, Statistics & Data Science",
+      "name": "Bachelor of Business Science: Economics with Law",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Business Science: Finance (Investment & Banking)",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Business Science: Finance with Accounting",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Business Science: Information Systems",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Business Science: Marketing",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Business Science: Industrial & Organisational Psychology",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 27,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Business Science: Computer Science",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 28,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Business Science: Statistics and Data Science",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 435,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 28,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Commerce: Information Systems & Computer Science",
       "faculty": "Commerce",
       "qualification_type": "degree",
       "duration_years": 3,
@@ -114,13 +857,14 @@
           ]
         }
       },
-      "notes": "All applicants must write the NBT (Academic & Quantitative Literacy). BBusSc stream is 4 years. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "notes": "Specialisation stream within the degree (a fixed curriculum, not a free major combination). All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 28,
       "is_active": true
     },
     {
       "qualification_code": null,
-      "name": "Bachelor of Business Science: Actuarial Science / Quantitative Finance",
+      "name": "Bachelor of Business Science: Actuarial Science",
       "faculty": "Commerce",
       "qualification_type": "degree",
       "duration_years": 4,
@@ -152,7 +896,47 @@
           ]
         }
       },
-      "notes": "All applicants must write the NBT (Academic & Quantitative Literacy). English FAL route requires Proficient AL & QL NBT scores. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "notes": "Specialisation stream within the BBusSc. English FAL route requires Proficient AL & QL NBT scores. All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
+      "source_page": 28,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Business Science: Quantitative Finance",
+      "faculty": "Commerce",
+      "qualification_type": "degree",
+      "duration_years": 4,
+      "min_aps": 500,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 80
+          },
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 60
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 80
+              }
+            ]
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Specialisation stream within the BBusSc. English FAL route requires Proficient AL & QL NBT scores. All applicants must write the NBT (Academic & Quantitative Literacy). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 28,
       "is_active": true
     },
@@ -193,6 +977,7 @@
         }
       },
       "notes": "NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 36,
       "is_active": true
     },
@@ -233,6 +1018,7 @@
         }
       },
       "notes": "NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 36,
       "is_active": true
     },
@@ -273,6 +1059,7 @@
         }
       },
       "notes": "NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 36,
       "is_active": true
     },
@@ -313,6 +1100,7 @@
         }
       },
       "notes": "NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 36,
       "is_active": true
     },
@@ -353,6 +1141,7 @@
         }
       },
       "notes": "NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 36,
       "is_active": true
     },
@@ -393,6 +1182,7 @@
         }
       },
       "notes": "NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 36,
       "is_active": true
     },
@@ -433,6 +1223,7 @@
         }
       },
       "notes": "NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 36,
       "is_active": true
     },
@@ -473,6 +1264,7 @@
         }
       },
       "notes": "NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 37,
       "is_active": true
     },
@@ -513,6 +1305,7 @@
         }
       },
       "notes": "NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 36,
       "is_active": true
     },
@@ -546,6 +1339,7 @@
         }
       },
       "notes": "NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 36,
       "is_active": true
     },
@@ -579,6 +1373,7 @@
         }
       },
       "notes": "Requires a creative portfolio (Band A portfolio score 75%+) and possible interview. NBTs (Maths, AL, QL) must be written but are not used for admission. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 36,
       "is_active": true
     },
@@ -619,6 +1414,7 @@
         }
       },
       "notes": "Also requires 70% for the next three best subjects (excl LO). Selection uses a Composite Index (FPS out of 900 = APS + NBT). NBT not captured here, so this gates on the documented sub-minimum APS; actual selection is highly competitive by FPS/WPS band.",
+      "combination": null,
       "source_page": 43,
       "is_active": true
     },
@@ -664,6 +1460,7 @@
         }
       },
       "notes": "Plus 60% for the next three best subjects (excl LO). Selection uses a Composite Index (FPS out of 900 = APS + NBT). NBT not captured here, so this gates on the documented sub-minimum APS; actual selection is highly competitive by FPS/WPS band.",
+      "combination": null,
       "source_page": 43,
       "is_active": true
     },
@@ -715,6 +1512,7 @@
         }
       },
       "notes": "Plus 60% for the next three best subjects (excl LO). Selection uses a Composite Index (FPS out of 900 = APS + NBT). NBT not captured here, so this gates on the documented sub-minimum APS; actual selection is highly competitive by FPS/WPS band.",
+      "combination": null,
       "source_page": 44,
       "is_active": true
     },
@@ -766,6 +1564,7 @@
         }
       },
       "notes": "Plus 60% for the next three best subjects (excl LO). Selection uses a Composite Index (FPS out of 900 = APS + NBT). NBT not captured here, so this gates on the documented sub-minimum APS; actual selection is highly competitive by FPS/WPS band.",
+      "combination": null,
       "source_page": 44,
       "is_active": true
     },
@@ -817,12 +1616,13 @@
         }
       },
       "notes": "Plus 60% for the next three best subjects (excl LO). Selection uses a Composite Index (FPS out of 900 = APS + NBT). NBT not captured here, so this gates on the documented sub-minimum APS; actual selection is highly competitive by FPS/WPS band.",
+      "combination": null,
       "source_page": 45,
       "is_active": true
     },
     {
       "qualification_code": null,
-      "name": "Bachelor of Arts (BA)",
+      "name": "Bachelor of Arts: Afrikaans",
       "faculty": "Humanities",
       "qualification_type": "degree",
       "duration_years": 3,
@@ -843,13 +1643,17 @@
           }
         ]
       },
-      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). Admitted to the degree; majors chosen within it. Majors include Afrikaans, African Languages, Arabic, Art History, Chinese Studies, Classical Studies, English, Film & Television Studies, French, German, Hebrew, History, Italian, Linguistics, Media & Writing, Music, Portuguese, Spanish, Theatre & Dance Studies, Xhosa; the Social Science majors; and approved cross-faculty majors. Economics, Psychology and Law majors carry additional entry requirements. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
       "source_page": 55,
       "is_active": true
     },
     {
       "qualification_code": null,
-      "name": "Bachelor of Social Science (BSocSc)",
+      "name": "Bachelor of Arts: African Languages & Literatures",
       "faculty": "Humanities",
       "qualification_type": "degree",
       "duration_years": 3,
@@ -870,7 +1674,945 @@
           }
         ]
       },
-      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). Admitted to the degree; majors chosen within it. Majors include African Studies, Anthropology, Economics, Gender Studies, Industrial Sociology, Philosophy, Politics and Governance, Psychology, Social Development, Sociology, The Study of Religions; the Arts majors; and approved cross-faculty majors (e.g. Mathematics, Computer Science, Environmental & Geographical Science). Economics, Psychology and Law majors carry additional entry requirements. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Arabic Language & Literature",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Art History and Discourse of Art",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Chinese Studies",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Classical Studies",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: English",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Film & Television Studies",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: French",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "excludes": [
+          "Business French"
+        ],
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: German",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Hebrew Language & Literature",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: History",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Italian",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Linguistics",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Media & Writing",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Music",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Portuguese",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Spanish",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Theatre & Dance Studies",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Arts: Xhosa Communication",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Arts; choose at least two majors, at least one offered by the Faculty of Humanities. A few pairings are not offered (e.g. French + Business French)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: African Studies",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: Anthropology",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: Economics",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 60
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Economics major requires Mathematics. NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "excludes": [
+          "Organisational Psychology",
+          "Informatics"
+        ],
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: Gender Studies",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: Industrial Sociology",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "excludes": [
+          "Sociology"
+        ],
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: Philosophy",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: Politics and Governance",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: Psychology",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          },
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics"
+          ]
+        }
+      },
+      "notes": "Psychology major requires Mathematics. NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: Social Development",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: Sociology",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "excludes": [
+          "Industrial Sociology"
+        ],
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
+      "source_page": 55,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Social Science: The Study of Religions",
+      "faculty": "Humanities",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 450,
+      "requirements": {
+        "subject_rules": [
+          {
+            "options": [
+              {
+                "subject": "English Home Language",
+                "min_mark": 50
+              },
+              {
+                "subject": "English First Additional Language",
+                "min_mark": 60
+              }
+            ]
+          }
+        ]
+      },
+      "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": {
+        "majors_min": 2,
+        "rule": "Admitted to the Bachelor of Social Science; choose at least two majors, at least one from the Faculty of Humanities. A few pairings are not offered (e.g. Sociology + Industrial Sociology; Economics + Organisational Psychology / Informatics)."
+      },
       "source_page": 55,
       "is_active": true
     },
@@ -909,6 +2651,7 @@
         }
       },
       "notes": "NBT Academic Literacy required (Quantitative Literacy for quantitative majors). NBT QL Upper Intermediate. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 55,
       "is_active": true
     },
@@ -936,6 +2679,7 @@
         ]
       },
       "notes": "Max 80 places; may require an admissions interview. NBT Academic Literacy required (Quantitative Literacy for quantitative majors). min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 55,
       "is_active": true
     },
@@ -963,6 +2707,7 @@
         ]
       },
       "notes": "Leading indicator is the portfolio evaluation; places awarded on merit. NBT Academic Literacy required (Quantitative Literacy for quantitative majors).",
+      "combination": null,
       "source_page": 55,
       "is_active": true
     },
@@ -990,6 +2735,7 @@
         ]
       },
       "notes": "Leading indicator is the audition; places awarded on merit. NBT Academic Literacy required (Quantitative Literacy for quantitative majors).",
+      "combination": null,
       "source_page": 55,
       "is_active": true
     },
@@ -1023,6 +2769,7 @@
         ]
       },
       "notes": "Audition, interview and music theory test required (leading indicator). NSC Music 60% or Unisa Theory Gr V / Practical Gr VII. NBT Academic Literacy required (Quantitative Literacy for quantitative majors).",
+      "combination": null,
       "source_page": 56,
       "is_active": true
     },
@@ -1045,12 +2792,13 @@
         ]
       },
       "notes": "Undergraduate 4-year LLB. NBT AL Proficient and QL Intermediate+ required. International applicants: FPS 510+. min_aps is the Band A 'guaranteed admission' FPS; applicants below it may still receive offers via the weighted WPS (redress) or EDU bands.",
+      "combination": null,
       "source_page": 62,
       "is_active": true
     },
     {
       "qualification_code": null,
-      "name": "Bachelor of Science (BSc)",
+      "name": "Bachelor of Science: Applied Mathematics",
       "faculty": "Science",
       "qualification_type": "degree",
       "duration_years": 3,
@@ -1088,7 +2836,1039 @@
           ]
         }
       },
-      "notes": "FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A. NBTs written for placement, not admission. Where Physical Sciences was not taken, Information Technology or Life Sciences may be doubled for certain majors only. UCT admits to the single BSc degree; majors are chosen within it (some have first-year capacity selection). Majors: Applied Mathematics, Applied Statistics, Archaeology, Artificial Intelligence, Astrophysics, Biochemistry, Biology, Chemistry, Computer Science, Computer Engineering, Business Computing, Environmental & Geographical Science, Genetics, Geology, Human Anatomy & Physiology, Marine Biology, Mathematics, Mathematical Statistics, Ocean & Atmosphere Science, Physics, Quantitative Biology, Statistics & Data Science.",
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Applied Statistics",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Archaeology",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A. Physical Sciences not required for this major; Information Technology or Life Sciences may be doubled in lieu where applicable.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Artificial Intelligence",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "co_majors": [
+          "Computer Science",
+          "Mathematical Statistics",
+          "Mathematics"
+        ],
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Astrophysics",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Biochemistry",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A. Capacity-limited major — selection within first year on academic merit.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Biology",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Chemistry",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Computer Science",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A. Capacity-limited major — selection within first year on academic merit.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Computer Engineering",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Business Computing",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Environmental & Geographical Science",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A. Physical Sciences not required for this major; Information Technology or Life Sciences may be doubled in lieu where applicable.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Genetics",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A. Capacity-limited major — selection within first year on academic merit.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Geology",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Human Anatomy & Physiology",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A. Capacity-limited major — selection within first year on academic merit.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Marine Biology",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Mathematics",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Mathematical Statistics",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Ocean & Atmosphere Science",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Physics",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Quantitative Biology",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "co_majors": [
+          "Biology",
+          "Statistics & Data Science",
+          "Mathematics"
+        ],
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
+      "source_page": 69,
+      "is_active": true
+    },
+    {
+      "qualification_code": null,
+      "name": "Bachelor of Science: Statistics & Data Science",
+      "faculty": "Science",
+      "qualification_type": "degree",
+      "duration_years": 3,
+      "min_aps": 660,
+      "requirements": {
+        "subject_rules": [
+          {
+            "subjects": [
+              "Mathematics"
+            ],
+            "min_mark": 70
+          },
+          {
+            "subjects": [
+              "Physical Sciences"
+            ],
+            "min_mark": 60
+          },
+          {
+            "subjects": [
+              "English Home Language",
+              "English First Additional Language"
+            ],
+            "min_mark": 50
+          }
+        ],
+        "fps": {
+          "required": [
+            "Mathematics",
+            "Physical Sciences"
+          ],
+          "double": [
+            "Mathematics",
+            "Physical Sciences"
+          ]
+        }
+      },
+      "notes": "NBTs written for placement, not admission. FPS out of 800 (Maths + Physical Sciences doubled); min FPS 550 (Band C), 660 Band A.",
+      "combination": {
+        "majors_min": 1,
+        "majors_max": 2,
+        "rule": "Admitted to the Bachelor of Science; take this as a single major or with a second Science major / one approved major from another faculty."
+      },
       "source_page": 69,
       "is_active": true
     }
