@@ -45,6 +45,7 @@ def make_mock_application(pending_challenge=None):
     mock.student_id = VALID_PROFILE_ID
     mock.university_id = uuid.uuid4()
     mock.programme = "BSc Computer Science"
+    mock.programme_id = None
     mock.application_year = 2027
     mock.status = "action_required"
     mock.submitted_at = None

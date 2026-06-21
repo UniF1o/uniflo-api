@@ -13,6 +13,7 @@ VALID_USER_ID = "a1b2c3d4-0000-0000-0000-000000000000"
 VALID_UNIVERSITY_ID = uuid.uuid4()
 VALID_APPLICATION_ID = uuid.uuid4()
 VALID_PROFILE_ID = uuid.uuid4()
+VALID_PROGRAMME_ID = uuid.uuid4()
 
 
 def auth_headers():
@@ -57,12 +58,13 @@ def make_mock_job():
     return mock
 
 
-def make_mock_application():
+def make_mock_application(programme_id=None):
     mock = MagicMock()
     mock.id = VALID_APPLICATION_ID
     mock.student_id = VALID_PROFILE_ID
     mock.university_id = VALID_UNIVERSITY_ID
     mock.programme = "BSc Computer Science"
+    mock.programme_id = programme_id
     mock.application_year = 2027
     mock.status = "pending"
     mock.submitted_at = None
@@ -71,16 +73,26 @@ def make_mock_application():
     mock.latest_job = make_mock_job()
     mock.pending_challenge = None
     mock.choices = [
-        _make_choice(1, "BSc Computer Science"),
+        _make_choice(1, "BSc Computer Science", programme_id=programme_id),
         _make_choice(2, "BEng Electrical"),
     ]
     return mock
 
 
-def _make_choice(choice_number, programme, eligible=None):
+def make_mock_programme(is_active=True, university_id=None, name="BSc Computer Science"):
+    mock = MagicMock()
+    mock.id = VALID_PROGRAMME_ID
+    mock.name = name
+    mock.is_active = is_active
+    mock.university_id = university_id or VALID_UNIVERSITY_ID
+    return mock
+
+
+def _make_choice(choice_number, programme, programme_id=None, eligible=None):
     mock = MagicMock()
     mock.choice_number = choice_number
     mock.programme = programme
+    mock.programme_id = programme_id
     mock.eligible = eligible
     return mock
 
@@ -495,3 +507,179 @@ def test_applications_require_auth():
 
     response = client.get(f"/applications/{VALID_APPLICATION_ID}")
     assert response.status_code == 401
+
+
+# --- programme_id service tests ---
+# These patch Application/ApplicationChoice/ApplicationJob at the service module level
+# so SQLModel's strict __setattr__ (which blocks transient attribute assignment on
+# freshly constructed table instances) doesn't interfere with the tests.
+
+def _make_session_for_create(university, programme=None):
+    """Mock session wired for create_application calls."""
+    mock_session = MagicMock()
+    mock_session.exec.return_value.first.return_value = make_mock_profile()
+    mock_session.exec.return_value.all.return_value = []
+
+    def _get(model, id):
+        model_name = model.__name__ if hasattr(model, "__name__") else str(model)
+        if model_name == "University":
+            return university
+        if model_name == "Programme":
+            return programme
+        return None
+
+    mock_session.get.side_effect = _get
+    return mock_session
+
+
+def _run_create(data, mock_session):
+    from app.api.applications import service
+    with patch("app.api.applications.service.Application") as MockApp, \
+         patch("app.api.applications.service.ApplicationChoice") as MockChoice, \
+         patch("app.api.applications.service.ApplicationJob") as MockJob, \
+         patch("app.api.applications.service.get_choices", return_value=[]):
+        mock_app = MagicMock()
+        MockApp.return_value = mock_app
+        service.create_application(mock_session, VALID_USER_ID, data)
+        return MockApp, MockChoice, MockJob, mock_app
+
+
+def test_create_application_programme_id_derives_name():
+    """When programme_id is supplied the application is constructed with the catalogue name."""
+    from app.api.applications.schemas import ApplicationCreate
+
+    programme = make_mock_programme(name="Bachelor of Science")
+    mock_session = _make_session_for_create(make_mock_university(), programme)
+
+    data = ApplicationCreate(
+        university_id=VALID_UNIVERSITY_ID,
+        programme="whatever the client sent",
+        programme_id=VALID_PROGRAMME_ID,
+        application_year=2027,
+    )
+    MockApp, MockChoice, _, _ = _run_create(data, mock_session)
+
+    _, kwargs = MockApp.call_args
+    assert kwargs["programme"] == "Bachelor of Science"
+    assert kwargs["programme_id"] == VALID_PROGRAMME_ID
+
+
+def test_create_application_free_text_programme_id_null():
+    """Free-text-only create constructs the application with programme_id = None."""
+    from app.api.applications.schemas import ApplicationCreate
+
+    mock_session = _make_session_for_create(make_mock_university())
+
+    data = ApplicationCreate(
+        university_id=VALID_UNIVERSITY_ID,
+        programme="BSc Computer Science",
+        application_year=2027,
+    )
+    MockApp, _, _, _ = _run_create(data, mock_session)
+
+    _, kwargs = MockApp.call_args
+    assert kwargs["programme"] == "BSc Computer Science"
+    assert kwargs["programme_id"] is None
+
+
+def test_create_application_programme_id_wrong_university():
+    """programme_id belonging to a different university is rejected with 422."""
+    import pytest
+    from fastapi import HTTPException
+
+    from app.api.applications import service
+    from app.api.applications.schemas import ApplicationCreate
+
+    programme = make_mock_programme(university_id=uuid.uuid4())
+    mock_session = _make_session_for_create(make_mock_university(), programme)
+
+    data = ApplicationCreate(
+        university_id=VALID_UNIVERSITY_ID,
+        programme="BSc Computer Science",
+        programme_id=VALID_PROGRAMME_ID,
+        application_year=2027,
+    )
+    with pytest.raises(HTTPException) as exc:
+        service.create_application(mock_session, VALID_USER_ID, data)
+    assert exc.value.status_code == 422
+    assert exc.value.detail == "programme_not_found_or_invalid"
+
+
+def test_create_application_inactive_programme_rejected():
+    """Inactive programmes are rejected with 422."""
+    import pytest
+    from fastapi import HTTPException
+
+    from app.api.applications import service
+    from app.api.applications.schemas import ApplicationCreate
+
+    programme = make_mock_programme(is_active=False)
+    mock_session = _make_session_for_create(make_mock_university(), programme)
+
+    data = ApplicationCreate(
+        university_id=VALID_UNIVERSITY_ID,
+        programme="BSc Computer Science",
+        programme_id=VALID_PROGRAMME_ID,
+        application_year=2027,
+    )
+    with pytest.raises(HTTPException) as exc:
+        service.create_application(mock_session, VALID_USER_ID, data)
+    assert exc.value.status_code == 422
+    assert exc.value.detail == "programme_not_found_or_invalid"
+
+
+def test_create_application_with_additional_programme_ids():
+    """Primary id + additional ids: ApplicationChoice is constructed with catalogue names."""
+    from app.api.applications.schemas import ApplicationCreate
+
+    second_id = uuid.uuid4()
+    primary = make_mock_programme(name="BSc Computer Science")
+    secondary = make_mock_programme(name="BEng Electrical")
+    secondary.id = second_id
+
+    mock_session = _make_session_for_create(make_mock_university())
+
+    def _get(model, id):
+        model_name = model.__name__ if hasattr(model, "__name__") else str(model)
+        if model_name == "University":
+            return make_mock_university()
+        if model_name == "Programme":
+            return primary if id == VALID_PROGRAMME_ID else secondary
+        return None
+
+    mock_session.get.side_effect = _get
+
+    data = ApplicationCreate(
+        university_id=VALID_UNIVERSITY_ID,
+        programme="any",
+        programme_id=VALID_PROGRAMME_ID,
+        additional_programmes=["any second"],
+        additional_programme_ids=[second_id],
+        application_year=2027,
+    )
+    _, MockChoice, _, _ = _run_create(data, mock_session)
+
+    calls = MockChoice.call_args_list
+    choice1_kw = calls[0][1]
+    choice2_kw = calls[1][1]
+    assert choice1_kw["programme"] == "BSc Computer Science"
+    assert choice1_kw["programme_id"] == VALID_PROGRAMME_ID
+    assert choice2_kw["programme"] == "BEng Electrical"
+    assert choice2_kw["programme_id"] == second_id
+
+
+def test_create_application_mismatched_additional_lengths_rejected():
+    """Mismatched additional_programmes / additional_programme_ids lengths are rejected."""
+    import pytest
+    from pydantic import ValidationError
+
+    from app.api.applications.schemas import ApplicationCreate
+
+    with pytest.raises(ValidationError):
+        ApplicationCreate(
+            university_id=VALID_UNIVERSITY_ID,
+            programme="BSc Computer Science",
+            additional_programmes=["Prog A", "Prog B"],
+            additional_programme_ids=[uuid.uuid4()],  # length mismatch
+            application_year=2027,
+        )

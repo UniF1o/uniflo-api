@@ -3,7 +3,7 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
-from pydantic import BaseModel, ConfigDict, field_validator
+from pydantic import BaseModel, ConfigDict, field_validator, model_validator
 
 
 class ApplicationStatus(str, Enum):
@@ -34,6 +34,7 @@ class ApplicationChoiceRead(BaseModel):
 
     choice_number: int
     programme: str
+    programme_id: Optional[uuid.UUID] = None
     eligible: Optional[bool] = None
 
 
@@ -58,6 +59,7 @@ class ApplicationRead(BaseModel):
     student_id: uuid.UUID
     university_id: uuid.UUID
     programme: str
+    programme_id: Optional[uuid.UUID] = None
     application_year: int
     status: Optional[ApplicationStatus]
     submitted_at: Optional[datetime]
@@ -144,8 +146,10 @@ class ChallengeSupplyRequest(BaseModel):
 class ApplicationCreate(BaseModel):
     university_id: uuid.UUID
     programme: str
+    programme_id: Optional[uuid.UUID] = None
     # Optional 2nd/3rd choices, in preference order after `programme`.
     additional_programmes: Optional[list[str]] = None
+    additional_programme_ids: Optional[list[uuid.UUID]] = None
     application_year: int
 
     @field_validator("programme")
@@ -165,6 +169,29 @@ class ApplicationCreate(BaseModel):
                 f"At most {MAX_ADDITIONAL_PROGRAMMES} additional programmes allowed"
             )
         return [_validate_programme(p) for p in v]
+
+    @field_validator("additional_programme_ids")
+    @classmethod
+    def validate_additional_programme_ids(
+        cls, v: Optional[list[uuid.UUID]]
+    ) -> Optional[list[uuid.UUID]]:
+        if v is None:
+            return v
+        if len(v) > MAX_ADDITIONAL_PROGRAMMES:
+            raise ValueError(
+                f"At most {MAX_ADDITIONAL_PROGRAMMES} additional programme ids allowed"
+            )
+        return v
+
+    @model_validator(mode="after")
+    def validate_parallel_lengths(self) -> "ApplicationCreate":
+        progs = self.additional_programmes
+        ids = self.additional_programme_ids
+        if progs is not None and ids is not None and len(progs) != len(ids):
+            raise ValueError(
+                "additional_programmes and additional_programme_ids must be the same length"
+            )
+        return self
 
     @field_validator("application_year")
     @classmethod

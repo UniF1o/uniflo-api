@@ -18,6 +18,7 @@ from app.models.application_choice import ApplicationChoice
 from app.models.application_job import ApplicationJob
 from app.models.field_mapping import FieldMappingRecord
 from app.models.portal_challenge import PortalChallenge
+from app.models.programme import Programme
 from app.models.student_profile import StudentProfile
 from app.models.university import University
 
@@ -83,6 +84,16 @@ def get_choices(
 _REQUIRED_PROFILE_FIELDS = REQUIRED_PROFILE_FIELDS
 
 
+def _resolve_programme(
+    session: Session, programme_id: uuid.UUID, university_id: uuid.UUID
+) -> Programme:
+    """Load a programme and assert it is active and belongs to the university."""
+    prog = session.get(Programme, programme_id)
+    if not prog or not prog.is_active or prog.university_id != university_id:
+        raise HTTPException(status_code=422, detail="programme_not_found_or_invalid")
+    return prog
+
+
 def create_application(
     session: Session, user_id: str, data: ApplicationCreate
 ) -> Application:
@@ -113,11 +124,34 @@ def create_application(
             },
         )
 
+    # Resolve primary programme — id is authoritative; name is derived from catalogue
+    # when programme_id is supplied, and taken from the free-text field otherwise.
+    programme_name = data.programme
+    resolved_programme_id: Optional[uuid.UUID] = data.programme_id
+    if data.programme_id is not None:
+        prog = _resolve_programme(session, data.programme_id, data.university_id)
+        programme_name = prog.name
+
+    # Resolve additional choices: zip ids + names (ids win when both are present)
+    additional_progs = data.additional_programmes or []
+    additional_ids = data.additional_programme_ids or []
+    n_additional = max(len(additional_progs), len(additional_ids))
+    additional_choices: list[tuple[str, Optional[uuid.UUID]]] = []
+    for i in range(n_additional):
+        prog_id = additional_ids[i] if i < len(additional_ids) else None
+        prog_name = additional_progs[i] if i < len(additional_progs) else None
+        if prog_id is not None:
+            prog = _resolve_programme(session, prog_id, data.university_id)
+            additional_choices.append((prog.name, prog_id))
+        else:
+            additional_choices.append((prog_name, None))  # type: ignore[arg-type]
+
     # create application, job, and programme choices in the same transaction
     application = Application(
         student_id=profile.id,
         university_id=data.university_id,
-        programme=data.programme,
+        programme=programme_name,
+        programme_id=resolved_programme_id,
         application_year=data.application_year,
         status=ApplicationStatus.PENDING,
         created_at=datetime.now(timezone.utc),
@@ -132,14 +166,24 @@ def create_application(
     )
     session.add(job)
 
-    # Choice 1 mirrors `programme`; 2+ come from additional_programmes.
-    programmes = [data.programme, *(data.additional_programmes or [])]
-    for choice_number, programme in enumerate(programmes, start=1):
+    # Choice 1 mirrors the primary programme
+    session.add(
+        ApplicationChoice(
+            application_id=application.id,
+            choice_number=1,
+            programme=programme_name,
+            programme_id=resolved_programme_id,
+        )
+    )
+
+    # Choices 2+ from additional
+    for choice_number, (name, prog_id) in enumerate(additional_choices, start=2):
         session.add(
             ApplicationChoice(
                 application_id=application.id,
                 choice_number=choice_number,
-                programme=programme,
+                programme=name,
+                programme_id=prog_id,
             )
         )
 
