@@ -11,3 +11,7 @@ def test_model_imports():
 def test_programme_has_qualification_type_and_duration():
     assert hasattr(Programme, "qualification_type")
     assert hasattr(Programme, "duration_years")
+
+
+def test_programme_has_combination():
+    assert hasattr(Programme, "combination")

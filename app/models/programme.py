@@ -30,6 +30,12 @@ class Programme(SQLModel, table=True):
         default_factory=dict, sa_column=Column(JSONB, nullable=False, server_default="{}")
     )
     notes: Optional[str] = Field(default=None, nullable=True)
+    # Major-combination metadata (descriptive only; the matcher never reads it):
+    # {majors_min?, majors_max?, co_majors?[], excludes?[], rule?}. Used by UCT's
+    # open-major degrees to convey "pick N majors", co-majors, and excluded pairs.
+    combination: Optional[Any] = Field(
+        default=None, sa_column=Column(JSONB, nullable=True)
+    )
     is_active: bool = Field(default=False)
     source_page: Optional[int] = Field(default=None, nullable=True)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

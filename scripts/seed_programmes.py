@@ -52,6 +52,17 @@ def _parse_date(s: str | None) -> date | None:
     return date.fromisoformat(s)
 
 
+def _missing_programmes(existing, file_entries):
+    """Active programmes (from `existing`) whose (qualification_code, name) is not
+    present in `file_entries` — i.e. removed/renamed in the JSON and to be
+    deactivated. Pure (no DB) so it is unit-testable."""
+    seen = {(e.get("qualification_code"), e["name"]) for e in file_entries}
+    return [
+        p for p in existing
+        if p.is_active and (p.qualification_code, p.name) not in seen
+    ]
+
+
 def seed_file(filename: str, allow_stale: bool = False) -> None:
     key = os.path.basename(filename)
     entry = REGISTRY.get(key)
@@ -163,6 +174,7 @@ def seed_file(filename: str, allow_stale: bool = False) -> None:
                 existing_prog.min_aps = prog_data.get("min_aps")
                 existing_prog.requirements = prog_data.get("requirements", {})
                 existing_prog.notes = prog_data.get("notes")
+                existing_prog.combination = prog_data.get("combination")
                 existing_prog.is_active = prog_data.get("is_active", False)
                 existing_prog.source_page = prog_data.get("source_page")
                 existing_prog.updated_at = now
@@ -179,6 +191,7 @@ def seed_file(filename: str, allow_stale: bool = False) -> None:
                     min_aps=prog_data.get("min_aps"),
                     requirements=prog_data.get("requirements", {}),
                     notes=prog_data.get("notes"),
+                    combination=prog_data.get("combination"),
                     is_active=prog_data.get("is_active", False),
                     source_page=prog_data.get("source_page"),
                     created_at=now,
@@ -187,8 +200,27 @@ def seed_file(filename: str, allow_stale: bool = False) -> None:
                 session.add(new_prog)
                 print(f"    Created: {prog_name}")
 
+        # Sync: deactivate active programmes for this (university, intake) that are
+        # no longer present in the file (restructures/renames). Reversible — sets
+        # is_active=False rather than deleting; the matcher only returns active rows.
+        existing_for_year = session.exec(
+            select(Programme).where(
+                Programme.university_id == uni.id,
+                Programme.intake_year == intake_year,
+            )
+        ).all()
+        to_deactivate = _missing_programmes(existing_for_year, programmes_data)
+        for prog in to_deactivate:
+            prog.is_active = False
+            prog.updated_at = datetime.now(timezone.utc)
+            print(f"    Deactivated (not in file): {prog.name}")
+        deactivated = len(to_deactivate)
+
         session.commit()
-        print(f"Done - {len(programmes_data)} programmes processed for {university_name} intake {intake_year}.")
+        print(
+            f"Done - {len(programmes_data)} programmes processed for {university_name} "
+            f"intake {intake_year}; {deactivated} deactivated."
+        )
 
 
 if __name__ == "__main__":

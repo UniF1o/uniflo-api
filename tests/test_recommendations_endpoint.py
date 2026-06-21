@@ -237,6 +237,7 @@ def _make_catalogue_response():
     from app.api.recommendations.schemas import (
         FacultyGroup,
         ProgrammeCatalogueItem,
+        ProgrammeCombination,
         ProgrammesCatalogueResponse,
     )
 
@@ -257,6 +258,9 @@ def _make_catalogue_response():
                         duration_years=5,
                         min_aps=33,
                         notes=None,
+                        combination=ProgrammeCombination(
+                            majors_min=1, majors_max=2, rule="Take with a second major."
+                        ),
                     ),
                     ProgrammeCatalogueItem(
                         id=PROGRAMME_ID_2,
@@ -299,6 +303,10 @@ def test_catalogue_happy_path():
     assert faculty["programmes"][0]["qualification_type"] == "degree"
     assert faculty["programmes"][0]["duration_years"] == 5
     assert faculty["programmes"][1]["qualification_type"] == "diploma"
+    # combination round-trips
+    combo = faculty["programmes"][0]["combination"]
+    assert combo["majors_min"] == 1 and combo["majors_max"] == 2
+    assert faculty["programmes"][1]["combination"] is None
 
 
 def test_catalogue_404_unknown_university():
