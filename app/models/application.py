@@ -16,6 +16,9 @@ class Application(SQLModel, table=True):
         foreign_key="universities.id", nullable=False, index=True
     )
     programme: str
+    programme_id: Optional[uuid.UUID] = Field(
+        default=None, foreign_key="programmes.id", nullable=True, index=True
+    )
     application_year: int
     status: Optional[str]
     # Consent timestamps — set when the student explicitly accepts the portal's

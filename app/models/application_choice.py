@@ -27,4 +27,7 @@ class ApplicationChoice(SQLModel, table=True):
     )
     choice_number: int = Field(nullable=False)
     programme: str = Field(nullable=False)
+    programme_id: Optional[uuid.UUID] = Field(
+        default=None, foreign_key="programmes.id", nullable=True, index=True
+    )
     eligible: Optional[bool] = Field(default=None, nullable=True)
