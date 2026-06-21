@@ -30,7 +30,12 @@ Python 3.12, venv at `.venv/`. Install deps with `pip install -r requirements-de
 
 ## Architecture
 
-**UniFlo** is a FastAPI backend that lets South African school leavers apply to multiple universities through a single profile. Phase 3 (not yet built) will use Playwright bots to fill in each university portal automatically.
+**UniFlo** is a FastAPI backend that lets South African school leavers apply to multiple universities through a single profile. Playwright bots fill in each university portal automatically — **Phase 3 is built**: real adapters for UJ, UP, Wits, and UCT live in `app/automation/adapters/`. **Phase 4** added the course-recommendation engine (`GET /recommendations`) and the `faculties`/`programmes` catalogue (`GET /universities/{id}/programmes`). **Phase 5 is planned**: structured `programme_id` selection on applications and `grade_12_final` applicant-type inclusivity — see `docs/phase-5/partner-b-phase-5-plan.md`.
+
+> The executed phase track diverged from `uniflo-web/docs/build-action-plan.md`'s
+> original numbering (its "Phase 4" was beta hardening); see that file's "Phase numbering
+> note". Beta hardening (POPIA, security audit, load test, paid tiers) is still pending,
+> sequenced after Phase 5.
 
 ### Request lifecycle
 
@@ -60,9 +65,9 @@ Routes never touch the DB directly. Services raise `HTTPException` for domain er
 
 The `documents` Supabase Storage bucket is private. The DB stores `storage_path` (e.g. `<user_id>/<type>/<uuid>.pdf`); a 1-hour signed URL is minted on every read. Uploads use `SUPABASE_SERVICE_ROLE_KEY` — the anon key is rejected by Storage RLS. Storage paths use a UUID, not the user-supplied filename.
 
-### Application automation (Phase 2 stub)
+### Application automation
 
-`POST /applications` enqueues `process_application()` as a FastAPI `BackgroundTask`. With `FAKE_AUTOMATION=true` (current default), it simulates a portal submission with a random delay and 80% success rate. Set `FAKE_AUTOMATION=false` to skip the stub entirely; Phase 3 will replace it with real Playwright adapter calls.
+`POST /applications` enqueues `process_application()` (`app/api/automation/background.py`) as a FastAPI `BackgroundTask`. It routes to the **real Playwright runtime** (the Phase 3 adapters in `app/automation/`) or to the **Phase 2 simulation** when `FAKE_AUTOMATION=true` — the dev default, which fakes a portal submission (random delay, 80% success) without touching a real portal. The real path is additionally **submit-gated** by `AUTOMATION_ALLOW_SUBMIT`, so it can drive a portal end to end without clicking the final submit. ⚠️ The simulation is the safe default; only set `FAKE_AUTOMATION=false` deliberately, and never run a real submit against a live portal from a test account.
 
 ### Auth model detail
 
