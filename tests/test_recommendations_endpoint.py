@@ -324,3 +324,64 @@ def test_catalogue_404_unknown_university():
     app.dependency_overrides.clear()
 
     assert response.status_code == 404
+
+
+# Task 3 confirming tests — catalogue picker-readiness
+# No backend changes required; these document the existing guarantees.
+
+
+def test_catalogue_is_public_no_auth_required():
+    """GET /universities/{id}/programmes is in the public-route list — no JWT needed."""
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.recommendations.service.list_university_programmes") as mock_fn:
+        mock_fn.return_value = _make_catalogue_response()
+        # Deliberately omit any Authorization header
+        response = client.get(f"/universities/{UNIVERSITY_ID}/programmes")
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+
+
+def test_catalogue_close_date_per_faculty_round_trips():
+    """Faculty close_date is exposed in the response so the frontend can compute open/closed."""
+    from datetime import date
+
+    from app.api.recommendations.schemas import (
+        FacultyGroup,
+        ProgrammeCatalogueItem,
+        ProgrammesCatalogueResponse,
+    )
+
+    catalogue = ProgrammesCatalogueResponse(
+        university_id=UNIVERSITY_ID,
+        intake_year=2027,
+        faculties=[
+            FacultyGroup(
+                faculty_id=str(uuid.uuid4()),
+                faculty_name="Engineering",
+                close_date=date(2026, 9, 30),
+                programmes=[
+                    ProgrammeCatalogueItem(
+                        id=PROGRAMME_ID_1,
+                        name="BEng Civil",
+                        qualification_code="X",
+                        min_aps=30,
+                        notes=None,
+                    )
+                ],
+            )
+        ],
+    )
+
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.recommendations.service.list_university_programmes") as mock_fn:
+        mock_fn.return_value = catalogue
+        response = client.get(f"/universities/{UNIVERSITY_ID}/programmes")
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    assert response.json()["faculties"][0]["close_date"] == "2026-09-30"
