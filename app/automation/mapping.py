@@ -200,7 +200,7 @@ def _choice(choices: Any, application: Any, n: int) -> Any:
 
 # Portals that implement the completed-matric / gap-year automation branch.
 # Extended in Task 6 as each adapter gains completed-matric support.
-_COMPLETED_MATRIC_SLUGS: frozenset[str] = frozenset({"up", "uj", "wits"})
+_COMPLETED_MATRIC_SLUGS: frozenset[str] = frozenset({"up", "uj", "wits", "uct"})
 
 
 def _applicant_branch(profile: Any, records: list[Any]) -> str:
@@ -223,8 +223,8 @@ def _guard_applicant_type(
     """Raise ValueError for applicant types the automation can't handle.
 
     Universally blocked: at-university / transfer, upgrader (separate branch),
-    postgrad. Completed-matric / gap-year is permitted for UP, UJ, and Wits
-    (Task 5 / Task 6); UCT still requires the applicant to be in Grade 12."""
+    postgrad. Completed-matric / gap-year is permitted for all four portals
+    as of Task 5 / Task 6 (UP, UJ, Wits, UCT)."""
     activity = str(_g(profile, "current_activity") or "").lower()
     if activity and any(
         k in activity for k in ("universit", "upgrad", "postgrad")
@@ -344,20 +344,32 @@ def _uct_mapping(
     the shared contact chain (UCT wants a P/G + fee payer; 'guardian is also
     fee payer' keeps step 4 to one person). Subjects carry the Gr11 final %;
     Grade 12 **April** marks come from a `grade_12_april` record when captured
-    (defaulting to the Gr11 final % otherwise) and the optional **June** marks
-    from a `grade_12_june` record — merged by subject name. Redress answers
-    pass through from `profile.redress_factors` (keys match the
-    uct.fields.json redress_* ids, with or without the prefix)."""
+    and the optional **June** marks from a `grade_12_june` record — merged by
+    subject name. Redress answers pass through from `profile.redress_factors`
+    (keys match the uct.fields.json redress_* ids, with or without the prefix).
+
+    Branch-aware (Task 6): completed-matric applicants use the grade_12_final
+    record for the subject base (% column = Gr11 Final %) and, when no
+    grade_12_april record is present, use the grade_12_final marks as the
+    April substitute. matric_year already prefers grade_12_final via
+    _matric_year(). Step 7 (Post School Activity) fields for completed-matric
+    are unverified — flagged in docs/phase-5/task-6-uct.md ⚠️."""
     guardian = _resolve_contact(contacts, "guardian")
     records = _as_records(academic_record)
     gr11 = _pick_record(records, "grade_11_final")
+    gr12_final = _pick_record(records, "grade_12_final", fallback=False)
     app_year = _g(application, "application_year")
     matric_year = _matric_year(records, app_year)
 
-    subjects = _coerce_subjects(_g(gr11, "subjects"))
-    april = _marks_by_subject(
-        _pick_record(records, "grade_12_april", fallback=False)
-    )
+    is_completed = _applicant_branch(profile, records) == "completed_matric"
+    subj_record = gr12_final if (is_completed and gr12_final is not None) else gr11
+
+    subjects = _coerce_subjects(_g(subj_record, "subjects"))
+    april_record = _pick_record(records, "grade_12_april", fallback=False)
+    if april_record is None and is_completed and gr12_final is not None:
+        # No separate April record — use the final marks as the best substitute
+        april_record = gr12_final
+    april = _marks_by_subject(april_record)
     june = _marks_by_subject(
         _pick_record(records, "grade_12_june", fallback=False)
     )
@@ -402,11 +414,11 @@ def _uct_mapping(
         "guardian_email": _g(guardian, "email"),
         "guardian_phone": _g(guardian, "phone"),
         "guardian_is_fee_payer": True,
-        # step 5 — school + subjects
+        # step 5 — school + subjects (branch-aware)
         "matric_year": str(matric_year) if matric_year is not None else None,
         "school_terms": "4 Terms",
         "school_qualification": "NSC(DBE, IEB or SACAI)",
-        "school": _g(gr11, "institution"),
+        "school": _g(subj_record, "institution") or _g(gr11, "institution"),
         "school_province": _title_case(_g(profile, "province")),
         "subjects": subjects,
         # step 6 / 11 / 12 — switches
