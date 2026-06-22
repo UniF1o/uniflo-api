@@ -25,7 +25,9 @@ from app.models.student_profile import StudentProfile
 from app.models.university import University
 
 # Preference order for "best available" record selection.
-_RECORD_PREFERENCE = ["grade_12_june", "grade_12_april", "grade_11_final"]
+# grade_12_final (completed NSC) is the most authoritative — it wins over all
+# in-progress records when a student has already sat their final exams.
+_RECORD_PREFERENCE = ["grade_12_final", "grade_12_june", "grade_12_april", "grade_11_final"]
 
 # Maximum possible APS per scoring method.
 # up_aps: best 6 at level 7 = 42. wits_aps: best 6 others (Eng+Maths at 8+2, four

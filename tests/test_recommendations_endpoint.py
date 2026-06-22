@@ -330,6 +330,96 @@ def test_catalogue_404_unknown_university():
 # No backend changes required; these document the existing guarantees.
 
 
+# Task 4 confirming tests — grade_12_final record type + best-available ordering
+
+
+def test_best_available_prefers_grade_12_final_when_present():
+    """_best_available_record returns grade_12_final first when the student has one."""
+    import uuid as _uuid
+
+    from app.api.recommendations import service as rec_service
+
+    profile_id = _uuid.uuid4()
+    final_record = MagicMock()
+    final_record.record_type = "grade_12_final"
+
+    session = MagicMock()
+    # First exec call (grade_12_final) returns the record; function stops there.
+    session.exec.return_value.first.return_value = final_record
+
+    result = rec_service._best_available_record(session, profile_id, record_type=None)
+    assert result is final_record
+
+
+def test_best_available_falls_back_to_june_when_final_absent():
+    """When grade_12_final is absent, grade_12_june is the next choice."""
+    import uuid as _uuid
+
+    from app.api.recommendations import service as rec_service
+
+    profile_id = _uuid.uuid4()
+    june_record = MagicMock()
+    june_record.record_type = "grade_12_june"
+
+    session = MagicMock()
+    # First call (grade_12_final) → None; second call (grade_12_june) → june_record.
+    session.exec.return_value.first.side_effect = [None, june_record]
+
+    result = rec_service._best_available_record(session, profile_id, record_type=None)
+    assert result is june_record
+
+
+def test_best_available_grade_12_final_beats_june_and_april():
+    """grade_12_final is returned even when june and april records also exist."""
+    import uuid as _uuid
+
+    from app.api.recommendations import service as rec_service
+
+    profile_id = _uuid.uuid4()
+    final_record = MagicMock()
+    final_record.record_type = "grade_12_final"
+
+    session = MagicMock()
+    # Only one exec call needed — grade_12_final found immediately.
+    session.exec.return_value.first.return_value = final_record
+
+    result = rec_service._best_available_record(session, profile_id, record_type=None)
+    assert result.record_type == "grade_12_final"
+    # Confirm only one DB query was made (found on first preference).
+    assert session.exec.call_count == 1
+
+
+def test_recommendations_record_type_used_echoes_grade_12_final():
+    """`record_type_used` in the recommendations response echoes grade_12_final."""
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    from app.api.recommendations.schemas import RecommendationsResponse
+
+    response_obj = RecommendationsResponse(
+        university_id=UNIVERSITY_ID,
+        intake_year=2027,
+        record_type_used="grade_12_final",
+        aps=36,
+        aps_max=42,
+        programmes=[],
+    )
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.recommendations.service.get_recommendations"
+    ) as mock_fn:
+        _mock_auth(mock_decode)
+        mock_fn.return_value = response_obj
+        response = client.get(
+            f"/recommendations?university_id={UNIVERSITY_ID}",
+            headers=_auth_headers(),
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    assert response.json()["record_type_used"] == "grade_12_final"
+
+
 def test_catalogue_is_public_no_auth_required():
     """GET /universities/{id}/programmes is in the public-route list — no JWT needed."""
     mock_session = MagicMock()

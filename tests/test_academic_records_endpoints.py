@@ -363,6 +363,43 @@ def test_get_record_grade_12_april_none():
     assert response.json() is None
 
 
+# POST with record_type=grade_12_final is accepted and round-trips
+def test_create_record_grade_12_final():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.academic_records.service.upsert_record"
+    ) as mock_upsert:
+        mock_auth(mock_decode)
+        mock_upsert.return_value = make_mock_record("grade_12_final")
+        payload = {**VALID_PAYLOAD, "record_type": "grade_12_final"}
+        response = client.post("/academic-records", json=payload, headers=auth_headers())
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 201
+    assert response.json()["record_type"] == "grade_12_final"
+
+
+# GET ?record_type=grade_12_final returns the final record
+def test_get_record_grade_12_final():
+    mock_session = MagicMock()
+    app.dependency_overrides[get_session] = lambda: mock_session
+
+    with patch("app.api.middleware.auth.jwt.decode") as mock_decode, patch(
+        "app.api.academic_records.service.get_record"
+    ) as mock_get:
+        mock_auth(mock_decode)
+        mock_get.return_value = make_mock_record("grade_12_final")
+        response = client.get(
+            "/academic-records?record_type=grade_12_final", headers=auth_headers()
+        )
+
+    app.dependency_overrides.clear()
+    assert response.status_code == 200
+    assert response.json()["record_type"] == "grade_12_final"
+
+
 # PATCH ?record_type=grade_12_april updates the April record
 def test_patch_record_grade_12_april():
     mock_session = MagicMock()
