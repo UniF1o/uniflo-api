@@ -1,12 +1,12 @@
-"""Completed-matric / gap-year branch selection and UP mapping.
+"""Completed-matric / gap-year branch selection and UP / UJ / Wits mapping.
 
 Verifies:
 - _applicant_branch returns the correct branch from record type and
   current_activity.
-- _guard_applicant_type permits completed-matric for UP, blocks
-  at-university / upgrader / postgrad for all portals, and blocks
-  completed-matric for portals that haven't built the branch yet.
-- build_field_mapping (UP) produces completed-matric field values
+- _guard_applicant_type permits completed-matric for UP, UJ, and Wits; blocks
+  at-university / upgrader / postgrad for all portals; and blocks
+  completed-matric for portals that haven't built the branch yet (UCT).
+- build_field_mapping (UP, UJ, Wits) produces completed-matric field values
   when the branch is completed_matric.
 """
 
@@ -174,9 +174,13 @@ def test_guard_permits_employed_for_uj():
     _guard_applicant_type(_EmployedProfile(), "uj", [])
 
 
-def test_guard_blocks_completed_matric_for_wits():
-    with pytest.raises(ValueError):
-        _guard_applicant_type(_EmployedProfile(), "wits", [])
+def test_guard_permits_gap_year_for_wits():
+    # Task 6 — Wits now implements the completed-matric branch.
+    _guard_applicant_type(_GapYearProfile(), "wits", [_GR12_FINAL])
+
+
+def test_guard_permits_employed_for_wits():
+    _guard_applicant_type(_EmployedProfile(), "wits", [])
 
 
 def test_guard_blocks_completed_matric_for_uct():
@@ -315,3 +319,81 @@ def test_uj_current_learner_subjects_from_gr11():
 def test_uj_current_learner_blocked_for_at_university():
     with pytest.raises(ValueError):
         _uj_map(_AtUniversityProfile(), [])
+
+
+# ---------------------------------------------------------------------------
+# Wits mapping — completed-matric branch (Task 6)
+# ---------------------------------------------------------------------------
+
+
+class _Guardian:
+    contact_type = "next_of_kin"
+    title = "mr"
+    first_name = "John"
+    last_name = "Dlamini"
+    phone = "0825550188"
+    email = "john.dlamini.test@gmail.com"
+    relationship = "father"
+    street_address = None
+    suburb = None
+    city = None
+    province = None
+    postal_code = None
+
+
+def _wits_map(profile, records):
+    return build_field_mapping(
+        "wits",
+        profile=profile,
+        application=_Application(),
+        academic_record=records,
+        contacts=[_Guardian()],
+        email="sipho.test@gmail.com",
+    )
+
+
+def test_wits_completed_matric_school_status_key_is_set():
+    m = _wits_map(_GapYearProfile(), [_GR12_FINAL])
+    assert m.values.get("school_status") == "Completed Grd 12 OR Upgrading"
+
+
+def test_wits_current_learner_no_school_status_key():
+    m = _wits_map(_CurrentGr12Profile(), [_GR11])
+    assert "school_status" not in m.values
+
+
+def test_wits_completed_matric_subjects_from_gr12_final():
+    m = _wits_map(_GapYearProfile(), [_GR12_FINAL])
+    maths = next(s for s in m.values["subjects"] if s["name"].upper() == "MATHEMATICS")
+    assert maths["percentage"] == 74  # GR12_FINAL (not GR11's 72)
+
+
+def test_wits_completed_matric_school_from_gr12_final():
+    m = _wits_map(_GapYearProfile(), [_GR12_FINAL])
+    assert m.values.get("school") == "Soshanguve South Secondary School"
+
+
+def test_wits_completed_matric_activity_is_gap_year():
+    m = _wits_map(_GapYearProfile(), [_GR12_FINAL])
+    assert m.values["current_activity"] == "Gap Year"
+
+
+def test_wits_completed_matric_activity_employed_for_working():
+    m = _wits_map(_EmployedProfile(), [_GR12_FINAL])
+    assert m.values["current_activity"] == "Employment Or Occupation"
+
+
+def test_wits_current_learner_activity_is_school():
+    m = _wits_map(_CurrentGr12Profile(), [_GR11])
+    assert m.values["current_activity"] == "School"
+
+
+def test_wits_current_learner_subjects_from_gr11():
+    m = _wits_map(_CurrentGr12Profile(), [_GR11])
+    maths = next(s for s in m.values["subjects"] if s["name"].upper() == "MATHEMATICS")
+    assert maths["percentage"] == 72  # GR11 data
+
+
+def test_wits_current_learner_blocked_for_at_university():
+    with pytest.raises(ValueError):
+        _wits_map(_AtUniversityProfile(), [])

@@ -114,6 +114,11 @@ _EXAM_NUMBER_INPUT = "#VC_OA_STG_SEDH_WITS_EXAMNUM"
 _GR11_SUBJECT = 'select[id="VC_OA_STG_SEDG_SCHOOL_CRSE_NBR${n}"]'
 _GR11_MARK = 'input[id="VC_OA_STG_SEDG_VC_GRADE${n}"]'
 _COPY_GR11_BTN = "#VC_OA_WRK_VC_COPY_GR11_SUBJ"
+# Current School Status radio — $1 = "Completed Grd 12 OR Upgrading"
+# ⚠️ VERIFY selector at first live completed-matric run: only the default ($0 =
+# "Current Grd 12") was walked live. PeopleSoft radio option ordering is
+# deterministic but the $n suffix was not confirmed for this specific control.
+_SCHOOL_STATUS_COMPLETED = '[id="VC_OA_STG_SEDH_VC_OA_SCHL_TYPE$1"]'
 _TERTIARY_FLAG = "#VC_OA_STG_GENL_VC_OA_TERT_FLG"
 _PROG_SELECT = 'select[id="VC_OA_WRK_VC_ACAD_PROG{n}"]'
 _PLAN_SELECT = 'select[id="VC_OA_WRK_VC_ACAD_PLAN{n}"]'
@@ -557,12 +562,18 @@ class WitsAdapter(UniversityAdapter):
         await self._save_and_next(page, "3 Current Activities")
 
     async def _step_secondary(self, page: Page, mapping: FieldMapping) -> None:
-        """Step 4. The South African / Current Grd 12 radios default correctly
-        for matriculants and are left alone. Order: school modal → authority →
-        exam year → month → number → the Gr11 grid → Copy Grade 11 Subjects
-        (the Gr12 list, min 5 subjects, IS required — verified). Every control
-        settles individually: a select's re-render discards sibling values set
-        in the same pass (verified the hard way)."""
+        """Step 4. The South African radio defaults correctly and is left alone.
+        Current School Status: for completed-matric applicants the mapping sets
+        school_status and we click the 'Completed Grd 12 OR Upgrading' radio;
+        for current-Gr12 the default ('Current Grd 12') is left unchanged.
+        Order: school-status radio → school modal → authority → exam year →
+        month → number → the Gr11 grid → Copy Grade 11 Subjects (the Gr12
+        list, min 5 subjects, IS required — verified). Every control settles
+        individually: a select's re-render discards sibling values set in the
+        same pass (verified the hard way)."""
+        if mapping.get("school_status"):
+            await fluid.js_click(page, _SCHOOL_STATUS_COMPLETED)
+            await fluid.settle(page, 600)
         if school := mapping.get("school"):
             await self._find_school(page, str(school))
         if authority := mapping.get("examining_authority"):

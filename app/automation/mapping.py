@@ -200,7 +200,7 @@ def _choice(choices: Any, application: Any, n: int) -> Any:
 
 # Portals that implement the completed-matric / gap-year automation branch.
 # Extended in Task 6 as each adapter gains completed-matric support.
-_COMPLETED_MATRIC_SLUGS: frozenset[str] = frozenset({"up", "uj"})
+_COMPLETED_MATRIC_SLUGS: frozenset[str] = frozenset({"up", "uj", "wits"})
 
 
 def _applicant_branch(profile: Any, records: list[Any]) -> str:
@@ -223,9 +223,8 @@ def _guard_applicant_type(
     """Raise ValueError for applicant types the automation can't handle.
 
     Universally blocked: at-university / transfer, upgrader (separate branch),
-    postgrad. Completed-matric / gap-year is permitted for UP (Task 5); other
-    portals still require the applicant to be currently in Grade 12 until Task 6
-    extends their adapters."""
+    postgrad. Completed-matric / gap-year is permitted for UP, UJ, and Wits
+    (Task 5 / Task 6); UCT still requires the applicant to be in Grade 12."""
     activity = str(_g(profile, "current_activity") or "").lower()
     if activity and any(
         k in activity for k in ("universit", "upgrad", "postgrad")
@@ -555,6 +554,21 @@ def _wits_population(ethnicity: Optional[str]) -> Optional[str]:
     return ethnicity.strip().title()
 
 
+def _wits_activity(profile: Any) -> str:
+    """Map profile current_activity to the Wits Step-3 LOV value.
+
+    Wits LOV (live): Currently upgrading matric / Employment Or Occupation /
+    Gap Year / School / University. The adapter fuzzy-matches via _select_best,
+    but mapping explicitly avoids relying on fuzzy for the completed-matric
+    values whose wording differs from the profile's free text."""
+    activity = str(_g(profile, "current_activity") or "").lower()
+    if "gap" in activity:
+        return "Gap Year"
+    if any(k in activity for k in ("employ", "work", "occupat")):
+        return "Employment Or Occupation"
+    return "School"
+
+
 def _wits_mapping(
     *, profile: Any, application: Any, academic_record: Any, contacts: Any,
     email: Optional[str], choices: Any = None,
@@ -566,7 +580,11 @@ def _wits_mapping(
     kin is required and the portal enforces NOK mobile/email ≠ applicant's
     (preconditioned by the adapter). A mailing address differing from the
     residential one flows to step 9 (Postal) via postal_same=False + the
-    postal_* block; otherwise the portal's 'Same as Domicilium' is used."""
+    postal_* block; otherwise the portal's 'Same as Domicilium' is used.
+
+    Branch-aware (Task 6): completed-matric applicants set school_status to
+    'Completed Grd 12 OR Upgrading' and pull school/subjects from the
+    grade_12_final record (fallback to grade_11_final)."""
     nok = _resolve_contact(contacts, "next_of_kin")
     records = _as_records(academic_record)
     gr11 = _pick_record(records, "grade_11_final")
@@ -574,6 +592,10 @@ def _wits_mapping(
     matric_year = _matric_year(records, app_year)
     nok_first = _g(nok, "first_name") or ""
     postal_same = _g(profile, "mailing_same_as_residential")
+
+    is_completed = _applicant_branch(profile, records) == "completed_matric"
+    gr12_final = _pick_record(records, "grade_12_final", fallback=False)
+    subj_record = gr12_final if (is_completed and gr12_final is not None) else gr11
 
     values: dict[str, Any] = {
         # Create Application ID (also passed via credentials.extra)
@@ -589,14 +611,16 @@ def _wits_mapping(
         "phone": _g(profile, "phone"),
         "application_year": str(app_year) if app_year is not None else None,
         # 3 Current Activities
-        "current_activity": _g(profile, "current_activity") or "School",
+        "current_activity": _wits_activity(profile),
         # 4 Secondary Education
-        "school": _g(gr11, "institution"),
+        # school_status: only set for completed-matric; adapter clicks the radio
+        "school_status": "Completed Grd 12 OR Upgrading" if is_completed else None,
+        "school": _g(subj_record, "institution") or _g(gr11, "institution"),
         "examining_authority": _title_case(_g(profile, "province")),
         "examination_year": str(matric_year) if matric_year is not None else None,
         "examination_month": "November",
         "exam_number": _g(profile, "exam_number"),
-        "subjects": _coerce_subjects(_g(gr11, "subjects")),
+        "subjects": _coerce_subjects(_g(subj_record, "subjects")),
         # 5 Tertiary Education
         "tertiary_studies": "No",
         # 6 Study Choices
