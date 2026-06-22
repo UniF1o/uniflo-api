@@ -49,6 +49,32 @@ SYNTHETIC_DOCUMENTS = [
     {"type": "GRADE11_RESULTS"},
 ]
 
+# Completed-matric / gap-year student (grade_12_final records, no longer in school).
+SYNTHETIC_COMPLETED_MATRIC_PROFILE = {
+    **SYNTHETIC_PROFILE,
+    "current_activity": "Gap Year",
+    "exam_number": "G28F9001",  # fake
+}
+
+SYNTHETIC_GRADE_12_FINAL_RECORDS = [
+    {
+        "record_type": "grade_12_final",
+        "institution": "Soshanguve Secondary School",
+        "year": 2025,
+        "subjects": [
+            {"name": "Mathematics", "mark": 74, "nsc_level": 6, "percentage": 74},
+            {"name": "Physical Sciences", "mark": 70, "nsc_level": 6, "percentage": 70},
+            {"name": "English First Additional Language", "mark": 76, "nsc_level": 6, "percentage": 76},
+            {"name": "Life Orientation", "mark": 82, "nsc_level": 7, "percentage": 82},
+        ],
+    },
+]
+
+SYNTHETIC_COMPLETED_MATRIC_DOCUMENTS = [
+    {"type": "ID_COPY"},
+    {"type": "MATRIC_RESULTS"},
+]
+
 # A small UJ-shaped form schema for tests.
 SYNTHETIC_FORM = PortalFormSchema(
     university_id=UUID("00000000-0000-0000-0000-0000000000aa"),

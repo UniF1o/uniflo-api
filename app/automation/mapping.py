@@ -123,7 +123,7 @@ def _matric_year(records: list[Any], app_year: Any) -> Optional[int]:
     """The Grade 12 (matric) year: a captured Grade-12 record's year wins;
     otherwise the year before the intake year (apply 2027 → matric 2026); a
     bare record's year is the last resort (legacy single-record behaviour)."""
-    gr12 = _pick_record(records, "grade_12_april", "grade_12_june")
+    gr12 = _pick_record(records, "grade_12_final", "grade_12_april", "grade_12_june")
     if gr12 is not None and _g(gr12, "record_type", "").startswith("grade_12"):
         return _g(gr12, "year")
     if isinstance(app_year, int):
@@ -198,21 +198,51 @@ def _choice(choices: Any, application: Any, n: int) -> Any:
     return _g(application, ("programme_second", "programme_third")[n - 2])
 
 
-# All four adapters currently submit as a CURRENT Grade 12 applicant — UJ's
-# endorsement, UP's exemption/highest-grade/tell-us-more and Wits' school-
-# status radio are hardcoded to that persona (their other branches were never
-# walked). Submitting those values for a gap-year/upgrading/employed applicant
-# would put false statements on a legal form, so the mapping fails fast.
-def _require_current_schooling(profile: Any, slug: str) -> None:
+# Portals that implement the completed-matric / gap-year automation branch.
+# Extended in Task 6 as each adapter gains completed-matric support.
+_COMPLETED_MATRIC_SLUGS: frozenset[str] = frozenset({"up"})
+
+
+def _applicant_branch(profile: Any, records: list[Any]) -> str:
+    """'completed_matric' or 'current_learner'.
+
+    A grade_12_final record is the primary signal; current_activity patterns
+    are the fallback for applicants who completed matric but haven't uploaded
+    their final results yet."""
+    if _pick_record(records, "grade_12_final", fallback=False) is not None:
+        return "completed_matric"
+    activity = str(_g(profile, "current_activity") or "").lower()
+    if any(k in activity for k in ("gap", "employ", "work", "occupat", "complete")):
+        return "completed_matric"
+    return "current_learner"
+
+
+def _guard_applicant_type(
+    profile: Any, slug: str, records: list[Any]
+) -> None:
+    """Raise ValueError for applicant types the automation can't handle.
+
+    Universally blocked: at-university / transfer, upgrader (separate branch),
+    postgrad. Completed-matric / gap-year is permitted for UP (Task 5); other
+    portals still require the applicant to be currently in Grade 12 until Task 6
+    extends their adapters."""
     activity = str(_g(profile, "current_activity") or "").lower()
     if activity and any(
-        key in activity
-        for key in ("gap", "upgrad", "employ", "occupat", "universit", "complete")
+        k in activity for k in ("universit", "upgrad", "postgrad")
+    ):
+        raise ValueError(
+            f"{slug}: portal automation does not support at-university, "
+            f"upgrader or postgrad applicants — activity: {activity!r}"
+        )
+    if slug in _COMPLETED_MATRIC_SLUGS:
+        return
+    if activity and any(
+        k in activity for k in ("gap", "employ", "work", "occupat", "complete")
     ):
         raise ValueError(
             f"{slug}: portal automation currently supports applicants still in "
             f"Grade 12 — profile activity {activity!r} would be misreported; "
-            "manual application required until the non-school flows are built"
+            "manual application required until the completed-matric flow is built"
         )
 
 
@@ -240,7 +270,8 @@ def build_field_mapping(
     grids; UCT additionally merges grade_12_april/grade_12_june marks).
     `choices` is the ordered programme list from `application_choices`
     (choice 1 mirrors `applications.programme`)."""
-    _require_current_schooling(profile, slug)
+    records = _as_records(academic_record)
+    _guard_applicant_type(profile, slug, records)
     if slug == "uj":
         return _uj_mapping(
             profile=profile,
@@ -397,6 +428,18 @@ def _uct_mapping(
     return FieldMapping(values={k: v for k, v in values.items() if v is not None})
 
 
+def _up_tell_us_more_completed(profile: Any) -> str:
+    """Map current_activity to the UP 'Tell us more' option for a completed-matric
+    applicant. Working/employed students get the employed option; all others
+    (gap-year, unspecified) get the unemployed option."""
+    activity = str(_g(profile, "current_activity") or "").lower()
+    if any(k in activity for k in ("employ", "work", "occupat")):
+        return (
+            "I am working/employed and haven't studied before at a tertiary institution"
+        )
+    return "I am unemployed and haven't studied before at a tertiary institution"
+
+
 def _up_gender(gender: Optional[str]) -> Optional[str]:
     """UP's set (live-verified): Female / Male / Unspecified-Non-Binary."""
     if not gender:
@@ -418,12 +461,32 @@ def _up_mapping(
     only after login). Subjects carry the captured NSC level when present (the
     adapter otherwise derives level = band(percent) — UP's percent dropdown is
     gated on the level). The examining authority defaults to '<province> DoE'
-    and is fuzzy-matched against the live board list by the adapter."""
+    and is fuzzy-matched against the live board list by the adapter.
+
+    Branch-aware: grade_12_final records / gap-year current_activity trigger the
+    completed-matric path (highest_grade=Grade 12, grade_12_final subjects,
+    completed-matric tell_us_more and exemption_type)."""
     records = _as_records(academic_record)
-    gr11 = _pick_record(records, "grade_11_final")
+    branch = _applicant_branch(profile, records)
+    is_completed = branch == "completed_matric"
+
     app_year = _g(application, "application_year")
     matric_year = _matric_year(records, app_year)
     province = _title_case(_g(profile, "province"))
+
+    if is_completed:
+        subject_record = (
+            _pick_record(records, "grade_12_final", fallback=False)
+            or _pick_record(records, "grade_11_final")
+        )
+        tell_us_more = _up_tell_us_more_completed(profile)
+        highest_grade = "Grade 12"
+        exemption_type = "Admit to Bachelor Studies"
+    else:
+        subject_record = _pick_record(records, "grade_11_final")
+        tell_us_more = "I am currently still in high school"
+        highest_grade = "Grade 11"
+        exemption_type = "Currently busy with schooling"
 
     values: dict[str, Any] = {
         # new-application form (also passed via credentials.extra)
@@ -446,17 +509,17 @@ def _up_mapping(
         "gender": _up_gender(_g(profile, "gender")),
         "home_language": _title_case(_g(profile, "home_language")),
         "population_group": _title_case(_g(profile, "ethnicity")),
-        "tell_us_more": "I am currently still in high school",
+        "tell_us_more": tell_us_more,
         # Tertiary / Secondary Education
         "prev_enrolled": "No",
         "final_school_year": str(matric_year) if matric_year is not None else None,
         "examining_authority": f"{province} DoE" if province else None,
-        "school": _g(gr11, "institution"),
+        "school": _g(subject_record, "institution"),
         "school_grades_type": "Nat Senior Cert or IEB",
-        "highest_grade": "Grade 11",
+        "highest_grade": highest_grade,
         "exam_number": _g(profile, "exam_number"),
-        "exemption_type": "Currently busy with schooling",
-        "subjects": _coerce_subjects(_g(gr11, "subjects")),
+        "exemption_type": exemption_type,
+        "subjects": _coerce_subjects(_g(subject_record, "subjects")),
         # Study Choice
         "programme": _choice(choices, application, 1),
         "programme_second": _choice(choices, application, 2),
