@@ -250,18 +250,32 @@ def test_single_choice_keeps_legacy_programme_column():
 # --- current-Grade-12 integrity guard ---------------------------------------------------
 
 
-def test_non_school_activity_fails_fast():
+def test_non_school_activity_fails_fast_for_non_up_portals():
+    """UJ / UCT / Wits still reject gap-year applicants until Task 6 extends them."""
     import pytest
 
     class _GapYearProfile(_Profile):
         current_activity = "Gap Year"
 
-    for slug in ("uj", "uct", "up", "wits"):
+    for slug in ("uj", "uct", "wits"):
         with pytest.raises(ValueError, match="Grade 12"):
             build_field_mapping(
                 slug, profile=_GapYearProfile(), application=_Application(),
                 academic_record=[_GR11], contacts=[_Guardian()], email=None,
             )
+
+
+def test_gap_year_permitted_for_up():
+    """UP now supports gap-year / completed-matric applicants (Task 5)."""
+
+    class _GapYearProfile(_Profile):
+        current_activity = "Gap Year"
+
+    m = build_field_mapping(
+        "up", profile=_GapYearProfile(), application=_Application(),
+        academic_record=[_GR11], email=None,
+    )
+    assert m.values["highest_grade"] == "Grade 12"
 
 
 def test_school_activity_passes_the_guard():
