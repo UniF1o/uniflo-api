@@ -165,9 +165,13 @@ def test_guard_blocks_at_university_for_uj():
         _guard_applicant_type(_AtUniversityProfile(), "uj", [])
 
 
-def test_guard_blocks_completed_matric_for_uj():
-    with pytest.raises(ValueError):
-        _guard_applicant_type(_GapYearProfile(), "uj", [])
+def test_guard_permits_gap_year_for_uj():
+    # Task 6 — UJ now implements the completed-matric branch.
+    _guard_applicant_type(_GapYearProfile(), "uj", [_GR12_FINAL])
+
+
+def test_guard_permits_employed_for_uj():
+    _guard_applicant_type(_EmployedProfile(), "uj", [])
 
 
 def test_guard_blocks_completed_matric_for_wits():
@@ -253,3 +257,61 @@ def test_up_completed_matric_matric_year_from_gr12_final():
 def test_up_current_learner_blocked_for_at_university():
     with pytest.raises(ValueError):
         _up_map(_AtUniversityProfile(), [])
+
+
+# ---------------------------------------------------------------------------
+# UJ mapping — completed-matric branch (Task 6)
+# ---------------------------------------------------------------------------
+
+
+def _uj_map(profile, records):
+    return build_field_mapping(
+        "uj",
+        profile=profile,
+        application=_Application(),
+        academic_record=records,
+        contacts=[],
+        email="sipho.test@gmail.com",
+    )
+
+
+def test_uj_completed_matric_endorsement_is_bachelors():
+    m = _uj_map(_GapYearProfile(), [_GR12_FINAL])
+    assert m.values["endorsement"] == "BACHELORS DEGREE"
+
+
+def test_uj_completed_matric_present_activity_not_pupil():
+    m = _uj_map(_GapYearProfile(), [_GR12_FINAL])
+    assert m.values["present_activity"] == "UNEMPLOYED"
+
+
+def test_uj_completed_matric_present_activity_employed_for_working():
+    m = _uj_map(_EmployedProfile(), [_GR12_FINAL])
+    assert m.values["present_activity"] == "EMPLOYED"
+
+
+def test_uj_completed_matric_subjects_from_gr12_final():
+    m = _uj_map(_GapYearProfile(), [_GR12_FINAL])
+    maths = next(s for s in m.values["subjects"] if s["name"].upper() == "MATHEMATICS")
+    assert maths["percentage"] == 74  # GR12_FINAL (not GR11's 72)
+
+
+def test_uj_completed_matric_school_from_gr12_final():
+    m = _uj_map(_GapYearProfile(), [_GR12_FINAL])
+    assert m.values.get("school") == "Soshanguve South Secondary School"
+
+
+def test_uj_current_learner_endorsement_unchanged():
+    m = _uj_map(_CurrentGr12Profile(), [_GR11])
+    assert m.values["endorsement"] == "CURRENTLY IN GR.12"
+
+
+def test_uj_current_learner_subjects_from_gr11():
+    m = _uj_map(_CurrentGr12Profile(), [_GR11])
+    maths = next(s for s in m.values["subjects"] if s["name"].upper() == "MATHEMATICS")
+    assert maths["percentage"] == 72
+
+
+def test_uj_current_learner_blocked_for_at_university():
+    with pytest.raises(ValueError):
+        _uj_map(_AtUniversityProfile(), [])

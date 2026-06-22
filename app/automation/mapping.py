@@ -200,7 +200,7 @@ def _choice(choices: Any, application: Any, n: int) -> Any:
 
 # Portals that implement the completed-matric / gap-year automation branch.
 # Extended in Task 6 as each adapter gains completed-matric support.
-_COMPLETED_MATRIC_SLUGS: frozenset[str] = frozenset({"up"})
+_COMPLETED_MATRIC_SLUGS: frozenset[str] = frozenset({"up", "uj"})
 
 
 def _applicant_branch(profile: Any, records: list[Any]) -> str:
@@ -630,6 +630,18 @@ def _wits_mapping(
     return FieldMapping(values={k: v for k, v in values.items() if v is not None})
 
 
+def _uj_present_activity_completed(profile: Any) -> str:
+    """UJ Page D 'What are you currently doing?' for a completed-matric applicant.
+    Employed/working → EMPLOYED; gap-year/unspecified → UNEMPLOYED. The adapter
+    fuzzy-matches against the live LOV, so minor text differences resolve at fill
+    time. [VERIFY at the first live completed-matric run — only the GRADE 12 PUPIL
+    option was walked live]."""
+    activity = str(_g(profile, "current_activity") or "").lower()
+    if any(k in activity for k in ("employ", "work", "occupat")):
+        return "EMPLOYED"
+    return "UNEMPLOYED"
+
+
 def _uj_mapping(
     *, profile: Any, application: Any, academic_record: Any, contacts: Any,
     email: Optional[str], choices: Any = None,
@@ -640,7 +652,26 @@ def _uj_mapping(
     nok = _resolve_contact(contacts, "next_of_kin")
     payer = _resolve_contact(contacts, "fee_payer")
     records = _as_records(academic_record)
-    gr11 = _pick_record(records, "grade_11_final")
+    # Branch-aware (Task 6): a grade_12_final record / gap-year activity takes the
+    # completed-matric path — Page C endorsement becomes the Bachelor's-degree NSC
+    # pass (not "CURRENTLY IN GR.12"), the subjects/school come from the final
+    # record, and Page D activity is no longer "GRADE 12 PUPIL".
+    is_completed = _applicant_branch(profile, records) == "completed_matric"
+    if is_completed:
+        subject_record = (
+            _pick_record(records, "grade_12_final", fallback=False)
+            or _pick_record(records, "grade_11_final")
+        )
+        # A completed-matric degree applicant presents the Bachelor's-degree NSC
+        # endorsement; UJ's endorsement LOV is fuzzy-matched, so minor text
+        # differences resolve at fill time ([VERIFY] at the first live run — only
+        # the current-Gr12 endorsement was walked).
+        endorsement = "BACHELORS DEGREE"
+        present_activity = _uj_present_activity_completed(profile)
+    else:
+        subject_record = _pick_record(records, "grade_11_final")
+        endorsement = "CURRENTLY IN GR.12"
+        present_activity = _g(profile, "current_activity") or "GRADE 12 PUPIL"
     app_year = _g(application, "application_year")
     matric_year = _matric_year(records, app_year)
 
@@ -689,12 +720,12 @@ def _uj_mapping(
         "ug_or_pg": "Undergraduate",
         "upgrading": "No",
         "matric_type": "SA Matric",
-        "endorsement": "CURRENTLY IN GR.12",
+        "endorsement": endorsement,
         "exam_number": _g(profile, "exam_number"),
-        "subjects": _coerce_subjects(_g(gr11, "subjects")),
+        "subjects": _coerce_subjects(_g(subject_record, "subjects")),
         # Page D — Previous Studies
-        "school": _g(gr11, "institution"),
-        "present_activity": _g(profile, "current_activity") or "GRADE 12 PUPIL",
+        "school": _g(subject_record, "institution"),
+        "present_activity": present_activity,
         "studied_before": "No",
         # Page E — Qualifications (faculty unresolved — see module docstring).
         # programme_second is mapped but the UJ adapter doesn't drive "Add
