@@ -17,6 +17,9 @@ class RecordType(str, Enum):
     # UCT's Grade 12 subject modal takes an optional June % alongside the
     # required April % — relevant for students applying after mid-year exams.
     GRADE_12_JUNE = "grade_12_june"
+    # Completed/final NSC — gap-year, already-have-matric, prior-year school-leaver.
+    # Most authoritative record when present; wins over all in-progress records.
+    GRADE_12_FINAL = "grade_12_final"
 
 
 class SubjectIn(BaseModel):
