@@ -183,9 +183,13 @@ def test_guard_permits_employed_for_wits():
     _guard_applicant_type(_EmployedProfile(), "wits", [])
 
 
-def test_guard_blocks_completed_matric_for_uct():
-    with pytest.raises(ValueError):
-        _guard_applicant_type(_GapYearProfile(), "uct", [_GR12_FINAL])
+def test_guard_permits_gap_year_for_uct():
+    # Task 6 — UCT now implements the completed-matric branch.
+    _guard_applicant_type(_GapYearProfile(), "uct", [_GR12_FINAL])
+
+
+def test_guard_permits_employed_for_uct():
+    _guard_applicant_type(_EmployedProfile(), "uct", [])
 
 
 # ---------------------------------------------------------------------------
@@ -397,3 +401,56 @@ def test_wits_current_learner_subjects_from_gr11():
 def test_wits_current_learner_blocked_for_at_university():
     with pytest.raises(ValueError):
         _wits_map(_AtUniversityProfile(), [])
+
+
+# ---------------------------------------------------------------------------
+# UCT mapping — completed-matric branch (Task 6)
+# ---------------------------------------------------------------------------
+
+
+def _uct_map(profile, records):
+    return build_field_mapping(
+        "uct",
+        profile=profile,
+        application=_Application(),
+        academic_record=records,
+        contacts=[_Guardian()],
+        email="sipho.test@gmail.com",
+    )
+
+
+def test_uct_completed_matric_subjects_from_gr12_final():
+    """grade_12_final subjects become the Gr11 % base (no Gr11 record)."""
+    m = _uct_map(_GapYearProfile(), [_GR12_FINAL])
+    maths = next(s for s in m.values["subjects"] if s["name"].upper() == "MATHEMATICS")
+    assert maths["percentage"] == 74  # GR12_FINAL (not GR11's 72)
+
+
+def test_uct_completed_matric_april_from_gr12_final_when_no_april_record():
+    """Without a grade_12_april record, the final marks fill the April column."""
+    m = _uct_map(_GapYearProfile(), [_GR12_FINAL])
+    maths = next(s for s in m.values["subjects"] if s["name"].upper() == "MATHEMATICS")
+    assert maths.get("april") == 74  # final marks proxying for April
+
+
+def test_uct_completed_matric_school_from_gr12_final():
+    m = _uct_map(_GapYearProfile(), [_GR12_FINAL])
+    assert m.values.get("school") == "Soshanguve South Secondary School"
+
+
+def test_uct_current_learner_subjects_from_gr11():
+    m = _uct_map(_CurrentGr12Profile(), [_GR11])
+    maths = next(s for s in m.values["subjects"] if s["name"].upper() == "MATHEMATICS")
+    assert maths["percentage"] == 72  # GR11 data, not GR12_FINAL's 74
+
+
+def test_uct_current_learner_no_april_without_gr12_april_record():
+    """Current-learner with no grade_12_april record: no april key in subjects."""
+    m = _uct_map(_CurrentGr12Profile(), [_GR11])
+    maths = next(s for s in m.values["subjects"] if s["name"].upper() == "MATHEMATICS")
+    assert "april" not in maths
+
+
+def test_uct_current_learner_blocked_for_at_university():
+    with pytest.raises(ValueError):
+        _uct_map(_AtUniversityProfile(), [])

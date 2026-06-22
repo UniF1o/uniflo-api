@@ -250,17 +250,17 @@ def test_single_choice_keeps_legacy_programme_column():
 # --- current-Grade-12 integrity guard ---------------------------------------------------
 
 
-def test_non_school_activity_fails_fast_for_non_completed_portals():
-    """UCT still rejects gap-year applicants until its Task 6 lands."""
+def test_at_university_fails_fast_for_all_portals():
+    """At-university / upgrader remains blocked for every portal."""
     import pytest
 
-    class _GapYearProfile(_Profile):
-        current_activity = "Gap Year"
+    class _AtUniversityProfile(_Profile):
+        current_activity = "At university"
 
-    for slug in ("uct",):
-        with pytest.raises(ValueError, match="Grade 12"):
+    for slug in ("up", "uj", "wits", "uct"):
+        with pytest.raises(ValueError):
             build_field_mapping(
-                slug, profile=_GapYearProfile(), application=_Application(),
+                slug, profile=_AtUniversityProfile(), application=_Application(),
                 academic_record=[_GR11], contacts=[_Guardian()], email=None,
             )
 
@@ -304,6 +304,21 @@ def test_gap_year_permitted_for_wits():
     )
     assert m.values.get("school_status") == "Completed Grd 12 OR Upgrading"
     assert m.values["current_activity"] == "Gap Year"
+
+
+def test_gap_year_permitted_for_uct():
+    """UCT now supports gap-year / completed-matric applicants (Task 6)."""
+
+    class _GapYearProfile(_Profile):
+        current_activity = "Gap Year"
+
+    m = build_field_mapping(
+        "uct", profile=_GapYearProfile(), application=_Application(),
+        academic_record=[_GR11], contacts=[_Guardian()], email=None,
+    )
+    # With only a Gr11 record and gap-year activity: branch = completed_matric,
+    # but falls back to Gr11 subjects (no gr12_final present).
+    assert m.get("subjects") is not None
 
 
 def test_school_activity_passes_the_guard():
