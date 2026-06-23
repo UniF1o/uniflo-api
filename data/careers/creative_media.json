@@ -1,0 +1,138 @@
+[
+  {
+    "slug": "graphic-designer",
+    "title": "Graphic / UX Designer",
+    "industry": "Creative, Media & Design",
+    "description": "Create visual communications and digital experiences — logos, brand identities, marketing materials, websites, and mobile app interfaces. UX designers focus on user research and product usability.",
+    "compensation": {"entry": 12000, "mid": 28000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R12k – R50k/mo"},
+    "employability": {
+      "demand": "High — digital economy drives constant demand for design talent.",
+      "outlook": "Growing; UX and product design especially sought in tech and banking.",
+      "pathways": ["BA/BTech Graphic Design / Visual Communication (3–4 years)", "UX bootcamp + portfolio", "Agencies, tech companies, in-house brand teams, freelance"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Visual Arts", "Design", "Information Technology", "Computer Applications Technology"]},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["graphic design", "visual communication", "design", "multimedia"],
+    "is_active": true
+  },
+  {
+    "slug": "journalist",
+    "title": "Journalist / Media Practitioner",
+    "industry": "Creative, Media & Design",
+    "description": "Research and communicate news, features, and investigations across print, broadcast, online, and social media platforms. Roles span reporter, editor, content strategist, and communications officer.",
+    "compensation": {"entry": 14000, "mid": 28000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R14k – R50k/mo"},
+    "employability": {
+      "demand": "Moderate — traditional media contracting; digital content and communications growing.",
+      "outlook": "Restructuring; data journalism, podcasting, and corporate communications expanding.",
+      "pathways": ["BA Journalism / Media Studies (3–4 years)", "Cadetships at media houses", "SABC, newspapers, online media, PR firms, corporate comms"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["English Home Language", "History"],
+    "programme_keywords": ["journalism", "media studies", "communication"],
+    "is_active": true
+  },
+  {
+    "slug": "filmmaker-animator",
+    "title": "Filmmaker / Animator",
+    "industry": "Creative, Media & Design",
+    "description": "Create motion-picture content — feature films, documentaries, advertising, and digital animation. Work across production companies, advertising agencies, and as independent creatives.",
+    "compensation": {"entry": 14000, "mid": 30000, "senior": 60000, "currency": "ZAR", "period": "month", "display": "R14k – R60k/mo"},
+    "employability": {
+      "demand": "Moderate — SA film industry is small but growing; animation sector expanding.",
+      "outlook": "Growing; streaming platforms increasing local content commissioning.",
+      "pathways": ["BA Film / Animation / Media Production (3–4 years)", "Production companies, advertising agencies, post-production studios, freelance"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Visual Arts", "Dramatic Arts", "Design", "Information Technology"]},
+    "recommended_subjects": ["Computer Applications Technology"],
+    "programme_keywords": ["film", "motion picture", "animation", "multimedia"],
+    "is_active": true
+  },
+  {
+    "slug": "fine-artist",
+    "title": "Fine / Visual Artist",
+    "industry": "Creative, Media & Design",
+    "description": "Create original works of art — painting, sculpture, printmaking, photography, or mixed media — for exhibition, galleries, commissions, and public art. Often combined with teaching or freelance work.",
+    "compensation": {"entry": 10000, "mid": 25000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R10k – R50k+/mo"},
+    "employability": {
+      "demand": "Moderate — gallery and commission markets; many artists supplement with teaching.",
+      "outlook": "Stable; digital platforms expanding art sales and audience reach.",
+      "pathways": ["BA Fine Art / BFA (4 years)", "Galleries, art schools, community arts projects, commissions, freelance"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Visual Arts", "Design"]},
+    "recommended_subjects": ["Art History"],
+    "programme_keywords": ["fine art", "visual arts"],
+    "is_active": true
+  },
+  {
+    "slug": "musician-sound-engineer",
+    "title": "Musician / Sound Engineer",
+    "industry": "Creative, Media & Design",
+    "description": "Create, perform, or produce music — from live performance to studio recording, composition, and audio post-production. Sound engineers work in recording studios, live venues, and broadcasting.",
+    "compensation": {"entry": 12000, "mid": 25000, "senior": 45000, "currency": "ZAR", "period": "month", "display": "R12k – R45k/mo"},
+    "employability": {
+      "demand": "Moderate — competitive market; streaming and live events drive opportunities.",
+      "outlook": "Stable; SA music industry growing internationally.",
+      "pathways": ["BA/BMus Music (4 years)", "Sound engineering diploma", "Music labels, recording studios, broadcasting, live events, freelance performance"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Music"]},
+    "recommended_subjects": ["Physical Sciences"],
+    "programme_keywords": ["music", "sound"],
+    "is_active": true
+  },
+  {
+    "slug": "pr-communications-specialist",
+    "title": "Public Relations / Communications Specialist",
+    "industry": "Creative, Media & Design",
+    "description": "Manage an organisation's public image — crafting press releases, managing crises, building media relationships, and developing communication strategies across digital and traditional channels.",
+    "compensation": {"entry": 16000, "mid": 32000, "senior": 55000, "currency": "ZAR", "period": "month", "display": "R16k – R55k/mo"},
+    "employability": {
+      "demand": "High — every large organisation needs communications expertise.",
+      "outlook": "Growing; social media management and digital PR expanding the role.",
+      "pathways": ["BA Communication / Journalism / PR (3–4 years)", "PRISA membership", "PR agencies, corporate comms, government, NGOs"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["English Home Language", "Business Studies"],
+    "programme_keywords": ["communication", "public relations", "journalism", "media studies"],
+    "is_active": true
+  },
+  {
+    "slug": "photographer",
+    "title": "Photographer / Videographer",
+    "industry": "Creative, Media & Design",
+    "description": "Capture visual stories — news, portraits, events, products, and documentary imagery. Combine creative and technical skills; work freelance or for media organisations and agencies.",
+    "compensation": {"entry": 10000, "mid": 22000, "senior": 40000, "currency": "ZAR", "period": "month", "display": "R10k – R40k/mo"},
+    "employability": {
+      "demand": "Moderate — highly competitive; specialisation (commercial, medical, sport) improves prospects.",
+      "outlook": "Stable; content economy keeps demand for visual storytellers alive.",
+      "pathways": ["Diploma / BA in Photography / Media Production (3 years)", "Portfolio-led freelance", "Media houses, advertising agencies, in-house corporate, freelance"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Visual Arts", "Design", "Computer Applications Technology"]},
+    "recommended_subjects": ["Information Technology"],
+    "programme_keywords": ["photography", "visual communication", "media"],
+    "is_active": true
+  },
+  {
+    "slug": "game-developer",
+    "title": "Game Developer / Interactive Media Designer",
+    "industry": "Creative, Media & Design",
+    "description": "Design, code, and produce video games and interactive experiences — from concept and narrative to game mechanics, art direction, and software engineering.",
+    "compensation": {"entry": 18000, "mid": 40000, "senior": 75000, "currency": "ZAR", "period": "month", "display": "R18k – R75k/mo"},
+    "employability": {
+      "demand": "Moderate — SA has a small but growing games industry; remote work enables global studios.",
+      "outlook": "Growing; mobile games and simulation market expanding regionally.",
+      "pathways": ["BSc Computer Science / BA Game Design (3–4 years)", "Portfolio + indie projects", "Game studios, interactive media companies, remote global studios"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Visual Arts", "Design", "Information Technology", "Mathematics"]},
+    "recommended_subjects": ["Computer Applications Technology"],
+    "programme_keywords": ["computer science", "design", "multimedia", "animation"],
+    "is_active": true
+  }
+]

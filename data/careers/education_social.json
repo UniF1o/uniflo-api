@@ -1,0 +1,138 @@
+[
+  {
+    "slug": "maths-science-teacher",
+    "title": "Maths / Science Teacher",
+    "industry": "Education & Social Sciences",
+    "description": "Teach Mathematics, Physical Sciences, or Life Sciences at secondary school. One of the most impactful and in-demand roles in SA's education system, with a clear permanent-post pathway.",
+    "compensation": {"entry": 18000, "mid": 28000, "senior": 40000, "currency": "ZAR", "period": "month", "display": "R18k – R40k/mo"},
+    "employability": {
+      "demand": "Very high — acute shortage of qualified Maths and Science teachers nationally.",
+      "outlook": "Strong; NSFAS bursaries incentivise the pathway; public posts are stable.",
+      "pathways": ["BEd (4 years) with Mathematics / Science specialism", "PGCE (1 year) after BSc", "DBE, SGBs — permanent public school posts"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Mathematics", "Physical Sciences", "Life Sciences"]},
+    "recommended_subjects": ["English Home Language"],
+    "programme_keywords": ["education", "teaching", "bed"],
+    "is_active": true
+  },
+  {
+    "slug": "foundation-phase-teacher",
+    "title": "Foundation / Intermediate Phase Teacher",
+    "industry": "Education & Social Sciences",
+    "description": "Teach Grades R–6, laying the foundations for literacy, numeracy, and life skills. Work with young learners in public, independent, and ECD settings.",
+    "compensation": {"entry": 15000, "mid": 24000, "senior": 35000, "currency": "ZAR", "period": "month", "display": "R15k – R35k/mo"},
+    "employability": {
+      "demand": "High — shortage of qualified Foundation Phase teachers, especially in rural areas.",
+      "outlook": "Stable; early childhood development policy expanding the sector.",
+      "pathways": ["BEd Foundation Phase / Intermediate Phase (4 years)", "DBE, independent schools, ECD centres"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["English Home Language", "isiZulu Home Language", "Afrikaans Home Language"],
+    "programme_keywords": ["education", "teaching", "foundation phase", "early childhood"],
+    "is_active": true
+  },
+  {
+    "slug": "psychologist",
+    "title": "Psychologist",
+    "industry": "Education & Social Sciences",
+    "description": "Assess and treat mental health conditions — depression, anxiety, trauma, and behavioural disorders. Work in clinical, educational, industrial, and community settings.",
+    "compensation": {"entry": 25000, "mid": 45000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R25k – R70k/mo"},
+    "employability": {
+      "demand": "High — SA has fewer than 5,000 registered psychologists for 62 million people.",
+      "outlook": "Strong; mental health awareness driving demand in corporate and educational sectors.",
+      "pathways": ["BA/BSc Psychology (3 years)", "Hons + Postgrad Diploma / Masters in Psychology (2–3 years)", "HPCSA internship (1 year)", "Hospitals, schools, private practice, corporates"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Life Sciences"]},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["psychology"],
+    "is_active": true
+  },
+  {
+    "slug": "social-worker",
+    "title": "Social Worker",
+    "industry": "Education & Social Sciences",
+    "description": "Support individuals, families, and communities facing poverty, abuse, substance dependence, and social exclusion. Carry statutory duties in child protection, welfare, and mental health.",
+    "compensation": {"entry": 15000, "mid": 22000, "senior": 35000, "currency": "ZAR", "period": "month", "display": "R15k – R35k/mo"},
+    "employability": {
+      "demand": "High — DSD is chronically understaffed; NGO and community sector demand is large.",
+      "outlook": "Steady; government salary restructuring improving retention.",
+      "pathways": ["BSocSci / BSW Social Work (4 years)", "SACSSP registration", "DSD, children's homes, hospitals, schools, NGOs"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["Life Sciences", "English Home Language"],
+    "programme_keywords": ["social work"],
+    "is_active": true
+  },
+  {
+    "slug": "sociologist",
+    "title": "Sociologist / Political Scientist",
+    "industry": "Education & Social Sciences",
+    "description": "Study social behaviour, institutions, and political systems — informing policy, advocacy, research, and public-sector decision-making. Often combined with data skills for evidence-based policy work.",
+    "compensation": {"entry": 18000, "mid": 35000, "senior": 55000, "currency": "ZAR", "period": "month", "display": "R18k – R55k/mo"},
+    "employability": {
+      "demand": "Moderate — government, think tanks, NGOs, and academia are primary employers.",
+      "outlook": "Stable; research and policy analysis roles growing in public sector.",
+      "pathways": ["BA Sociology / Political Science (3 years)", "Honours/Masters (1–2 years)", "Government departments, Parliament, research institutes, NGOs, academia"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["History", "Geography", "Economics"],
+    "programme_keywords": ["social science", "political science", "sociology", "development studies"],
+    "is_active": true
+  },
+  {
+    "slug": "counsellor",
+    "title": "Counsellor / Youth Development Worker",
+    "industry": "Education & Social Sciences",
+    "description": "Provide guidance and support to individuals navigating personal, career, or substance-use challenges. Work in schools, clinics, community centres, and corporate wellness programmes.",
+    "compensation": {"entry": 14000, "mid": 22000, "senior": 35000, "currency": "ZAR", "period": "month", "display": "R14k – R35k/mo"},
+    "employability": {
+      "demand": "Moderate — EAP and school counselling growing; most posts are in NGO and public sector.",
+      "outlook": "Stable; mental health awareness increasing demand especially in corporate sector.",
+      "pathways": ["BA Psychology / Social Work (3 years)", "Certificate in Counselling / Youth Work (1 year)", "Schools, clinics, rehab centres, EAPs, NGOs"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["Life Sciences", "English Home Language"],
+    "programme_keywords": ["psychology", "social work"],
+    "is_active": true
+  },
+  {
+    "slug": "lecturer-academic",
+    "title": "Lecturer / Academic Researcher",
+    "industry": "Education & Social Sciences",
+    "description": "Teach at university level and/or conduct original research in a chosen discipline. Requires postgraduate study and typically a doctoral qualification for permanent academic posts.",
+    "compensation": {"entry": 30000, "mid": 50000, "senior": 80000, "currency": "ZAR", "period": "month", "display": "R30k – R80k/mo"},
+    "employability": {
+      "demand": "Moderate — higher-education sector competes for postdocs; PhD required for most posts.",
+      "outlook": "Stable; STEM disciplines and scarce-skills fields attract research funding.",
+      "pathways": ["Honours/Masters/PhD in chosen discipline (4–8 years)", "Postdoc fellowship", "Universities, CSIR, NRF research chairs, private higher education"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": [],
+    "programme_keywords": ["education", "humanities", "social science", "science", "commerce"],
+    "is_active": true
+  },
+  {
+    "slug": "criminologist",
+    "title": "Criminologist / Forensic Practitioner",
+    "industry": "Education & Social Sciences",
+    "description": "Study crime, criminal behaviour, and the justice system — developing prevention strategies, advising on policy, or working as an expert in forensic settings alongside SAPS and the NPA.",
+    "compensation": {"entry": 18000, "mid": 32000, "senior": 48000, "currency": "ZAR", "period": "month", "display": "R18k – R48k/mo"},
+    "employability": {
+      "demand": "Moderate — SAPS, NPA, prisons, and NGOs are main employers.",
+      "outlook": "Stable; crime prevention policy and victim support expanding the field.",
+      "pathways": ["BA Criminology / Forensic Studies (3 years)", "Honours (1 year)", "SAPS, NPA, DCS, victim support NGOs, private security consulting"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["Life Sciences", "History"],
+    "programme_keywords": ["criminology", "forensic"],
+    "is_active": true
+  }
+]

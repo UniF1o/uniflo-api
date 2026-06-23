@@ -2,6 +2,7 @@ from app.models.academic_record import AcademicRecord
 from app.models.application import Application
 from app.models.application_choice import ApplicationChoice
 from app.models.application_job import ApplicationJob
+from app.models.career import Career
 from app.models.contact import Contact
 from app.models.document import Document
 from app.models.faculty import Faculty
@@ -13,6 +14,7 @@ from app.models.university import University
 from app.models.user import User
 
 __all__ = [
+    "Career",
     "StudentProfile",
     "AcademicRecord",
     "Contact",

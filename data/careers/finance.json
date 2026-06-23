@@ -1,0 +1,172 @@
+[
+  {
+    "slug": "chartered-accountant",
+    "title": "Chartered Accountant CA(SA)",
+    "industry": "Finance, Accounting & Business",
+    "description": "The gold standard of the accounting profession. CAs prepare and audit financial statements, advise on tax and compliance, and lead finance functions. The SAICA designation opens doors at the highest levels.",
+    "compensation": {"entry": 64000, "mid": 85000, "senior": 107000, "currency": "ZAR", "period": "month", "display": "R64k – R107k/mo"},
+    "employability": {
+      "demand": "Very high — CAs are in demand across every sector; consistently listed on Critical Skills.",
+      "outlook": "Excellent; strong brand value globally, enabling international mobility.",
+      "pathways": ["BCom Accounting (3 years)", "CTA/postgrad diploma (1 year)", "3-year SAICA training contract", "Public practice, corporate, government"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Accounting"],
+    "programme_keywords": ["accounting", "chartered accountant"],
+    "is_active": true
+  },
+  {
+    "slug": "actuary",
+    "title": "Actuary",
+    "industry": "Finance, Accounting & Business",
+    "description": "Use advanced mathematics and statistics to assess and price financial risk — in insurance, pensions, banking, and consulting. Passing actuarial exams is a rigorous multi-year process.",
+    "compensation": {"entry": 117000, "mid": 170000, "senior": 225000, "currency": "ZAR", "period": "month", "display": "R117k – R225k/mo"},
+    "employability": {
+      "demand": "Very high — acute shortage; top-5 most in-demand professional in SA financial sector.",
+      "outlook": "Exceptional; qualified actuaries have near-zero unemployment.",
+      "pathways": ["BSc Actuarial Science / Statistics (4 years)", "Institute of Actuaries exam series (5–10 years)", "Insurance, banking, consulting, regulatory bodies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Physical Sciences"],
+    "programme_keywords": ["actuarial", "actuarial science"],
+    "is_active": true
+  },
+  {
+    "slug": "investment-analyst",
+    "title": "Investment / Financial Analyst",
+    "industry": "Finance, Accounting & Business",
+    "description": "Research companies, sectors, and markets to guide investment decisions. Work at asset managers, investment banks, or corporate treasury teams, producing buy/sell recommendations and financial models.",
+    "compensation": {"entry": 25000, "mid": 55000, "senior": 90000, "currency": "ZAR", "period": "month", "display": "R25k – R90k/mo"},
+    "employability": {
+      "demand": "High — financial sector competes intensely for analytical talent.",
+      "outlook": "Strong; asset management and banking sectors growing.",
+      "pathways": ["BCom Finance / Economics / Accounting (3–4 years)", "CFA charter (3 years)", "Asset managers, investment banks, corporate treasury"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Accounting", "Economics"],
+    "programme_keywords": ["finance", "investment", "economics", "financial sciences"],
+    "is_active": true
+  },
+  {
+    "slug": "economist",
+    "title": "Economist",
+    "industry": "Finance, Accounting & Business",
+    "description": "Analyse economic data and trends to inform policy, business strategy, and investment. Work in government, central banking, consulting, academia, and development finance institutions.",
+    "compensation": {"entry": 25000, "mid": 50000, "senior": 80000, "currency": "ZAR", "period": "month", "display": "R25k – R80k/mo"},
+    "employability": {
+      "demand": "Moderate-high — strong in government, central bank, and research institutions.",
+      "outlook": "Stable; data-literate economists increasingly sought by private sector.",
+      "pathways": ["BCom/BA Economics (3 years)", "Honours/Masters in Economics (1–2 years)", "SARB, National Treasury, consultancies, banks, academia"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Mathematics", "Mathematical Literacy"]},
+    "recommended_subjects": ["Economics"],
+    "programme_keywords": ["economics", "econometrics"],
+    "is_active": true
+  },
+  {
+    "slug": "accountant",
+    "title": "Accountant / Bookkeeper",
+    "industry": "Finance, Accounting & Business",
+    "description": "Record financial transactions, prepare reports, manage tax filings, and support business decision-making. Work in practice or as part of a company's finance team across all industries.",
+    "compensation": {"entry": 15000, "mid": 28000, "senior": 45000, "currency": "ZAR", "period": "month", "display": "R15k – R45k/mo"},
+    "employability": {
+      "demand": "High — every business needs accounting support; SME demand is very strong.",
+      "outlook": "Stable; automation reshaping roles but demand for skilled accountants remains.",
+      "pathways": ["BCom Accounting / Diploma in Accounting (3 years)", "SAIPA, CIMA, AAT qualifications", "Public practice, SMEs, NGOs, government"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Accounting", "Mathematics", "Mathematical Literacy"]},
+    "recommended_subjects": ["Accounting"],
+    "programme_keywords": ["accounting", "financial management"],
+    "is_active": true
+  },
+  {
+    "slug": "business-manager",
+    "title": "Entrepreneur / Business Manager",
+    "industry": "Finance, Accounting & Business",
+    "description": "Start and run a business or lead a team within a larger organisation. Business managers plan strategy, manage people and budgets, and drive growth. Entrepreneurship is a career path for self-starters.",
+    "compensation": {"entry": 15000, "mid": 40000, "senior": 80000, "currency": "ZAR", "period": "month", "display": "R15k – R80k+/mo"},
+    "employability": {
+      "demand": "High — management skills needed across every sector.",
+      "outlook": "Entrepreneurship growing; SA has a large SME sector.",
+      "pathways": ["BCom Business Management / BBusSci (3–4 years)", "MBA (postgrad)", "Own business, family business, corporate management"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Business Studies", "Accounting", "Economics", "Mathematics", "Mathematical Literacy"]},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["business management", "entrepreneurship", "management"],
+    "is_active": true
+  },
+  {
+    "slug": "risk-manager",
+    "title": "Risk Manager",
+    "industry": "Finance, Accounting & Business",
+    "description": "Identify, assess, and mitigate risks — financial, operational, legal, and reputational. Provide frameworks that help organisations make informed decisions under uncertainty.",
+    "compensation": {"entry": 28000, "mid": 55000, "senior": 90000, "currency": "ZAR", "period": "month", "display": "R28k – R90k/mo"},
+    "employability": {
+      "demand": "High — growing regulatory requirements and business complexity driving demand.",
+      "outlook": "Strong; risk management is increasingly embedded in board-level governance.",
+      "pathways": ["BCom Risk Management / Finance / Accounting (3–4 years)", "FRM / PRMIA certification", "Banks, insurance companies, corporate risk teams"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Economics", "Accounting"],
+    "programme_keywords": ["risk management", "finance", "accounting"],
+    "is_active": true
+  },
+  {
+    "slug": "financial-planner",
+    "title": "Financial Planner / Wealth Manager",
+    "industry": "Finance, Accounting & Business",
+    "description": "Help individuals and families plan their financial futures — budgeting, investments, retirement, insurance, and tax. Build long-term relationships with clients to grow and protect their wealth.",
+    "compensation": {"entry": 18000, "mid": 40000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R18k – R70k/mo"},
+    "employability": {
+      "demand": "High — growing middle class increasing demand for personal financial advice.",
+      "outlook": "Strong; CFP designation increasingly required by employers.",
+      "pathways": ["BCom Finance / Financial Planning (3 years)", "CFP certification", "Financial advisory firms, banks, insurance companies, independent practice"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Economics", "Accounting"],
+    "programme_keywords": ["financial planning", "finance", "investment management"],
+    "is_active": true
+  },
+  {
+    "slug": "tax-consultant",
+    "title": "Tax Consultant",
+    "industry": "Finance, Accounting & Business",
+    "description": "Advise individuals and businesses on tax compliance and planning — optimising tax positions, managing SARS submissions, and navigating complex tax legislation.",
+    "compensation": {"entry": 20000, "mid": 42000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R20k – R70k/mo"},
+    "employability": {
+      "demand": "High — tax laws change frequently; demand for specialists is steady.",
+      "outlook": "Stable; digitalisation of SARS systems creating demand for specialist advisors.",
+      "pathways": ["BCom Taxation / Accounting (3–4 years)", "MCom Tax or Adv Diploma", "Audit firms, tax practices, corporate tax departments"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Accounting"],
+    "programme_keywords": ["taxation", "accounting", "financial management"],
+    "is_active": true
+  },
+  {
+    "slug": "auditor",
+    "title": "Auditor",
+    "industry": "Finance, Accounting & Business",
+    "description": "Independently examine financial records to verify accuracy, compliance, and integrity. Internal auditors improve controls; external auditors (CAs) give assurance to shareholders.",
+    "compensation": {"entry": 22000, "mid": 45000, "senior": 75000, "currency": "ZAR", "period": "month", "display": "R22k – R75k/mo"},
+    "employability": {
+      "demand": "High — all public companies and government entities require external audit.",
+      "outlook": "Stable; public-sector audit growing as accountability demands increase.",
+      "pathways": ["BCom Accounting (3 years)", "CA(SA) or CIA qualification", "Big 4 audit firms, internal audit departments, AGSA"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Accounting"],
+    "programme_keywords": ["accounting", "auditing", "internal auditing"],
+    "is_active": true
+  }
+]

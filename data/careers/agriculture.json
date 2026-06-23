@@ -1,0 +1,138 @@
+[
+  {
+    "slug": "agricultural-scientist",
+    "title": "Agricultural Scientist / Agronomist",
+    "industry": "Agriculture & Environment",
+    "description": "Improve crop yields, soil health, and farming practices through research and field trials. Advise farmers on best-practice agronomy, pest management, irrigation, and sustainable land use.",
+    "compensation": {"entry": 20000, "mid": 38000, "senior": 55000, "currency": "ZAR", "period": "month", "display": "R20k – R55k/mo"},
+    "employability": {
+      "demand": "Moderate-high — food security drive and agri-extension services need agronomists.",
+      "outlook": "Growing; precision agriculture and climate adaptation increasing demand.",
+      "pathways": ["BSc Agriculture / Agronomy (4 years)", "Honours (1 year)", "DALRRD, ARC, agro-chemical companies, commercial farms, cooperatives"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Agricultural Sciences", "Life Sciences"]},
+    "recommended_subjects": ["Mathematics", "Physical Sciences"],
+    "programme_keywords": ["agriculture", "agricultural sciences", "agronomy"],
+    "is_active": true
+  },
+  {
+    "slug": "veterinarian",
+    "title": "Veterinarian",
+    "industry": "Agriculture & Environment",
+    "description": "Diagnose and treat diseases in animals — companion animals, livestock, and wildlife. Vets work in private practice, public health, the agriculture sector, and conservation.",
+    "compensation": {"entry": 30000, "mid": 55000, "senior": 80000, "currency": "ZAR", "period": "month", "display": "R30k – R80k/mo"},
+    "employability": {
+      "demand": "High — shortage of vets in state veterinary services and rural practices.",
+      "outlook": "Strong; biosecurity, food safety regulation, and wildlife conservation driving demand.",
+      "pathways": ["BVSc (6 years)", "Community service (1 year)", "Private practice, DALRRD, wildlife organisations, game farms"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences", "Life Sciences"], "any_of": []},
+    "recommended_subjects": ["Agricultural Sciences"],
+    "programme_keywords": ["veterinary", "veterinary science"],
+    "is_active": true
+  },
+  {
+    "slug": "animal-scientist",
+    "title": "Animal Scientist",
+    "industry": "Agriculture & Environment",
+    "description": "Study animal nutrition, genetics, breeding, and welfare to improve livestock productivity and health. Work with beef, dairy, poultry, and small-stock operations and research institutions.",
+    "compensation": {"entry": 20000, "mid": 36000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R20k – R50k/mo"},
+    "employability": {
+      "demand": "Moderate — livestock sector and feed industry are main employers.",
+      "outlook": "Stable; sustainability and alternative proteins creating new research niches.",
+      "pathways": ["BSc Animal Science (4 years)", "Honours (1 year)", "Commercial livestock farms, ARC, feed companies, DALRRD"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Life Sciences"], "any_of": []},
+    "recommended_subjects": ["Agricultural Sciences", "Physical Sciences"],
+    "programme_keywords": ["animal science", "animal production"],
+    "is_active": true
+  },
+  {
+    "slug": "farm-agribusiness-manager",
+    "title": "Farm / Agribusiness Manager",
+    "industry": "Agriculture & Environment",
+    "description": "Plan and manage agricultural operations — crop planning, resource allocation, staff management, sales, and compliance. Agribusiness managers handle commercial farming enterprises or agri-processing companies.",
+    "compensation": {"entry": 18000, "mid": 40000, "senior": 65000, "currency": "ZAR", "period": "month", "display": "R18k – R65k/mo"},
+    "employability": {
+      "demand": "High — commercial farming sector constantly needs capable managers.",
+      "outlook": "Strong; agriprocessing, export markets, and land reform creating new businesses.",
+      "pathways": ["BSc Agri Management / BCom Agribusiness (4 years)", "Agricultural college diplomas", "Commercial farms, cooperatives, agriprocessing companies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Agricultural Sciences", "Agricultural Management Practices", "Business Studies", "Economics"]},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["agricultural management", "agribusiness", "agricultural economics"],
+    "is_active": true
+  },
+  {
+    "slug": "conservation-scientist",
+    "title": "Conservation Scientist / Ecologist",
+    "industry": "Agriculture & Environment",
+    "description": "Protect and restore natural ecosystems — conducting biodiversity assessments, developing conservation plans, and advising on land use. Work in national parks, NGOs, and consulting.",
+    "compensation": {"entry": 18000, "mid": 32000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R18k – R50k/mo"},
+    "employability": {
+      "demand": "Moderate — driven by biodiversity legislation and conservation funding.",
+      "outlook": "Steady; international conservation funding supplements government posts.",
+      "pathways": ["BSc Conservation Biology / Ecology (3–4 years)", "Honours/MSc", "SANParks, CapeNature, WWF, conservation consulting"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Life Sciences", "Geography", "Agricultural Sciences"]},
+    "recommended_subjects": ["Physical Sciences", "Mathematics"],
+    "programme_keywords": ["conservation", "nature conservation", "wildlife", "environmental"],
+    "is_active": true
+  },
+  {
+    "slug": "food-technologist",
+    "title": "Food Technologist",
+    "industry": "Agriculture & Environment",
+    "description": "Develop, improve, and ensure the safety of food products — from formulation and processing to quality control and regulatory compliance. Bridges science and the food industry.",
+    "compensation": {"entry": 20000, "mid": 36000, "senior": 52000, "currency": "ZAR", "period": "month", "display": "R20k – R52k/mo"},
+    "employability": {
+      "demand": "Moderate-high — food industry is one of SA's largest manufacturing sectors.",
+      "outlook": "Stable; health foods, export compliance, and functional foods growing.",
+      "pathways": ["BSc Food Science / Food Technology (4 years)", "ARC, food and beverage manufacturers, retailers, government labs"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Life Sciences"], "any_of": []},
+    "recommended_subjects": ["Physical Sciences", "Mathematics"],
+    "programme_keywords": ["food science", "food technology", "consumer science"],
+    "is_active": true
+  },
+  {
+    "slug": "environmental-manager",
+    "title": "Environmental Manager / EIA Practitioner",
+    "industry": "Agriculture & Environment",
+    "description": "Oversee environmental compliance, conduct environmental impact assessments, and develop sustainability plans. Required on all major infrastructure, mining, and development projects by law.",
+    "compensation": {"entry": 22000, "mid": 42000, "senior": 65000, "currency": "ZAR", "period": "month", "display": "R22k – R65k/mo"},
+    "employability": {
+      "demand": "High — NEMA requires EAPS registration for all EIA projects.",
+      "outlook": "Growing; regulatory tightening and ESG reporting driving corporate demand.",
+      "pathways": ["BSc Environmental Science / Geography (3–4 years)", "EAPS registration", "Consulting firms, mining companies, government, development agencies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Life Sciences", "Geography", "Agricultural Sciences", "Physical Sciences"]},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["environmental management", "environmental science", "geography"],
+    "is_active": true
+  },
+  {
+    "slug": "hydrologist",
+    "title": "Hydrologist / Water Resources Specialist",
+    "industry": "Agriculture & Environment",
+    "description": "Study the movement and distribution of water — rivers, groundwater, wetlands, and water supply systems. Support dam design, drought management, and water quality work.",
+    "compensation": {"entry": 22000, "mid": 40000, "senior": 60000, "currency": "ZAR", "period": "month", "display": "R22k – R60k/mo"},
+    "employability": {
+      "demand": "High — water scarcity is SA's most pressing resource challenge.",
+      "outlook": "Strong; demand growing with infrastructure investment in water security.",
+      "pathways": ["BSc Hydrology / Geography / Civil Engineering (3–4 years)", "DWS, consulting firms, municipalities, catchment management agencies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Geography", "Physical Sciences"]},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["hydrology", "geography", "civil engineering", "environmental management"],
+    "is_active": true
+  }
+]

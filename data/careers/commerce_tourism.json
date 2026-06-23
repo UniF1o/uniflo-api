@@ -1,0 +1,138 @@
+[
+  {
+    "slug": "marketing-manager",
+    "title": "Marketing / Brand Manager",
+    "industry": "Commerce, Tourism & Hospitality",
+    "description": "Develop and execute marketing strategies — brand positioning, digital campaigns, market research, and product launches. Work across FMCG, financial services, tech, and retail.",
+    "compensation": {"entry": 18000, "mid": 42000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R18k – R70k/mo"},
+    "employability": {
+      "demand": "High — every commercial organisation needs marketing capability.",
+      "outlook": "Growing; digital marketing and data-driven campaigns expanding the field.",
+      "pathways": ["BCom Marketing / BCom Business Management (3–4 years)", "CIM certification", "Corporates, agencies, FMCG companies, startups"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Business Studies", "Economics", "Mathematics", "Mathematical Literacy"]},
+    "recommended_subjects": ["Accounting"],
+    "programme_keywords": ["marketing", "business management", "commerce"],
+    "is_active": true
+  },
+  {
+    "slug": "supply-chain-manager",
+    "title": "Supply Chain / Logistics Manager",
+    "industry": "Commerce, Tourism & Hospitality",
+    "description": "Plan and oversee the flow of goods from source to consumer — procurement, warehousing, transport, customs, and inventory. Critical in FMCG, retail, manufacturing, and e-commerce.",
+    "compensation": {"entry": 20000, "mid": 45000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R20k – R70k/mo"},
+    "employability": {
+      "demand": "High — port congestion and import complexity drive demand for specialists.",
+      "outlook": "Strong; e-commerce and regional trade corridors expanding logistics needs.",
+      "pathways": ["BCom Logistics / Supply Chain Management (3–4 years)", "CIPS / SAPICS certification", "FMCG companies, retailers, freight forwarders, 3PLs"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Mathematics", "Mathematical Literacy", "Business Studies", "Economics"]},
+    "recommended_subjects": ["Geography"],
+    "programme_keywords": ["logistics", "supply chain management", "transport", "business management"],
+    "is_active": true
+  },
+  {
+    "slug": "hotel-manager",
+    "title": "Hospitality / Hotel Manager",
+    "industry": "Commerce, Tourism & Hospitality",
+    "description": "Lead the operations of a hotel, lodge, or hospitality establishment — front office, food and beverage, housekeeping, events, and revenue management. Build guest experience and drive profitability.",
+    "compensation": {"entry": 15000, "mid": 32000, "senior": 55000, "currency": "ZAR", "period": "month", "display": "R15k – R55k/mo"},
+    "employability": {
+      "demand": "Moderate — tourism recovery post-COVID rebuilding demand; seasonal variability.",
+      "outlook": "Growing; SA tourism sector targeting R400bn by 2030.",
+      "pathways": ["BCom Hospitality Management / BTech Hospitality (3–4 years)", "Hotel school diplomas", "Hotel chains, game lodges, resorts, cruise lines"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Hospitality Studies", "Tourism", "Consumer Studies", "Business Studies"]},
+    "recommended_subjects": ["Mathematical Literacy", "English Home Language"],
+    "programme_keywords": ["hospitality", "hotel management", "tourism management"],
+    "is_active": true
+  },
+  {
+    "slug": "tourism-manager",
+    "title": "Tourism / Travel Manager",
+    "industry": "Commerce, Tourism & Hospitality",
+    "description": "Develop and manage tourism products — tour packages, destination marketing, travel itineraries, and eco-tourism offerings. Work with operators, conservation bodies, and government boards.",
+    "compensation": {"entry": 14000, "mid": 26000, "senior": 45000, "currency": "ZAR", "period": "month", "display": "R14k – R45k/mo"},
+    "employability": {
+      "demand": "Moderate — growing as inbound tourism expands; linked to broader economic cycles.",
+      "outlook": "Growing; SA National Tourism Sector Strategy prioritises job creation.",
+      "pathways": ["BCom Tourism Management / BA Tourism (3–4 years)", "Tour operators, SA Tourism, game reserves, travel agencies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Tourism", "Geography", "Business Studies"]},
+    "recommended_subjects": ["English Home Language", "Afrikaans Home Language"],
+    "programme_keywords": ["tourism", "tourism management", "travel"],
+    "is_active": true
+  },
+  {
+    "slug": "human-resources-manager",
+    "title": "Human Resources Manager",
+    "industry": "Commerce, Tourism & Hospitality",
+    "description": "Recruit, develop, and retain employees — managing performance, compensation, labour relations, and transformation. HR is a strategic business partner in every large organisation.",
+    "compensation": {"entry": 20000, "mid": 42000, "senior": 65000, "currency": "ZAR", "period": "month", "display": "R20k – R65k/mo"},
+    "employability": {
+      "demand": "High — every organisation above ~50 people needs dedicated HR support.",
+      "outlook": "Stable; labour-law complexity and transformation requirements keeping demand high.",
+      "pathways": ["BCom Human Resources / Industrial Psychology (3–4 years)", "SABPP membership", "Corporates, government, consulting, staffing agencies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["Business Studies", "Economics"],
+    "programme_keywords": ["human resource management", "industrial psychology", "business management"],
+    "is_active": true
+  },
+  {
+    "slug": "retail-operations-manager",
+    "title": "Retail / Store Operations Manager",
+    "industry": "Commerce, Tourism & Hospitality",
+    "description": "Run a retail store or cluster of branches — managing stock, staff, sales targets, shrinkage, and customer experience. A fast-paced role with clear progression from floor staff to regional manager.",
+    "compensation": {"entry": 14000, "mid": 28000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R14k – R50k/mo"},
+    "employability": {
+      "demand": "High — retail is one of SA's largest employment sectors.",
+      "outlook": "Stable; e-commerce disruption offset by growth in township retail.",
+      "pathways": ["BCom Retail Management / Business Management (3–4 years)", "Internal management trainee programmes", "Pick n Pay, Shoprite, Woolworths, Spar, Mr Price"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Business Studies", "Mathematics", "Mathematical Literacy", "Economics"]},
+    "recommended_subjects": ["Accounting"],
+    "programme_keywords": ["retail management", "business management", "marketing"],
+    "is_active": true
+  },
+  {
+    "slug": "event-manager",
+    "title": "Event Manager / Conference Coordinator",
+    "industry": "Commerce, Tourism & Hospitality",
+    "description": "Plan and deliver events — corporate conferences, product launches, sports events, festivals, and private functions. Coordinate venues, suppliers, budgets, logistics, and marketing.",
+    "compensation": {"entry": 14000, "mid": 26000, "senior": 45000, "currency": "ZAR", "period": "month", "display": "R14k – R45k/mo"},
+    "employability": {
+      "demand": "Moderate — recovery post-COVID has rebounded strongly; MICE sector growing.",
+      "outlook": "Growing; SA's position as an international meetings destination expanding opportunities.",
+      "pathways": ["Diploma / BCom Event Management / Hospitality (3–4 years)", "Event companies, hotels, PCOs, corporates, sports bodies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Hospitality Studies", "Tourism", "Business Studies", "Consumer Studies"]},
+    "recommended_subjects": ["Mathematical Literacy", "English Home Language"],
+    "programme_keywords": ["event management", "hospitality", "tourism management"],
+    "is_active": true
+  },
+  {
+    "slug": "estate-agent",
+    "title": "Property / Real Estate Agent",
+    "industry": "Commerce, Tourism & Hospitality",
+    "description": "Market, sell, and lease residential and commercial property — advising buyers and sellers, conducting valuations, and managing portfolios. Commission-based; high earners in strong markets.",
+    "compensation": {"entry": 12000, "mid": 30000, "senior": 60000, "currency": "ZAR", "period": "month", "display": "R12k – R60k+/mo"},
+    "employability": {
+      "demand": "Moderate — tied to property market cycles; Proptech creating new channels.",
+      "outlook": "Stable; affordable housing and township property markets providing growth pockets.",
+      "pathways": ["NQF4 Real Estate qualification (required by PPRA)", "Agency apprenticeship", "Estate agencies, property developers, corporate property"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Business Studies", "Economics", "Mathematics", "Mathematical Literacy"]},
+    "recommended_subjects": ["English Home Language"],
+    "programme_keywords": ["property management", "real estate", "business management"],
+    "is_active": true
+  }
+]

@@ -1,0 +1,155 @@
+[
+  {
+    "slug": "chemist",
+    "title": "Chemist",
+    "industry": "Natural & Physical Sciences",
+    "description": "Apply chemical knowledge to research, analyse substances, and develop products — in industries from pharmaceuticals to petrochemicals, food technology, and materials science.",
+    "compensation": {"entry": 22000, "mid": 40000, "senior": 60000, "currency": "ZAR", "period": "month", "display": "R22k – R60k/mo"},
+    "employability": {
+      "demand": "Moderate-high — needed in manufacturing, mining, and pharmaceutical sectors.",
+      "outlook": "Stable; materials science and green chemistry growing.",
+      "pathways": ["BSc Chemistry (3 years)", "Honours/MSc (1–2 years)", "Pharmaceutical companies, petrochemicals, food industry, research councils"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Mathematics", "Life Sciences"],
+    "programme_keywords": ["chemistry", "chemical sciences"],
+    "is_active": true
+  },
+  {
+    "slug": "biologist",
+    "title": "Biologist / Life Scientist",
+    "industry": "Natural & Physical Sciences",
+    "description": "Study living organisms — from cellular and molecular biology to ecology and zoology. Work in research institutions, conservation agencies, healthcare, agriculture, and biotechnology.",
+    "compensation": {"entry": 20000, "mid": 38000, "senior": 55000, "currency": "ZAR", "period": "month", "display": "R20k – R55k/mo"},
+    "employability": {
+      "demand": "Moderate — academic and government research strongest; private-sector biotech growing.",
+      "outlook": "Growing; biosecurity, conservation, and biotechnology expanding.",
+      "pathways": ["BSc Biological Sciences (3 years)", "Honours/MSc (1–2 years)", "Universities, CSIR, NBI, conservation organisations, pharmaceutical companies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Life Sciences"], "any_of": []},
+    "recommended_subjects": ["Mathematics", "Physical Sciences"],
+    "programme_keywords": ["biological sciences", "biology", "zoology", "botany"],
+    "is_active": true
+  },
+  {
+    "slug": "physicist",
+    "title": "Physicist",
+    "industry": "Natural & Physical Sciences",
+    "description": "Study matter, energy, and the fundamental laws of the universe. Physicists work in research, engineering, medical physics, renewable energy, and data-intensive fields.",
+    "compensation": {"entry": 25000, "mid": 45000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R25k – R70k/mo"},
+    "employability": {
+      "demand": "Moderate — strong in nuclear energy, medical physics, and academic research.",
+      "outlook": "Growing; renewables, Necsa, ITER project, and data science value physics graduates.",
+      "pathways": ["BSc Physics (3 years)", "Honours/MSc/PhD (2–4 years)", "CSIR, Necsa, universities, renewable energy companies, financial modelling"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Information Technology"],
+    "programme_keywords": ["physics", "physical sciences"],
+    "is_active": true
+  },
+  {
+    "slug": "environmental-scientist",
+    "title": "Environmental Scientist",
+    "industry": "Natural & Physical Sciences",
+    "description": "Study and manage the environment — assessing pollution, conducting environmental impact assessments, advising on policy, and developing conservation strategies.",
+    "compensation": {"entry": 20000, "mid": 38000, "senior": 55000, "currency": "ZAR", "period": "month", "display": "R20k – R55k/mo"},
+    "employability": {
+      "demand": "Moderate-high — EIA legislation requires environmental practitioners on all major projects.",
+      "outlook": "Growing; climate change policy and sustainability reporting driving demand.",
+      "pathways": ["BSc Environmental Science / Geography (3 years)", "Honours (1 year)", "EIA consultancies, government, mining companies, conservation agencies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Life Sciences", "Geography"]},
+    "recommended_subjects": ["Physical Sciences", "Mathematics"],
+    "programme_keywords": ["environmental science", "environmental management", "geography"],
+    "is_active": true
+  },
+  {
+    "slug": "geologist",
+    "title": "Geologist / Geoscientist",
+    "industry": "Natural & Physical Sciences",
+    "description": "Study the Earth's structure, materials, and history to locate mineral deposits, assess geological hazards, and support mining, civil engineering, and environmental projects.",
+    "compensation": {"entry": 25000, "mid": 48000, "senior": 80000, "currency": "ZAR", "period": "month", "display": "R25k – R80k/mo"},
+    "employability": {
+      "demand": "High — SA mining sector creates strong demand for exploration and mine geologists.",
+      "outlook": "Strong; minerals critical to green energy (lithium, manganese, cobalt) driving exploration.",
+      "pathways": ["BSc Geology (3 years)", "Honours (1 year)", "Mining houses, consulting, Department of Mineral Resources"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Geography", "Physical Sciences"]},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["geology", "earth science", "geoscience"],
+    "is_active": true
+  },
+  {
+    "slug": "microbiologist",
+    "title": "Microbiologist / Biochemist",
+    "industry": "Natural & Physical Sciences",
+    "description": "Study microorganisms, their interactions, and biochemical processes — critical in healthcare (infection control, vaccine development), food safety, agriculture, and industrial biotechnology.",
+    "compensation": {"entry": 22000, "mid": 40000, "senior": 58000, "currency": "ZAR", "period": "month", "display": "R22k – R58k/mo"},
+    "employability": {
+      "demand": "Moderate-high — food industry, pharmaceutical, and public health driving demand.",
+      "outlook": "Growing; pandemic awareness elevated microbiological expertise in policy.",
+      "pathways": ["BSc Microbiology / Biochemistry (3 years)", "Honours/MSc (1–2 years)", "Pharmaceutical companies, food labs, hospitals, NICD, CSIR"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Life Sciences", "Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["biochemistry", "microbiology", "biotechnology"],
+    "is_active": true
+  },
+  {
+    "slug": "statistician",
+    "title": "Statistician",
+    "industry": "Natural & Physical Sciences",
+    "description": "Design experiments, collect data, and apply statistical methods to draw conclusions — supporting research, business decisions, public policy, and scientific study.",
+    "compensation": {"entry": 22000, "mid": 42000, "senior": 65000, "currency": "ZAR", "period": "month", "display": "R22k – R65k/mo"},
+    "employability": {
+      "demand": "High — demand spans science, finance, healthcare, government, and tech.",
+      "outlook": "Strong; data revolution has elevated the value of statistical skills.",
+      "pathways": ["BSc Statistics / Actuarial Science / Mathematics (3 years)", "Honours/MSc", "Stats SA, SARB, insurance, banks, pharmaceutical firms, research councils"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Physical Sciences", "Information Technology"],
+    "programme_keywords": ["statistics", "actuarial science", "mathematical sciences"],
+    "is_active": true
+  },
+  {
+    "slug": "mathematician",
+    "title": "Mathematician",
+    "industry": "Natural & Physical Sciences",
+    "description": "Apply abstract reasoning and mathematical models to solve problems — in pure research, finance, engineering, cryptography, and machine learning. Postgraduate study is typically required.",
+    "compensation": {"entry": 22000, "mid": 45000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R22k – R70k/mo"},
+    "employability": {
+      "demand": "Moderate — core academic demand plus high crossover to finance and tech.",
+      "outlook": "Stable; mathematical modelling skills increasingly sought outside academia.",
+      "pathways": ["BSc Mathematics (3 years)", "Honours/MSc/PhD (1–4 years)", "Universities, financial services, engineering firms, tech companies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Physical Sciences"],
+    "programme_keywords": ["mathematics", "mathematical sciences", "applied mathematics"],
+    "is_active": true
+  },
+  {
+    "slug": "oceanographer",
+    "title": "Oceanographer / Marine Scientist",
+    "industry": "Natural & Physical Sciences",
+    "description": "Study the ocean — its physical, chemical, biological, and geological properties. Contribute to fisheries management, climate science, environmental monitoring, and offshore industry.",
+    "compensation": {"entry": 20000, "mid": 36000, "senior": 55000, "currency": "ZAR", "period": "month", "display": "R20k – R55k/mo"},
+    "employability": {
+      "demand": "Moderate — niche but growing given blue economy and climate focus.",
+      "outlook": "Steady; government science agencies and DFFE are primary employers.",
+      "pathways": ["BSc Oceanography / Marine Biology (3 years)", "Honours/MSc (1–2 years)", "DFFE, CSIR, South African Weather Service, offshore mining companies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Physical Sciences", "Life Sciences", "Geography"]},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["oceanography", "marine science", "environmental science"],
+    "is_active": true
+  }
+]
