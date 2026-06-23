@@ -66,7 +66,7 @@ class TestListCareers:
                         outlook="Strong",
                         pathways=["BEng Civil Engineering (4 years)"],
                     ),
-                    recommended_subjects=["Engineering Graphics and Design"],
+                    required_subjects=["Mathematics", "Physical Sciences"],
                 ),
                 CareerRead(
                     id=CAREER_ID_2,
@@ -129,7 +129,7 @@ class TestListCareers:
         assert career["compensation"]["currency"] == "ZAR"
         assert "demand" in career["employability"]
         assert "pathways" in career["employability"]
-        assert career["recommended_subjects"] == ["Engineering Graphics and Design"]
+        assert career["required_subjects"] == ["Mathematics", "Physical Sciences"]
 
     def test_returns_409_when_no_academic_record(self):
         mock_session = MagicMock()
