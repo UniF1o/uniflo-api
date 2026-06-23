@@ -1,0 +1,172 @@
+[
+  {
+    "slug": "software-developer",
+    "title": "Software Developer",
+    "industry": "Information & Communication Technology",
+    "description": "Build web, mobile, and desktop applications. Software developers write, test, and maintain code across the full stack — from user interfaces to databases and APIs.",
+    "compensation": {"entry": 20000, "mid": 55000, "senior": 100000, "currency": "ZAR", "period": "month", "display": "R20k – R100k/mo"},
+    "employability": {
+      "demand": "Very high — ICT skills shortage; software engineers listed on SA Critical Skills List 2025.",
+      "outlook": "Exceptional; demand outpaces supply across all sectors. Remote work opens global opportunities.",
+      "pathways": ["BSc Computer Science / BSc IT (3–4 years)", "Coding bootcamp + portfolio", "Startups, banks, tech companies, freelance"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Information Technology", "Computer Applications Technology"],
+    "programme_keywords": ["computer science", "information technology", "informatics", "software engineering", "data science"],
+    "is_active": true
+  },
+  {
+    "slug": "data-scientist",
+    "title": "Data Scientist / Analyst",
+    "industry": "Information & Communication Technology",
+    "description": "Extract insights from large datasets using statistics, machine learning, and data visualisation. Inform business decisions and build predictive models across every industry.",
+    "compensation": {"entry": 25000, "mid": 60000, "senior": 90000, "currency": "ZAR", "period": "month", "display": "R25k – R90k/mo"},
+    "employability": {
+      "demand": "Very high — data science is the fastest-growing ICT discipline; on Critical Skills List.",
+      "outlook": "Exceptional; every data-driven organisation needs analysts and scientists.",
+      "pathways": ["BSc Statistics / Data Science / Computer Science (3–4 years)", "Postgrad in Data Science", "Finance, retail, healthcare, tech, government"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Information Technology"],
+    "programme_keywords": ["data science", "statistics", "information systems", "computer science"],
+    "is_active": true
+  },
+  {
+    "slug": "ai-ml-engineer",
+    "title": "AI / Machine Learning Engineer",
+    "industry": "Information & Communication Technology",
+    "description": "Design and deploy machine learning models and AI systems — from natural language processing to computer vision. Bridges data science and production software engineering.",
+    "compensation": {"entry": 35000, "mid": 70000, "senior": 110000, "currency": "ZAR", "period": "month", "display": "R35k – R110k+/mo"},
+    "employability": {
+      "demand": "Very high — AI talent is globally scarce; SA companies competing for local expertise.",
+      "outlook": "Explosive; every industry is integrating AI tools.",
+      "pathways": ["BSc Computer Science / BSc AI (3–4 years)", "Postgrad specialisation", "Tech companies, financial services, research labs"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Physical Sciences", "Information Technology"],
+    "programme_keywords": ["computer science", "artificial intelligence", "data science"],
+    "is_active": true
+  },
+  {
+    "slug": "cybersecurity-specialist",
+    "title": "Cybersecurity Specialist",
+    "industry": "Information & Communication Technology",
+    "description": "Protect systems, networks, and data from cyber threats. Roles span penetration testing, incident response, security architecture, and compliance — increasingly critical as attacks escalate.",
+    "compensation": {"entry": 25000, "mid": 55000, "senior": 85000, "currency": "ZAR", "period": "month", "display": "R25k – R85k/mo"},
+    "employability": {
+      "demand": "Very high — cyber threats growing; acute shortage of qualified specialists.",
+      "outlook": "Exceptional; cybersecurity spend is rising across government, finance, and healthcare.",
+      "pathways": ["BSc Computer Science / BSc IT (3–4 years)", "CISSP, CEH, CompTIA Security+ certifications", "Banks, telecoms, government agencies, consulting"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Information Technology"],
+    "programme_keywords": ["computer science", "information technology", "cybersecurity"],
+    "is_active": true
+  },
+  {
+    "slug": "network-systems-engineer",
+    "title": "Network & Systems Engineer",
+    "industry": "Information & Communication Technology",
+    "description": "Design, implement, and maintain computer networks and server infrastructure — LANs, WANs, cloud infrastructure, and telecoms networks. Keep organisations connected and running.",
+    "compensation": {"entry": 18000, "mid": 38000, "senior": 60000, "currency": "ZAR", "period": "month", "display": "R18k – R60k/mo"},
+    "employability": {
+      "demand": "High — network infrastructure is the backbone of every organisation.",
+      "outlook": "Steady; cloud migration and 5G rollout creating new specialist demand.",
+      "pathways": ["BSc IT / Diploma in IT (3 years)", "CCNA/CCNP, MCSA certifications", "ISPs, corporates, government, managed service providers"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Mathematics", "Mathematical Literacy", "Information Technology"]},
+    "recommended_subjects": ["Computer Applications Technology"],
+    "programme_keywords": ["information technology", "information systems", "networking"],
+    "is_active": true
+  },
+  {
+    "slug": "business-analyst",
+    "title": "Business / Systems Analyst",
+    "industry": "Information & Communication Technology",
+    "description": "Bridge the gap between business needs and IT solutions — gathering requirements, mapping processes, and specifying systems. Work closely with developers, stakeholders, and project managers.",
+    "compensation": {"entry": 22000, "mid": 45000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R22k – R70k/mo"},
+    "employability": {
+      "demand": "High — every digital transformation project needs business analysts.",
+      "outlook": "Growing; listed on several critical skills frameworks.",
+      "pathways": ["BSc IT / BCom Information Systems (3–4 years)", "BA/IIBA certifications", "Banks, consulting firms, government, tech companies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Business Studies", "Information Technology"],
+    "programme_keywords": ["information systems", "information technology", "business informatics"],
+    "is_active": true
+  },
+  {
+    "slug": "cloud-solutions-architect",
+    "title": "Cloud Solutions Architect",
+    "industry": "Information & Communication Technology",
+    "description": "Design and oversee cloud infrastructure — choosing services, planning migrations, and ensuring security and cost-efficiency on platforms like AWS, Azure, and GCP.",
+    "compensation": {"entry": 35000, "mid": 65000, "senior": 100000, "currency": "ZAR", "period": "month", "display": "R35k – R100k+/mo"},
+    "employability": {
+      "demand": "Very high — cloud adoption accelerating; architects are scarce.",
+      "outlook": "Exceptional; cloud is the default for most new systems.",
+      "pathways": ["BSc Computer Science / BSc IT (3–4 years)", "AWS/Azure/GCP certifications", "Consulting firms, banks, tech companies, remote contracts"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Information Technology"],
+    "programme_keywords": ["computer science", "information technology", "information systems"],
+    "is_active": true
+  },
+  {
+    "slug": "devops-engineer",
+    "title": "DevOps / Platform Engineer",
+    "industry": "Information & Communication Technology",
+    "description": "Automate software delivery pipelines, manage infrastructure as code, and maintain CI/CD systems. Keep development and operations teams aligned for fast, reliable software releases.",
+    "compensation": {"entry": 28000, "mid": 58000, "senior": 90000, "currency": "ZAR", "period": "month", "display": "R28k – R90k/mo"},
+    "employability": {
+      "demand": "High — DevOps practices are now standard in software teams.",
+      "outlook": "Strong; demand grows with software team sizes.",
+      "pathways": ["BSc Computer Science / BSc IT (3–4 years)", "Docker, Kubernetes, Terraform certifications", "Tech companies, banks, e-commerce"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Information Technology"],
+    "programme_keywords": ["computer science", "information technology", "software engineering"],
+    "is_active": true
+  },
+  {
+    "slug": "database-administrator",
+    "title": "Database Administrator",
+    "industry": "Information & Communication Technology",
+    "description": "Design, maintain, and optimise databases that store critical data. DBAs ensure data integrity, performance, backups, and security across relational and NoSQL systems.",
+    "compensation": {"entry": 20000, "mid": 40000, "senior": 65000, "currency": "ZAR", "period": "month", "display": "R20k – R65k/mo"},
+    "employability": {
+      "demand": "Moderate-high — needed in every data-heavy organisation.",
+      "outlook": "Stable; increasingly complemented by data engineering skills.",
+      "pathways": ["BSc IT / BCom Information Systems (3–4 years)", "Oracle, SQL Server, PostgreSQL certifications", "Corporate IT, government, financial services"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Information Technology"],
+    "programme_keywords": ["information systems", "information technology", "computer science"],
+    "is_active": true
+  },
+  {
+    "slug": "it-support-technician",
+    "title": "IT Support Technician",
+    "industry": "Information & Communication Technology",
+    "description": "Provide first- and second-line support to users — diagnosing hardware and software problems, setting up devices, and maintaining IT infrastructure in organisations of all sizes.",
+    "compensation": {"entry": 12000, "mid": 22000, "senior": 35000, "currency": "ZAR", "period": "month", "display": "R12k – R35k/mo"},
+    "employability": {
+      "demand": "High — every organisation with computers needs IT support.",
+      "outlook": "Stable; a strong entry point into ICT with clear progression paths.",
+      "pathways": ["Diploma in IT / N+ / A+ certification", "CompTIA A+, Network+", "Any industry — corporate, SME, government"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Information Technology", "Computer Applications Technology", "Mathematics", "Mathematical Literacy"]},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["information technology", "computer support"],
+    "is_active": true
+  }
+]

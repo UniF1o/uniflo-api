@@ -1,0 +1,172 @@
+[
+  {
+    "slug": "medical-doctor",
+    "title": "Medical Doctor (MBChB)",
+    "industry": "Health & Medicine",
+    "description": "Diagnose and treat illness, injury, and disease. Doctors work in hospitals, clinics, and private practice across every medical speciality — from general practice to surgery.",
+    "compensation": {"entry": 44000, "mid": 80000, "senior": 135000, "currency": "ZAR", "period": "month", "display": "R44k – R135k/mo"},
+    "employability": {
+      "demand": "Very high — acute shortage of doctors in public and rural health; on Critical Skills List.",
+      "outlook": "Exceptional; healthcare demand grows with population and disease burden.",
+      "pathways": ["MBChB (6 years)", "Community service (1 year)", "Internship, specialisation (3–6 years), private or public practice"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences", "Life Sciences"], "any_of": []},
+    "recommended_subjects": ["English Home Language"],
+    "programme_keywords": ["mbchb", "medicine and surgery", "bachelor of medicine"],
+    "is_active": true
+  },
+  {
+    "slug": "pharmacist",
+    "title": "Pharmacist",
+    "industry": "Health & Medicine",
+    "description": "Dispense medicines, counsel patients, and ensure safe and effective drug use. Pharmacists work in retail pharmacies, hospitals, the pharmaceutical industry, and regulatory bodies.",
+    "compensation": {"entry": 30000, "mid": 50000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R30k – R70k/mo"},
+    "employability": {
+      "demand": "High — shortage in hospital pharmacy and rural areas.",
+      "outlook": "Stable; pharmaceutical sector growth adds industrial and research roles.",
+      "pathways": ["BPharm (4 years)", "Community service (1 year)", "Retail pharmacy chains, hospitals, pharmaceutical companies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Life Sciences"],
+    "programme_keywords": ["pharmacy"],
+    "is_active": true
+  },
+  {
+    "slug": "physiotherapist",
+    "title": "Physiotherapist",
+    "industry": "Health & Medicine",
+    "description": "Restore and improve patients' movement and function through exercise, manual therapy, and rehabilitation. Work with sports injuries, post-surgical recovery, neurological conditions, and chronic pain.",
+    "compensation": {"entry": 25000, "mid": 40000, "senior": 55000, "currency": "ZAR", "period": "month", "display": "R25k – R55k/mo"},
+    "employability": {
+      "demand": "High — shortage particularly in public hospitals and rural areas.",
+      "outlook": "Growing; sports science and private rehab clinics expanding.",
+      "pathways": ["BSc Physiotherapy (4 years)", "Community service (1 year)", "Hospitals, sports teams, private practices, rehabilitation centres"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Life Sciences"], "any_of": []},
+    "recommended_subjects": ["Physical Sciences", "Mathematics"],
+    "programme_keywords": ["physiotherapy"],
+    "is_active": true
+  },
+  {
+    "slug": "occupational-therapist",
+    "title": "Occupational Therapist",
+    "industry": "Health & Medicine",
+    "description": "Help people with physical, mental, or developmental challenges perform daily activities and meaningful work. Work in hospitals, schools, rehabilitation centres, and private practice.",
+    "compensation": {"entry": 22000, "mid": 38000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R22k – R50k/mo"},
+    "employability": {
+      "demand": "High — shortage in public health facilities; schools need OTs for learner support.",
+      "outlook": "Growing; ageing population and disability rights increasing demand.",
+      "pathways": ["BSc Occupational Therapy (4 years)", "Community service (1 year)", "Hospitals, special schools, private practice"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Life Sciences"], "any_of": []},
+    "recommended_subjects": ["Physical Sciences"],
+    "programme_keywords": ["occupational therapy"],
+    "is_active": true
+  },
+  {
+    "slug": "registered-nurse",
+    "title": "Registered Nurse",
+    "industry": "Health & Medicine",
+    "description": "Provide direct patient care — monitoring health, administering treatment, supporting doctors, and educating patients. Nurses are the backbone of healthcare delivery in hospitals and clinics.",
+    "compensation": {"entry": 18000, "mid": 28000, "senior": 45000, "currency": "ZAR", "period": "month", "display": "R18k – R45k/mo"},
+    "employability": {
+      "demand": "Very high — acute nursing shortage in SA; on Critical Skills List.",
+      "outlook": "Exceptional; public healthcare system is severely understaffed.",
+      "pathways": ["4-year diploma or degree at nursing college or university", "SANC registration", "Public hospitals, private hospitals, clinics"],
+      "employment_note": "Primary pathway is a 4-year nursing college diploma. University degrees (BSc Nursing) exist at some institutions but most nurses train at SANC-accredited colleges."
+    },
+    "subject_rule": {"all_of": ["Life Sciences"], "any_of": []},
+    "recommended_subjects": ["Mathematics", "Physical Sciences"],
+    "programme_keywords": ["nursing"],
+    "is_active": true
+  },
+  {
+    "slug": "dietitian",
+    "title": "Dietitian / Nutritionist",
+    "industry": "Health & Medicine",
+    "description": "Assess and treat nutritional conditions — from managing diabetes and eating disorders to optimising athlete performance. Provide evidence-based dietary advice in clinical and community settings.",
+    "compensation": {"entry": 20000, "mid": 35000, "senior": 45000, "currency": "ZAR", "period": "month", "display": "R20k – R45k/mo"},
+    "employability": {
+      "demand": "Moderate — growing awareness of nutrition driving demand in private practice.",
+      "outlook": "Stable; wellness, sports, and chronic disease management creating new opportunities.",
+      "pathways": ["BSc Dietetics (4 years)", "Community service (1 year)", "Hospitals, sports teams, private practice, food industry"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Life Sciences"], "any_of": []},
+    "recommended_subjects": ["Physical Sciences", "Mathematics"],
+    "programme_keywords": ["dietetics", "nutrition"],
+    "is_active": true
+  },
+  {
+    "slug": "dentist",
+    "title": "Dentist",
+    "industry": "Health & Medicine",
+    "description": "Diagnose and treat conditions of the teeth and mouth — fillings, extractions, orthodontics, and oral surgery. Work in private practice, hospitals, or public dental clinics.",
+    "compensation": {"entry": 40000, "mid": 70000, "senior": 110000, "currency": "ZAR", "period": "month", "display": "R40k – R110k/mo"},
+    "employability": {
+      "demand": "High — shortage of dentists in public sector and rural areas.",
+      "outlook": "Strong; private practice demand is consistent.",
+      "pathways": ["BChD / BDS Dentistry (5 years)", "Community service (1 year)", "Private practices, public dental clinics, hospitals"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences", "Life Sciences"], "any_of": []},
+    "recommended_subjects": [],
+    "programme_keywords": ["dental", "dentistry", "oral health"],
+    "is_active": true
+  },
+  {
+    "slug": "radiographer",
+    "title": "Radiographer / Radiologist",
+    "industry": "Health & Medicine",
+    "description": "Use imaging technology — X-rays, MRI, CT scans, and ultrasound — to diagnose disease and injury. Diagnostic radiographers capture the images; radiologists (doctors) interpret them.",
+    "compensation": {"entry": 22000, "mid": 38000, "senior": 60000, "currency": "ZAR", "period": "month", "display": "R22k – R60k/mo"},
+    "employability": {
+      "demand": "High — shortage of radiographers across public and private hospitals.",
+      "outlook": "Growing; medical imaging is expanding in diagnostics and oncology.",
+      "pathways": ["BSc Radiography (4 years)", "Community service (1 year)", "Hospitals, radiology practices, oncology centres"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Life Sciences"], "any_of": []},
+    "recommended_subjects": ["Physical Sciences", "Mathematics"],
+    "programme_keywords": ["radiography"],
+    "is_active": true
+  },
+  {
+    "slug": "speech-therapist",
+    "title": "Speech-Language Therapist",
+    "industry": "Health & Medicine",
+    "description": "Assess and treat communication and swallowing disorders in children and adults — from stuttering and language delay to post-stroke speech recovery.",
+    "compensation": {"entry": 22000, "mid": 36000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R22k – R50k/mo"},
+    "employability": {
+      "demand": "High — critical shortage, especially in schools and public hospitals.",
+      "outlook": "Growing; increased awareness of learning disabilities driving school demand.",
+      "pathways": ["BSc Speech-Language Pathology (4 years)", "Community service (1 year)", "Hospitals, schools, private practice"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Life Sciences"], "any_of": []},
+    "recommended_subjects": ["English Home Language"],
+    "programme_keywords": ["speech-language pathology", "audiology"],
+    "is_active": true
+  },
+  {
+    "slug": "biomedical-scientist",
+    "title": "Biomedical Scientist / Medical Technologist",
+    "industry": "Health & Medicine",
+    "description": "Perform laboratory tests on blood, tissue, and other samples to diagnose disease. Work behind the scenes in hospital labs and private pathology laboratories.",
+    "compensation": {"entry": 20000, "mid": 35000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R20k – R50k/mo"},
+    "employability": {
+      "demand": "Moderate-high — laboratory services are essential to healthcare delivery.",
+      "outlook": "Stable; pandemic heightened awareness of diagnostic lab capacity needs.",
+      "pathways": ["BSc Medical Laboratory Science / Biomedical Science (4 years)", "HPCSA registration", "Hospital labs, Lancet, Ampath, NHLS"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Life Sciences", "Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Mathematics"],
+    "programme_keywords": ["biomedical", "medical science", "medical laboratory"],
+    "is_active": true
+  }
+]

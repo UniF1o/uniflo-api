@@ -12,6 +12,7 @@ from app.api.academic_records.router import router as academic_records_router
 from app.api.account.router import router as account_router
 from app.api.applications.router import router as applications_router
 from app.api.auth.router import router as auth_router
+from app.api.careers.router import router as careers_router
 from app.api.contacts.router import router as contacts_router
 from app.api.documents.router import router as documents_router
 from app.api.middleware.auth import AuthMiddleware
@@ -93,6 +94,7 @@ app.include_router(contacts_router)
 app.include_router(documents_router)
 app.include_router(universities_router)
 app.include_router(recommendations_router)
+app.include_router(careers_router)
 app.include_router(applications_router)
 
 

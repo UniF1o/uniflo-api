@@ -1,0 +1,138 @@
+[
+  {
+    "slug": "attorney",
+    "title": "Attorney / Advocate",
+    "industry": "Law & Justice",
+    "description": "Represent clients in legal matters — drafting contracts, advising on rights and obligations, negotiating settlements, and appearing in court. Attorneys practise broadly; advocates specialise in litigation.",
+    "compensation": {"entry": 20000, "mid": 55000, "senior": 125000, "currency": "ZAR", "period": "month", "display": "R20k – R125k/mo"},
+    "employability": {
+      "demand": "High — large legal services sector; demand from commerce, government, and individuals.",
+      "outlook": "Stable; specialised practice areas (commercial, tech, environmental law) growing.",
+      "pathways": ["LLB (4 years)", "2-year articles of clerkship or pupillage", "Law firms, corporate legal, state attorney, self-employed"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["History", "English Home Language"],
+    "programme_keywords": ["llb", "bachelor of laws"],
+    "is_active": true
+  },
+  {
+    "slug": "legal-advisor",
+    "title": "Legal Advisor / Corporate Counsel",
+    "industry": "Law & Justice",
+    "description": "Provide legal guidance to an organisation — drafting agreements, advising on compliance and risk, managing litigation, and protecting the company's legal interests in-house.",
+    "compensation": {"entry": 30000, "mid": 60000, "senior": 90000, "currency": "ZAR", "period": "month", "display": "R30k – R90k/mo"},
+    "employability": {
+      "demand": "High — every large company and government department needs legal counsel.",
+      "outlook": "Growing; regulatory complexity driving demand for in-house lawyers.",
+      "pathways": ["LLB (4 years)", "2-year articles", "Corporate legal departments, banks, insurance companies, government"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["Business Studies", "Economics"],
+    "programme_keywords": ["llb", "bachelor of laws"],
+    "is_active": true
+  },
+  {
+    "slug": "paralegal",
+    "title": "Paralegal",
+    "industry": "Law & Justice",
+    "description": "Support lawyers with legal research, document preparation, case management, and client communication. Paralegals are essential to law firm efficiency and access-to-justice organisations.",
+    "compensation": {"entry": 12000, "mid": 22000, "senior": 30000, "currency": "ZAR", "period": "month", "display": "R12k – R30k/mo"},
+    "employability": {
+      "demand": "Moderate — entry-level role; good pathway into the legal profession.",
+      "outlook": "Stable; legal tech may shift tasks but demand for human judgment remains.",
+      "pathways": ["Diploma in Paralegal Practice / LLB (3–4 years)", "Law Society certification", "Law firms, NGOs, legal aid clinics"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["English Home Language"],
+    "programme_keywords": ["paralegal", "legal"],
+    "is_active": true
+  },
+  {
+    "slug": "forensic-investigator",
+    "title": "Forensic Investigator",
+    "industry": "Law & Justice",
+    "description": "Investigate financial crimes, fraud, and corruption using specialised forensic techniques — evidence gathering, interviews, financial tracing, and expert witness testimony. Bridge law and finance.",
+    "compensation": {"entry": 18000, "mid": 38000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R18k – R50k/mo"},
+    "employability": {
+      "demand": "High — fraud and corruption investigation is a growing field in SA.",
+      "outlook": "Growing; public-sector accountability and anti-corruption work expanding.",
+      "pathways": ["BCom Forensic Accounting / Criminology (3–4 years)", "CFE certification", "Audit firms, SAPS, NPA, corporate security"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Life Sciences", "Mathematics", "Mathematical Literacy"]},
+    "recommended_subjects": ["Accounting"],
+    "programme_keywords": ["forensic", "criminology"],
+    "is_active": true
+  },
+  {
+    "slug": "human-rights-advocate",
+    "title": "Human Rights / Constitutional Lawyer",
+    "industry": "Law & Justice",
+    "description": "Defend constitutional rights and advance social justice through litigation, policy advocacy, and legal education. Work with NGOs, public interest law centres, and the judiciary.",
+    "compensation": {"entry": 18000, "mid": 40000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R18k – R70k/mo"},
+    "employability": {
+      "demand": "Moderate — niche practice area; mostly NGO and public-interest sector.",
+      "outlook": "Stable; Constitutional Court litigation keeps demand for specialists alive.",
+      "pathways": ["LLB (4 years)", "LLM in Human Rights / Constitutional Law (1–2 years)", "Section 27, SECTION27, Legal Resources Centre, public defender offices"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["History", "English Home Language"],
+    "programme_keywords": ["llb", "bachelor of laws"],
+    "is_active": true
+  },
+  {
+    "slug": "labour-law-specialist",
+    "title": "Labour Law Specialist",
+    "industry": "Law & Justice",
+    "description": "Advise employers and employees on workplace rights, contracts, dismissals, and bargaining council disputes. Represent clients at the CCMA, Labour Court, and in negotiations.",
+    "compensation": {"entry": 22000, "mid": 50000, "senior": 80000, "currency": "ZAR", "period": "month", "display": "R22k – R80k/mo"},
+    "employability": {
+      "demand": "High — high frequency of workplace disputes in SA makes labour law specialists essential.",
+      "outlook": "Stable; constantly evolving labour legislation keeps demand high.",
+      "pathways": ["LLB (4 years)", "Postgrad diploma in Labour Law", "Law firms, CCMA commissioners, trade unions, corporates"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["Business Studies", "Economics"],
+    "programme_keywords": ["llb", "labour law"],
+    "is_active": true
+  },
+  {
+    "slug": "prosecutor",
+    "title": "Prosecutor / State Advocate",
+    "industry": "Law & Justice",
+    "description": "Represent the state in criminal proceedings — gathering evidence, deciding on charges, and arguing cases in the Magistrates' Court and High Court on behalf of the public.",
+    "compensation": {"entry": 20000, "mid": 38000, "senior": 60000, "currency": "ZAR", "period": "month", "display": "R20k – R60k/mo"},
+    "employability": {
+      "demand": "High — NPA has significant backlogs and needs qualified prosecutors.",
+      "outlook": "Stable; public-sector salary increases improving retention.",
+      "pathways": ["LLB (4 years)", "NPA training programme", "National Prosecuting Authority"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["History"],
+    "programme_keywords": ["llb", "bachelor of laws"],
+    "is_active": true
+  },
+  {
+    "slug": "magistrate",
+    "title": "Magistrate / Judge",
+    "industry": "Law & Justice",
+    "description": "Preside over court proceedings, assess evidence, and deliver rulings. Magistrates handle the bulk of SA's criminal and civil cases; judges sit in higher courts on complex matters.",
+    "compensation": {"entry": 38000, "mid": 60000, "senior": 120000, "currency": "ZAR", "period": "month", "display": "R38k – R120k/mo"},
+    "employability": {
+      "demand": "Moderate — vacancies are filled from experienced legal practitioners.",
+      "outlook": "Stable; judiciary is funded by government and not dependent on market cycles.",
+      "pathways": ["LLB (4 years)", "Several years in legal practice", "Department of Justice appointment process"],
+      "employment_note": "Magistrate and judge appointments require substantial prior legal practice — typically 10+ years as an attorney or advocate."
+    },
+    "subject_rule": {"all_of": [], "any_of": []},
+    "recommended_subjects": ["History", "English Home Language"],
+    "programme_keywords": ["llb", "bachelor of laws"],
+    "is_active": true
+  }
+]

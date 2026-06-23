@@ -1,0 +1,172 @@
+[
+  {
+    "slug": "civil-engineer",
+    "title": "Civil Engineer",
+    "industry": "Engineering & Built Environment",
+    "description": "Design, build, and maintain infrastructure such as roads, bridges, dams, and water systems. Civil engineers work in both public and private sectors on projects that shape communities.",
+    "compensation": {"entry": 25000, "mid": 45000, "senior": 65000, "currency": "ZAR", "period": "month", "display": "R25k – R65k+/mo"},
+    "employability": {
+      "demand": "High — engineering skills shortage; 38% of employers struggle to fill roles (Xpatweb 2025).",
+      "outlook": "Strong, driven by infrastructure investment and public-works programmes.",
+      "pathways": ["BEng/BSc Civil Engineering (4 years)", "Professional registration with ECSA", "Government infrastructure, consulting firms, construction companies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Engineering Graphics and Design"],
+    "programme_keywords": ["civil engineering"],
+    "is_active": true
+  },
+  {
+    "slug": "mechanical-engineer",
+    "title": "Mechanical Engineer",
+    "industry": "Engineering & Built Environment",
+    "description": "Design, analyse, and manufacture mechanical systems — from engines and turbines to HVAC systems and industrial machinery. Works across automotive, aerospace, energy, and manufacturing sectors.",
+    "compensation": {"entry": 25000, "mid": 48000, "senior": 70000, "currency": "ZAR", "period": "month", "display": "R25k – R70k+/mo"},
+    "employability": {
+      "demand": "High — critical shortage in manufacturing and energy sectors.",
+      "outlook": "Steady demand across mining, energy, automotive, and industrial maintenance.",
+      "pathways": ["BEng/BSc Mechanical Engineering (4 years)", "ECSA registration", "Manufacturing, energy utilities, automotive OEMs"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Engineering Graphics and Design"],
+    "programme_keywords": ["mechanical engineering"],
+    "is_active": true
+  },
+  {
+    "slug": "electrical-engineer",
+    "title": "Electrical / Electronic Engineer",
+    "industry": "Engineering & Built Environment",
+    "description": "Design and develop electrical systems — from power distribution and telecoms infrastructure to electronic circuits and embedded systems. Essential to energy, telecoms, and automation industries.",
+    "compensation": {"entry": 28000, "mid": 50000, "senior": 75000, "currency": "ZAR", "period": "month", "display": "R28k – R75k+/mo"},
+    "employability": {
+      "demand": "High — shortage in power, telecoms, and automation; prioritised on SA Critical Skills List.",
+      "outlook": "Strong growth in renewable energy, smart grids, and telecoms expansion.",
+      "pathways": ["BEng Electrical/Electronic Engineering (4 years)", "ECSA registration", "Eskom, Telkom, renewables companies, automation firms"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Engineering Graphics and Design", "Information Technology"],
+    "programme_keywords": ["electrical engineering", "electronic engineering"],
+    "is_active": true
+  },
+  {
+    "slug": "chemical-engineer",
+    "title": "Chemical Engineer",
+    "industry": "Engineering & Built Environment",
+    "description": "Apply chemistry and engineering principles to design industrial processes — oil refining, food processing, pharmaceuticals, and materials production. Optimise plants for safety and efficiency.",
+    "compensation": {"entry": 28000, "mid": 52000, "senior": 75000, "currency": "ZAR", "period": "month", "display": "R28k – R75k+/mo"},
+    "employability": {
+      "demand": "Moderate-high — steady demand in mining, petrochemicals, and food sectors.",
+      "outlook": "Stable; growth in sustainable chemistry and green energy processes.",
+      "pathways": ["BEng Chemical Engineering (4 years)", "ECSA registration", "Sasol, petrochemical refineries, pharmaceutical companies"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Life Sciences"],
+    "programme_keywords": ["chemical engineering"],
+    "is_active": true
+  },
+  {
+    "slug": "mining-engineer",
+    "title": "Mining Engineer",
+    "industry": "Engineering & Built Environment",
+    "description": "Plan and oversee the extraction of minerals and resources safely and efficiently. Work in surface and underground mines, managing blasting, excavation, equipment, and environmental impact.",
+    "compensation": {"entry": 30000, "mid": 55000, "senior": 80000, "currency": "ZAR", "period": "month", "display": "R30k – R80k+/mo"},
+    "employability": {
+      "demand": "High — critical skills shortage in SA mining sector.",
+      "outlook": "Strong for experienced engineers; platinum, gold, and coal sectors remain major employers.",
+      "pathways": ["BEng Mining Engineering (4 years)", "ECSA + Mine Manager certificate", "Anglo American, Sibanye-Stillwater, Glencore"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Geography"],
+    "programme_keywords": ["mining engineering"],
+    "is_active": true
+  },
+  {
+    "slug": "industrial-engineer",
+    "title": "Industrial / Systems Engineer",
+    "industry": "Engineering & Built Environment",
+    "description": "Optimise complex processes, systems, and organisations for efficiency and quality. Industrial engineers work across manufacturing, logistics, healthcare operations, and service industries.",
+    "compensation": {"entry": 25000, "mid": 45000, "senior": 65000, "currency": "ZAR", "period": "month", "display": "R25k – R65k+/mo"},
+    "employability": {
+      "demand": "High — cross-industry demand as organisations prioritise operational efficiency.",
+      "outlook": "Growing as automation and lean operations become standard.",
+      "pathways": ["BEng Industrial Engineering (4 years)", "ECSA registration", "Consulting, automotive, FMCG, healthcare"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics", "Physical Sciences"], "any_of": []},
+    "recommended_subjects": ["Business Studies"],
+    "programme_keywords": ["industrial engineering"],
+    "is_active": true
+  },
+  {
+    "slug": "architect",
+    "title": "Architect",
+    "industry": "Engineering & Built Environment",
+    "description": "Design buildings and spaces — from residential homes and commercial offices to hospitals and cultural centres. Balance aesthetics, function, sustainability, and building codes across the full design lifecycle.",
+    "compensation": {"entry": 18000, "mid": 38000, "senior": 55000, "currency": "ZAR", "period": "month", "display": "R18k – R55k/mo"},
+    "employability": {
+      "demand": "Moderate — tied to construction cycles; competitive entry-level market.",
+      "outlook": "Steady; green building and urban development driving demand.",
+      "pathways": ["BAS (3 years) + MArch (2 years)", "SACAP registration", "Architectural firms, government, property developers"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Visual Arts", "Engineering Graphics and Design", "Design"],
+    "programme_keywords": ["architecture", "architectural"],
+    "is_active": true
+  },
+  {
+    "slug": "quantity-surveyor",
+    "title": "Quantity Surveyor",
+    "industry": "Engineering & Built Environment",
+    "description": "Manage construction project costs from inception to completion — estimating, tendering, contract management, and final accounts. Play a central role in keeping projects on budget.",
+    "compensation": {"entry": 22000, "mid": 40000, "senior": 60000, "currency": "ZAR", "period": "month", "display": "R22k – R60k/mo"},
+    "employability": {
+      "demand": "High — needed on every major construction project; shortage of experienced QSs.",
+      "outlook": "Strong with continued infrastructure spend.",
+      "pathways": ["BSc Quantity Surveying (4 years)", "ASAQS registration", "Construction firms, consulting practices, property developers"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Accounting", "Engineering Graphics and Design"],
+    "programme_keywords": ["quantity surveying"],
+    "is_active": true
+  },
+  {
+    "slug": "urban-planner",
+    "title": "Urban & Regional Planner",
+    "industry": "Engineering & Built Environment",
+    "description": "Shape the development of cities, towns, and regions — land use, housing, transport, and environmental planning. Work with municipalities, developers, and communities to design livable spaces.",
+    "compensation": {"entry": 20000, "mid": 38000, "senior": 55000, "currency": "ZAR", "period": "month", "display": "R20k – R55k/mo"},
+    "employability": {
+      "demand": "Moderate — driven by rapid urbanisation and municipal development needs.",
+      "outlook": "Growing as SA cities expand and informal settlements require upgrading.",
+      "pathways": ["BSc Urban/Regional Planning (4 years)", "SACPLAN registration", "Municipalities, development agencies, consulting firms"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": [], "any_of": ["Geography", "Mathematics"]},
+    "recommended_subjects": ["History", "Economics"],
+    "programme_keywords": ["urban planning", "town planning"],
+    "is_active": true
+  },
+  {
+    "slug": "construction-project-manager",
+    "title": "Construction Project Manager",
+    "industry": "Engineering & Built Environment",
+    "description": "Lead construction projects from planning through handover — coordinating contractors, managing budgets and timelines, and ensuring compliance with specifications and safety standards.",
+    "compensation": {"entry": 28000, "mid": 50000, "senior": 80000, "currency": "ZAR", "period": "month", "display": "R28k – R80k/mo"},
+    "employability": {
+      "demand": "High — experienced PMs in short supply across all construction sectors.",
+      "outlook": "Strong; every infrastructure project needs capable project leadership.",
+      "pathways": ["BSc Construction Management / BSc QS / BEng (4 years)", "PMP/SACPCMP certification", "Main contractors, project management firms, property developers"],
+      "employment_note": null
+    },
+    "subject_rule": {"all_of": ["Mathematics"], "any_of": []},
+    "recommended_subjects": ["Business Studies", "Engineering Graphics and Design"],
+    "programme_keywords": ["construction management", "construction studies", "project management"],
+    "is_active": true
+  }
+]
