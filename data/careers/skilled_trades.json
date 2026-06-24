@@ -6,6 +6,7 @@
     "description": "Install, maintain, and repair electrical systems in homes, commercial buildings, and industrial plants. SA's energy crisis has made qualified electricians more valuable than ever.",
     "compensation": {"entry": 17000, "mid": 28000, "senior": 38000, "currency": "ZAR", "period": "month", "display": "R17k – R38k/mo"},
     "employability": {
+      "tvet_only": true,
       "demand": "Very high — artisan shortage is acute; on Critical Skills List; loadshedding-era demand spike.",
       "outlook": "Exceptional; solar installation, EV charging infrastructure, and grid maintenance all growing.",
       "pathways": ["N1–N6 at TVET college + electrician's learnership/apprenticeship (2–4 years)", "Trade test at QCTO", "Contractors, municipalities, Eskom, solar companies, self-employed"],
@@ -23,6 +24,7 @@
     "description": "Install, maintain, and repair industrial machinery and mechanical equipment. Millwrights are multi-skilled artisans who keep factories, mines, and plants running.",
     "compensation": {"entry": 18000, "mid": 30000, "senior": 45000, "currency": "ZAR", "period": "month", "display": "R18k – R45k/mo"},
     "employability": {
+      "tvet_only": true,
       "demand": "Very high — listed as one of the most in-demand artisan trades in SA.",
       "outlook": "Strong; automation and manufacturing expansion keeping demand elevated.",
       "pathways": ["N1–N6 Mechanical Engineering at TVET + apprenticeship (2–4 years)", "QCTO trade test", "Mining companies, paper mills, chemical plants, food manufacturers"],
@@ -40,6 +42,7 @@
     "description": "Fabricate, assemble, and repair metal structures — pressure vessels, tanks, pipelines, and structural steel. Work in construction, energy, mining, and ship repair.",
     "compensation": {"entry": 15000, "mid": 26000, "senior": 40000, "currency": "ZAR", "period": "month", "display": "R15k – R40k/mo"},
     "employability": {
+      "tvet_only": true,
       "demand": "High — listed on Critical Skills List; fabrication skills needed across heavy industry.",
       "outlook": "Strong; infrastructure projects and energy sector driving demand.",
       "pathways": ["N1–N6 at TVET + boilermaker apprenticeship (2–4 years)", "QCTO trade test", "Construction, mining, energy, ship repair, structural steel companies"],
@@ -57,6 +60,7 @@
     "description": "Install and repair pipes, fixtures, and drainage systems in residential, commercial, and industrial settings. Water infrastructure demand in SA keeps plumbers in steady work.",
     "compensation": {"entry": 14000, "mid": 24000, "senior": 35000, "currency": "ZAR", "period": "month", "display": "R14k – R35k/mo"},
     "employability": {
+      "tvet_only": true,
       "demand": "High — plumbing shortage especially in residential and municipal maintenance.",
       "outlook": "Stable; water conservation retrofits and infrastructure repair generating demand.",
       "pathways": ["N1–N6 Civil/Plumbing at TVET + plumbing apprenticeship (2–4 years)", "PIRB registration after trade test", "Contractors, municipalities, property management, self-employed"],
@@ -74,6 +78,7 @@
     "description": "Service, diagnose, and repair diesel engines in trucks, buses, construction equipment, and agricultural machinery — or petrol vehicles and light commercial vehicles as an auto mechanic.",
     "compensation": {"entry": 14000, "mid": 24000, "senior": 38000, "currency": "ZAR", "period": "month", "display": "R14k – R38k/mo"},
     "employability": {
+      "tvet_only": true,
       "demand": "High — transport sector depends on mechanics; fleet operators in short supply.",
       "outlook": "Stable; EV transition creating demand for upskilling but diesel dominant for a decade.",
       "pathways": ["N1–N6 Diesel / Motor Mechanics at TVET + apprenticeship (2–4 years)", "QCTO trade test", "Transport companies, OEM dealers, fleet operators, mines"],
@@ -91,6 +96,7 @@
     "description": "Install, calibrate, and maintain measurement and control instruments in industrial plants — flow meters, pressure gauges, control valves, and SCADA systems. Critical in petrochemical, food, and mining plants.",
     "compensation": {"entry": 20000, "mid": 35000, "senior": 50000, "currency": "ZAR", "period": "month", "display": "R20k – R50k/mo"},
     "employability": {
+      "tvet_only": true,
       "demand": "Very high — one of the most acute artisan shortages in SA's industrial sector.",
       "outlook": "Exceptional; process automation and industrial IoT amplifying demand.",
       "pathways": ["N1–N6 Electrical / Instrumentation at TVET + learnership (2–4 years)", "QCTO trade test", "Refineries, chemical plants, food manufacturers, mining"],
@@ -108,6 +114,7 @@
     "description": "Cut, shape, and install timber and panel products — from roof trusses and door frames to fitted furniture and shopfitting. One of the most entry-accessible skilled trades.",
     "compensation": {"entry": 12000, "mid": 22000, "senior": 35000, "currency": "ZAR", "period": "month", "display": "R12k – R35k/mo"},
     "employability": {
+      "tvet_only": true,
       "demand": "Moderate-high — construction sector always needs carpenters.",
       "outlook": "Stable; housing delivery programmes providing consistent work.",
       "pathways": ["N1–N4 Carpentry / Woodwork at TVET + apprenticeship (2–4 years)", "QCTO trade test", "Construction companies, shopfitters, furniture manufacturers, self-employed"],

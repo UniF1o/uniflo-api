@@ -56,6 +56,7 @@ def _matches_keywords(programme_name: str, keywords: list[str]) -> bool:
 def _career_to_read(career: Career) -> CareerRead:
     comp = career.compensation or {}
     emp = career.employability or {}
+    subject_rule = career.subject_rule or {}
     return CareerRead(
         id=str(career.id),
         slug=career.slug,
@@ -76,7 +77,7 @@ def _career_to_read(career: Career) -> CareerRead:
             pathways=emp.get("pathways", []),
             employment_note=emp.get("employment_note"),
         ),
-        recommended_subjects=career.recommended_subjects or None,
+        required_subjects=subject_rule.get("all_of", []),
     )
 
 
@@ -102,6 +103,7 @@ def list_careers(
         _career_to_read(c)
         for c in careers
         if _passes_subject_rule(student_subjects, c.subject_rule or {})
+        and not (c.employability or {}).get("tvet_only", False)
     ]
 
     return CareersListResponse(careers=matched)

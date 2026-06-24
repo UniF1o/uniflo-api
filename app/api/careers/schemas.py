@@ -27,7 +27,7 @@ class CareerRead(BaseModel):
     description: str
     compensation: CompensationOut
     employability: EmployabilityOut
-    recommended_subjects: Optional[list[str]] = None
+    required_subjects: list[str] = []
 
 
 class CareersListResponse(BaseModel):
