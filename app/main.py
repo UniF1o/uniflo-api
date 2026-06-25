@@ -10,6 +10,7 @@ from slowapi.errors import RateLimitExceeded
 
 from app.api.academic_records.router import router as academic_records_router
 from app.api.account.router import router as account_router
+from app.api.admin.router import router as admin_router
 from app.api.applications.router import router as applications_router
 from app.api.auth.router import router as auth_router
 from app.api.contacts.router import router as contacts_router
@@ -86,6 +87,7 @@ async def unhandled_exception_handler(request: Request, exc: Exception):
 
 app.include_router(webhooks_router)
 app.include_router(auth_router)
+app.include_router(admin_router)
 app.include_router(account_router)
 app.include_router(profiles_router)
 app.include_router(academic_records_router)
