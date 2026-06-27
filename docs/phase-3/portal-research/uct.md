@@ -224,6 +224,48 @@ Driven end-to-end with the synthetic Jane Doe applicant (test account `uniflo.ja
 
 ---
 
+## Branch mapping (2026-06-27)
+
+> Live-driven via Playwright with the Jane Doe synthetic applicant, instance `UCT_ONLAPP1428528` (parked at Step 15). Covers the two outstanding applicant-type tracks for UCT: **Employed** and **International**. The portal was left in its parked state — no rows added, no fields saved; all branch probes were reverted/cancelled.
+
+### Track: Employed (Labour Force)
+
+**Trigger field:** Step 7 "Post School Activity" → the **Activity** dropdown inside the add/edit row modal (`Add Post School Activity` "+" → iframe `ptModFrame_0`). Step 7 is **not** a single dropdown — it is a *table* of activity rows (columns: From / To / Activity); each row is added via a modal.
+**Option selected:** `Labour Force` (this is UCT's "employed / working" activity type).
+**Full Activity option list (10, exact strings):** `Foreign PSE Institution`, `Labour Force`, `National Service`, `Other`, `SA Higher Education College`, `Secondary/High School`, `South African Technikon`, `South African University`, `Technical College`, `Unemployed`.
+**Modal fields (fixed schema — same for every activity):** `*Start Year` (dropdown: blank / 2026 / 2025), `*End Year` (same), `*Activity` (the 10-option dropdown). Buttons: Save / Delete / Cancel.
+**Fields revealed:** none. Selecting `Labour Force` reveals **no** employer-name, job-title, or description sub-fields — the modal stays Start Year / End Year / Activity. (Confirmed the modal is fixed-schema by also selecting `South African University` — still no extra fields.)
+**Fields hidden:** none.
+**Validation changes:** none for `Labour Force` itself.
+**Notes:** UCT models post-school activity as a **list of year-range + activity-type entries**, not a single applicant-type selector. The "Employed" branch is therefore just an added row `{Start Year, End Year, Activity=Labour Force}`. **Adapter implication:** there are no employment-detail fields to map on UCT — `employer`, `job_title`, `activity_description` from the profile have no destination here; only the year range and the activity category are captured. The existing gap-year entry on this instance is a `Unemployed` row (2025–2026), confirming the same shape.
+**Screenshots:** `screenshots/uct/branch-employed/` (`step7-base.png`, `step7-labourforce-modal.png`).
+
+#### Cross-step gating — tertiary/transfer activity types
+Selecting any **tertiary** activity (`South African University`, `Foreign PSE Institution`, `SA Higher Education College`, `South African Technikon`, `Technical College`) does not add fields to the Step 7 modal, but on Save the portal raises a **cross-step validation** alert:
+> *"You have listed a tertiary education activity in your Post School Activities, but there is no related information added to your Tertiary Information. Please return to the Tertiary Information section and add the related content."*
+
+So the **university-transfer track on UCT is gated by Step 6 (Tertiary Information)**, not by sub-fields under Post School Activity. The transfer detail (institution, qualification, etc.) lives in Step 6 — per the hard rule, sub-fields of the transfer path were not mapped further. `Labour Force`, `Unemployed`, `National Service`, `Secondary/High School`, `Other` do not trigger this gate.
+
+### Track: International applicant
+
+**Trigger field:** Step 2 "Personal Information" → the **"Indicate Type of Citizenship or Residency in SA"** dropdown (native `<select>`, accessible name `*Indicate Type of Citizenship or Residency in SA`; PeopleSoft id `UCT_OA_PERS_*`). Currently "SA Citizen".
+**Full option list (5, exact strings):** `Asylum Seeker`, `International (Non-SA Citizen)`, `Permanent Resident`, `Refugee`, `SA Citizen`.
+**Option selected:** `International (Non-SA Citizen)`.
+**Fields hidden:** the entire **Identification** block — heading `ID Details` + the conditional `*SA ID Number` textbox — disappears.
+**Fields revealed:** a new **Passport Information** section replaces it: an add-row table (columns **Country / Citizenship Status / Passport Number**) with an `Add Passport Information` "+" button. The "+" opens a modal (iframe `ptModFrame_N`) with three required fields:
+  - `*Country` — native `<select>`, full ~250-country list (Afghanistan … Zimbabwe; includes split-UK entries England/Scotland/Wales/Northern Ireland).
+  - `*Citizenship Status` — native `<select>`, **populates only after a Country is chosen**; options: `Citizen`, `Permanent Resident`, `Temporary Resident`, `Unknown`.
+  - `*Passport Number` — text; helper note "If your Passport number is not available please enter N/A." (so N/A is an accepted value).
+**Validation changes:** SA ID checksum/DOB cross-validation no longer applies (no SA ID field). Passport rows are added via the modal (Save/Cancel), mirroring the Step 7 add-row pattern.
+**Notes:** This is a **field-swap branch**, not just an additive one — `SA ID Number` ↔ `Passport Information(Country, Citizenship Status, Passport Number)`. The other non-SA options (`Permanent Resident`, `Refugee`, `Asylum Seeker`) were not each walked, but `Permanent Resident` is also one of the in-modal Citizenship Status values — expect the same Passport Information section for all non-`SA Citizen` selections (the SA ID field is specifically tied to `SA Citizen`). **Adapter implication:** for international applicants, map `nationality`/`country` → Passport `*Country`, residency status → `*Citizenship Status`, and `passport_number` → `*Passport Number` (fall back to "N/A"); the SA-ID path is skipped. **AJAX hazard:** toggling Citizenship triggers a server round-trip that **blanks the `SA ID Number` field** when you switch back to `SA Citizen` — the adapter must re-enter the SA ID after any citizenship change, not assume it persists.
+**Screenshots:** `screenshots/uct/branch-international/` (`step2-citizenship-sa-base.png`, `step2-citizenship-international.png`, `step2-passport-modal.png`).
+
+### Session notes / state left behind (2026-06-27)
+
+- **No submission, no payment.** All probes were reverted or cancelled; the application instance `UCT_ONLAPP1428528` remains parked and unsubmitted (Step 16 "Not Started").
+- **Step-status side effect:** editing the Citizenship dropdown on Step 2 marked it dirty; the activity guide's navigation guard then blocked jumping to Step 15 until Step 2 was re-completed. Re-saving Step 2 (with its original valid data: SA Citizen, ID `0805140001084`) returned it to **Complete**, but PeopleSoft then **reset the downstream steps' completion flags to "In Progress"** (it re-derives sequence after an early-step save). The underlying data for those steps is intact — they just need to be re-visited/re-saved to flip back to Complete. This is a cosmetic flag reset, not data loss.
+- **`*Sex` options** confirmed again: `Female / Male / Trans` (consistent with the 2026-06-10 spike, not the original F/M-only note).
+
 ## Appendix — raw dictated walkthrough
 > Original unedited notes, kept as the source for anything the video doesn't show.
 
