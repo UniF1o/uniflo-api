@@ -205,6 +205,76 @@ Full schema cross-check + status: **[data-model-gaps.md](data-model-gaps.md)** (
 
 ---
 
+## Branch mapping (2026-06-27)
+
+> Live-driven via Playwright with the synthetic Jane Doe identity, **never submitted** (UJ assigns no student number and persists nothing server-side until final submit). Entry gate → Page A → Page B → Page C → Page D traversed fresh this session. Bulk option lists for UJ's branch fields were already captured in [`uj-field-options.json`](uj-field-options.json) during the 2026-06-18/19/20 every-option walkthroughs; this section consolidates them into the per-track map and adds the one piece those walkthroughs left open — the **`oapPact` ("What are you currently doing?") options for a non-current-Gr12 applicant** (captured live here).
+>
+> **Drive method note:** ITS has no accessible names, so everything was driven by element id via `browser_evaluate` (JS `value` + dispatched `change`/`blur`). Key practical tricks, all confirmed live: select **values are codes** not labels (e.g. marital `S`, home-lang `E`, ethnic `24`); postal codes can be JS-set on both the code field **and** its `_desc` sibling to **skip the LOV popup entirely** (Bug 4); the SA-citizen citizenship group must be force-hidden + `oapCitzCode`/`_desc` set (Bug 2); disabled `Save` buttons (`oapNextBtn2`, `oapNextBtn3`) are force-enabled by clearing `disabled` (+ `eval(JSText_46.innerHTML)` for Page C — Bug 1); a LOV's full option list can be fetched directly from `gen.gw1pkg.gw1lovbind` using the `x_lovcode`/`x_chksum` hashes in its `LOVHref_n.href` (no popup needed).
+
+### Applicant-type trigger architecture
+
+UJ spreads the applicant-type branch across **four** fields — three on Page C (Matric/Results) and one on Page D (Previous Studies):
+
+| Field | Page | Control | Role |
+|---|---|---|---|
+| `oapMatType` "Indicate your endorsement…" | C | LOV | **Primary applicant-type field.** Its option set is **gated by `(oapTypeMatric + oapMatYear)`** — the 18-option list is a superset; the *allowed* subset = function(matric-type, matric-year). |
+| `oapStudUpgrade` "Are you upgrading your Gr 12 results?" | C | select Yes/No | Repeating/upgrading flag. |
+| `oapTypeMatric` "SA or International Matric" | C | select `I`/`S` | International branch. |
+| `oapPact` "What are you currently doing?" | D | LOV | **Gated by applicant type** (the endorsement). Current-Gr12 → one option; completed/past-year → the post-school activity set (captured below). |
+
+**Endorsement (`oapMatType`) gated subsets** (codes = descriptions; full 18-option superset in `uj-field-options.json`):
+- **SA, current year** (current Gr12 school-leaver): `10`=CURRENTLY IN GR.12, `VC`=Vocational Certificate.
+- **SA, past year** (completed-matric / gap-year / upgrading): `B`=NSC/IEB/SACAI - Degree, `C`=…Certificate, `D`=…Dip/Cert, `BV`/`CV`/`DV`=Vocational admit Degree/Cert/Diploma, `VC`=Vocational Certificate.
+- **International**: `CA`=Cambridge, `IB`=International Baccalaureate, `KC`=Kenyan, `CH`=Mozambique/Angolan, `SS`=NSSC (Namibian), `DR`=Republic of Congo Diplôme, `WA`=West Exam Council, `BA`=Gabonese/Congo-Brazzaville, `02`=Other International Matric.
+
+**Mark-column behaviour differs by applicant type** (live-confirmed this session): for **current-Gr12** the visible/required subject mark is the **Final Gr11 symbol** (`oapsymbGr11`); for a **completed-matric** endorsement (`B`), `oapsymbGr11` is hidden and the **Final Gr12 symbol** (`oapsymbGr12_desc`) becomes the visible/required mark. (Upgraders additionally expose the mid-year + final Gr12 columns — `oapStudUpgrade=Yes`.)
+
+### Track: Completed matric (prior year)
+
+**Triggers:** Page C `oapMatYear` = a past year (e.g. 2024) + `oapTypeMatric` = `SA Matric` (`S`) + `oapStudUpgrade` = `No` + `oapMatType` endorsement ∈ {`B`,`C`,`D`,…} (the SA past-year subset).
+**Effect:** the endorsement LOV filters to the past-year subset (no `CURRENTLY IN GR.12`); the subject grid requires the **Final Gr12 symbol** instead of the Gr11 symbol. Page D `oapPact` then offers post-school activities (below).
+**Screenshots:** `screenshots/uj/branch-completed/` (`pageD-present-activity.png`).
+
+### Track: Repeating / upgrading
+
+**Trigger:** Page C `oapStudUpgrade` = `Yes` (with a past-year `oapMatYear` + SA matric + an endorsement).
+**Effect:** flags an upgrade; the matric subject row exposes the hidden Gr12 mark columns (Mid-Year `oapsymbGr12j` and Final `oapsymbGr12`) in addition to the Gr11 symbol. Which columns are *required* is driven mainly by the **endorsement**, not the upgrade flag alone. Toggling the upgrade flag does not delete already-committed subject rows. (Per `uj-field-options.json`, re-confirmed structurally this session.)
+
+### Track: Gap year
+
+**Trigger:** Page D `oapPact` "What are you currently doing?" — available only once the applicant is a non-current-Gr12 type (completed/past-year endorsement on Page C).
+**Value:** `09`=UNEMPLOYED (closest "gap year / not studying or working"), or `10`=OTHER.
+
+### Track: Employed
+
+**Trigger:** Page D `oapPact` = `07`=EMPLOYED.
+
+**`oapPact` full option set, live-captured 2026-06-27** (LOV internal title "Activity last year", filter `%`), for a **completed-matric** applicant — supersedes the prior gap which only had the current-Gr12 value:
+
+| Code | Description |
+|---|---|
+| `01` | UNIVERSITY STUDENT |
+| `02` | TEACHER`S TRAINING COLLEGE |
+| `03` | TECHNIKON STUDENT |
+| `05` | TECHNICAL COLLEGE STUDENT |
+| `06` | NATIONAL SERVICE |
+| `07` | **EMPLOYED** |
+| `09` | **UNEMPLOYED** |
+| `10` | OTHER |
+
+(For a **current-Gr12** applicant the same LOV returns only `08`=GRADE 12 PUPIL — confirming `oapPact` is gated by the Page-C applicant type. The tertiary-student codes `01`/`02`/`03`/`05` are the transfer-ish options; out of scope per the hard rule — note only.)
+
+### Track: International applicant
+
+**Two surfaces:**
+1. **Page A — citizenship branch:** `oapCitizenType` = `No` (not an SA citizen) reveals the non-SA block: `oapPPnumber` (Passport Number), `oapStudyPermit` (visa/permit type LOV — 17 options, e.g. `SP`=STUDY VISA, `PR`=PERMANENT RESIDENCE, `AS`=ASYLUM SEEKER, `RP`=REFUGEES PERMIT), explicit `oapGender` (F/M, since not derivable from an SA ID), and manual DOB/maiden. (Per `uj-field-options.json`.)
+2. **Page C — matric branch:** `oapTypeMatric` = `International Matric` (`I`) switches the endorsement LOV to the international subset (Cambridge/IB/Kenyan/…) and reveals an **Examination Number** field (`oapExamNum`); `SA Matric` (`S`) hides it. (Documented from the prior capture; this session the `oapExamNum` reveal did not re-fire under purely-synthetic `change`/`blur` events — a useful adapter note: the reveal needs the real `eventRun(16.999)` server round-trip, so the adapter must dispatch the native onchange, not just set the value.)
+
+### Session notes / state left behind (2026-06-27)
+
+- **No submission.** Reached Page D (`ITS_OAP04`) and stopped; never entered Page E/F/G or clicked Submit. UJ issues no student number and saves nothing between sessions, so the abandoned application leaves no recoverable record (consistent with the account model — there is no parked UJ account).
+- Synthetic Page A/B data used placeholder address/contact values (Braamfontein / 2000 / `082…` / `john.payer@gmail.com`); only Jane's identity fields (name, ID `0805140001084`, DOB, email) are the canonical synthetic identity.
+
 ## Appendix — raw dictated walkthrough
 > Original unedited notes, kept as the source for the parts the video doesn't show (login/applicant-type).
 

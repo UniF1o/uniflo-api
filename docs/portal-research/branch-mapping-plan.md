@@ -406,7 +406,7 @@ Append findings under a "Branch mapping (date)" section in `stellies.md` using t
 
 | Portal | Initial walkthrough | Completed matric | Repeating / upgrading | Gap year | Employed | International |
 |---|---|---|---|---|---|---|
-| UJ | done | [ ] | [ ] | [ ] | [ ] | [ ] |
+| UJ | done | [x] | [x] | [x] | [x] | [x] |
 | UP | done | [ ] | [ ] | [ ] | [ ] | [ ] |
 | Wits | done | [x] | [x] | [x] | [x] | [x] |
 | UCT | done (gap year path) | n/a | n/a | done | [ ] | [ ] |
