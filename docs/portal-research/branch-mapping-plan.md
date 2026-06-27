@@ -409,5 +409,5 @@ Append findings under a "Branch mapping (date)" section in `stellies.md` using t
 | UJ | done | [ ] | [ ] | [ ] | [ ] | [ ] |
 | UP | done | [ ] | [ ] | [ ] | [ ] | [ ] |
 | Wits | done | [ ] | [ ] | [ ] | [ ] | [ ] |
-| UCT | done (gap year path) | n/a | n/a | done | [ ] | [ ] |
+| UCT | done (gap year path) | n/a | n/a | done | [x] | [x] |
 | Stellies | [ ] | [ ] | [ ] | [ ] | [ ] | [ ] |
