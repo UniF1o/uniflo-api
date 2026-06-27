@@ -72,7 +72,21 @@ If the portal blocks navigation back (e.g. a step is locked after submission), n
 
 ---
 
-## Test accounts
+## Synthetic applicant — Jane Doe
+
+This identity is used for every portal. It is entirely fictitious. Never substitute real student data.
+
+| Detail | Value |
+|---|---|
+| Full name | Jane Doe |
+| Date of birth | 14 May 2008 (`2008-05-14`) |
+| SA ID number | `0805140001084` |
+| Email | `unknown.user.jane.doe@gmail.com` |
+| UniFlo app password | `JaneDoe@2027` |
+
+The email inbox is accessible via the Gmail MCP connector (`mcp__claude_ai_Gmail__*`). Use it to read OTPs and emailed credentials without manual copy-pasting.
+
+## Portal accounts
 
 All existing accounts are parked mid-application. Re-login and navigate to the branching section — do not create fresh accounts unless the portal has locked the session and re-login truly fails.
 
@@ -81,12 +95,18 @@ All existing accounts are parked mid-application. Re-login and navigate to the b
 | UJ | no pre-login — enter via POPI gate each time | n/a | Page D (no student number — never submitted) |
 | UP | Application ID `T4005778` | `JaneDoe@UP2027` | Mid-application, Verify not clicked |
 | Wits | Temporary ID `T1872394` | `JaneDoe@Wits27` | Wizard parked (indemnity not accepted, Submit never clicked) |
-| UCT | `jane.doe.2027` | `JaneDoe@UCT_2027` | Instance `UCT_ONLAPP1428528` at Step 15 |
+| UCT | username `jane.doe.2027` | `JaneDoe@UCT_2027` | Instance `UCT_ONLAPP1428528` at Step 15 |
 | Stellies | TBD — account to be created | TBD | Not started |
 
-Email used across all portals: `unknown.user.jane.doe@gmail.com`
+### Additional account notes
 
-Synthetic applicant personal details (name, ID number, DOB): see `portal-walkthroughs-plan.md` at the workspace root (`UniFlo/portal-walkthroughs-plan.md`). Do not use any real student data.
+**UJ:** No student number is ever assigned until final submission — which we never do. Each session re-enters Jane's biographical data from Page 0 (POPI gate). The application state is not saved server-side between sessions.
+
+**UP:** The account was created with a DOM-decoded captcha (pattern `UP_{case}_{char}_{seq}.JPG`). The password was changed from the emailed temporary to `JaneDoe@UP2027` on first login. Application is parked before Verify — the Apply button is visible but was never clicked.
+
+**Wits:** Temporary ID `T1872394` was issued by the portal after account creation (captcha `e5qn2n`, DOM-decoded). The temporary password was Jane's DOB as `yymmdd` (`080514`). Permanent password was set to `JaneDoe@Wits27`. The wizard is parked at Step 17 with indemnity not accepted and Submit never clicked.
+
+**UCT:** Username `jane.doe.2027`, password `JaneDoe@UCT_2027`. No OTP is sent at subsequent logins — only at original account creation (already done). The instance `UCT_ONLAPP1428528` is parked at Step 15 In Progress; the review confirm dialog was dismissed (No). Steps 1–14 are saved Complete.
 
 ### Login steps per portal
 
