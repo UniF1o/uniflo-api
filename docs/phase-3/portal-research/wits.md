@@ -219,6 +219,72 @@ Full walkthrough on the live portal, synthetic Jane Doe, Temporary ID `T1867394`
 
 ---
 
+## Branch mapping (2026-06-27)
+
+> Live-driven via Playwright with the Jane Doe synthetic applicant — Temporary ID `T1872394`, application instance `UW_OA_UGFT4356839`, **parked and unsubmitted** (indemnity not accepted, Submit never clicked). Covers all five applicant-type tracks for Wits: Completed matric, Repeating/upgrading, Gap year, Employed, International. The portal was left in its original parked state (Main Activity = School, Current Grd 12, Grade 11 marks intact).
+>
+> **Navigation note (supersedes the older plan note):** left-nav `li` clicks do NOT navigate; the live spike used Next/Previous. This session instead used the per-step **direct detail URLs** exposed in the left-nav (`.../psc/csprodonl_newwin/UW_SELF_SERVICE/SA/c/VC_OA_MENU.VC_OA_FL.GBL?PAGE=VC_OA_<STEP>_DTL_FL&...&PTAI_LIST_ID=<instance>&PTAI_ITEM_ID=UW_OA_UGFT<n>_<instance>`). Navigating the **main** window to one of these loads a standalone, fully-editable detail page for that step (own Save + Validate Application), which saves to the same application instance — a faster way to jump straight to Step 3 / Step 4 than clicking Previous ~10×. Step 3 page = `VC_OA_ACTV_DTL_FL` (item `UW_OA_UGFT11`), Step 4 = `VC_OA_SCED_DTL_FL` (item `UW_OA_UGFT13`).
+
+### Master trigger: Step 3 "Main Activity" drives Step 4 "Current School Status"
+
+The single most important finding: the **Step 4 "Current School Status" radio (`SEDH_VC_OA_SCHL_TYPE`: Current Grd 12 / Completed Grd 12 OR Upgrading) is NOT user-selectable** — both radios are rendered **`disabled`**. Its value is **derived server-side from the Step 3 "Main Activity" dropdown** (`GENL_VC_MAIN_ACTIVITY`):
+
+| Step 3 Main Activity | → Step 4 Current School Status |
+|---|---|
+| `School` | `Current Grd 12` |
+| `Currently upgrading matric` | `Completed Grd 12 OR Upgrading` |
+| `Gap Year` / `Employment Or Occupation` / `University` | `Completed Grd 12 OR Upgrading` (same — any non-School activity) |
+
+Verified live: saving Main Activity = `Currently upgrading matric` flipped Step 4 to `Completed Grd 12 OR Upgrading [checked][disabled]`; reverting to `School` flipped it back to `Current Grd 12` and **the Grade 11 marks were retained** (not wiped). **Adapter implication:** to set a Wits applicant's school status, the adapter sets **Step 3 Main Activity** — it must never try to click the Step 4 status radios (they're disabled).
+
+### Track: Completed matric (prior year) & Repeating / upgrading
+
+**Trigger:** Step 3 Main Activity → a non-`School` value (`Currently upgrading matric` for upgraders; any of Gap Year / Employment / University also yields the completed-status layout). Both tracks resolve to the **same** Step 4 state: `Current School Status = Completed Grd 12 OR Upgrading`.
+**Step 4 layout change vs the Current-Grd-12 default:**
+- **Fields hidden:** the entire **"Final Grade 11 Results"** 10-row table is removed, **and** the **"Copy Grade 11 Subjects"** button is removed.
+- **Fields remaining:** only the **"Grade 12 Subjects"** table (the applicant enters final Grade 12 marks directly), plus Grade 12 Particulars (Examining Authority, Examination Year, Examination Month, Examination Number *(if available)*).
+- **Validation changes:** none newly forced by label (Examination Number stays "if available"); the page instruction reminds upgraders to "enter ALL matric attempts". Per the 2026-06-11 spike, ≥5 Grade 12 subjects are required at Validate.
+**Notes:** there is no separate "completed prior year" vs "repeating" control on Wits — both are the same `Completed Grd 12 OR Upgrading` status; the distinction (which year, multiple attempts) is conveyed via the Examination Year + the Grade 12 subject marks, not a dedicated field.
+**Screenshots:** `screenshots/wits/branch-completed-upgrading/` (`step4-completed-upgrading.png`; base = `step4-secondary-base.png`).
+
+### Track: Gap year
+
+**Trigger:** Step 3 Main Activity = `Gap Year`.
+**Fields revealed on Step 3:** none — the page stays Main Activity dropdown + optional "Add Sport". No gap-year date-range or description fields.
+**Cross-step effect:** sets Step 4 Current School Status → `Completed Grd 12 OR Upgrading` (same layout change as above: no Grade 11 table / Copy button).
+**Notes:** Wits captures no gap-year detail beyond the activity category itself.
+
+### Track: Employed
+
+**Trigger:** Step 3 Main Activity = `Employment Or Occupation`.
+**Fields revealed on Step 3:** no input fields, but an **informational note** appears: *"Your Main Activity is Employment or Occupation. Note that you might be required to submit a CV or other supporting documents."*
+**Cross-step effect:** sets Step 4 Current School Status → `Completed Grd 12 OR Upgrading`.
+**Notes:** no employer-name / job-title / description fields — the only employment-specific behaviour is the CV-upload hint (Step 16 Documents). **Adapter implication:** nothing to map from the profile's employment fields here; surface the CV-document requirement to the student.
+
+### Track: International applicant
+
+**Trigger field:** Step 4 "Secondary Education Type" radio (`SEDH_VC_OA_SCED_OPT`: South African / International) — this radio **is** enabled/selectable (unlike Current School Status). Switch to `International`.
+**Fields hidden:** the **"Grade 12 Particulars"** block (SA province Examining Authority list) **and** the **"Current School Status"** radios disappear entirely.
+**Fields revealed:** an **"International Particulars"** section:
+  - **Country** — native `<select>`, full ~250-country list.
+  - **Examining Authority** — native `<select>`, **8 options**: `Assessment & Qualifications Alliance`, `Cambridge International Examination`, `Edexcel`, `Foreign School Leaving Certificate`, `International Baccalaureate`, `Namibian Senior Secondary Certificate`, `Scottish Examining Board`, `Zimbabwe Secondary Education Certificate`.
+  - **Examination Year** — text.
+  - **Examination Number (if available)** — text.
+  - **Subject Level** — native `<select>`, **9 options** (NEW): `A Level`, `AS Level`, `Foreign School Leaving`, `German Abitur`, `HIGCSE`, `IGCSE`, `International Baccalaureate`, `Namibian Senior Secondary`, `Ordinary Level`.
+  - **Enter Additional Exam Sittings** — native `<select>` (NEW): `1 Extra Sitting` / `2 Extra Sittings` / `3 Extra Sittings`.
+**Notes:** confirms the original walkthrough's "8 exam authorities / 9 qualification types" counts (8 Examining Authorities, 9 Subject Levels). The Grade 11/Grade 12 subject tables still follow below for the marks. Reset back to `South African` before leaving (done).
+**Screenshots:** `screenshots/wits/branch-international/` (`step4-international.png`; base = `step4-secondary-base.png`).
+
+### University transfer — note only (out of scope)
+
+Step 3 Main Activity = `University` adds **no sub-fields or note** on Step 3 itself, but (like the other non-School activities) sets Step 4 to `Completed Grd 12 OR Upgrading`. The tertiary-transfer detail lives in **Step 5 "Tertiary Education"** (toggle `GENL_VC_OA_TERT_FLG`, which matriculants leave "No"); per the hard rule, the transfer sub-fields were not mapped further.
+
+### Session notes / state left behind (2026-06-27)
+
+- **No submission, no payment, indemnity not accepted.** The application `UW_OA_UGFT4356839` remains parked at the indemnity step (where the parked session resumed), unsubmitted.
+- **Restored to original:** Step 3 Main Activity saved back to `School`; Step 4 confirmed back to `Current Grd 12` with Grade 11 marks intact (e.g. row 1 = English Home Language 85). The International toggle on Step 4 was reverted to `South African` and never saved.
+- **Population Group** reminder (from the 2026-06-11 spike, unchanged): Wits uses `Asian / Black / Coloured / Indian / White` — "Black", not "African".
+
 ## Appendix — raw dictated walkthrough
 > Original unedited notes, kept as the source for anything the video doesn't show.
 
