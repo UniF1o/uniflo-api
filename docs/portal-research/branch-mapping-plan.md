@@ -409,7 +409,7 @@ Append findings under a "Branch mapping (date)" section in `stellies.md` using t
 | UJ | done | [ ] | [ ] | [ ] | [ ] | [ ] |
 | UP | done | [ ] | [ ] | [ ] | [ ] | [ ] |
 | Wits | done | [x] | [x] | [x] | [x] | [x] |
-| UCT | done (gap year path) | n/a | n/a | done | [ ] | [ ] |
+| UCT | done (gap year path) | n/a | n/a | done | [x] | [x] |
 | Stellies | partial — BLOCKED (reCAPTCHA) | [ ] | [ ] | [ ] | [ ] | [x] (at signup) |
 
 > **Stellenbosch blocker (2026-06-27):** the SUNStudent portal (Serosoft Academia "Wolverine") gates **both login and signup with Google reCAPTCHA v2**, which triggers a live image challenge under automation and is **not** DOM-decodable like UP/Wits. Account creation could not be completed, so the four in-application tracks (completed matric / repeating / gap year / employed) are unreachable. The **International branch was captured at signup** (Country of Citizenship → unlocks the ID Type document picker). Full findings + what's still TBD: [`../phase-3/portal-research/stellies.md`](../phase-3/portal-research/stellies.md). Needs a human-solved reCAPTCHA (or a solver service) to create the test account before Part 2 can proceed.
