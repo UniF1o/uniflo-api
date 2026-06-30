@@ -30,6 +30,10 @@ a clear "apply manually" message (research scoped transfers out as note-fields-o
    and `is_sa_citizen` already exist and are retained.
 3. **Migration:** additive, all-nullable, reversible; apply to prod via `alembic upgrade head`
    **only after the PR merges** (`DATABASE_URL` = production).
+4. **Expanded applicant taxonomy + prelims (drives the frontend Step-1 question):** add
+   `GRADE_10`/`GRADE_11` to `CurrentActivityEnum` and `grade_12_september` to `RecordType`
+   (both additive, no migration — string column). Grade 10/11 and at-university are **profile-only**
+   (blocked from applying, clear message); they never reach an adapter.
 
 ### Scope notes from research (must respect)
 - **UP international is gated at SIGNUP** ("Identify me by: Passport Number"), not in-app — the
@@ -65,7 +69,16 @@ service wiring is needed.
   `study_permit_type` for International). Must NOT affect SA-citizen submissions.
 - Leave `REQUIRED_PROFILE_FIELDS` unchanged (additive-nullable convention); conditional rules live
   in the validator above.
-- `CurrentActivityEnum` already has `UPGRADING = "Upgrading matric"` — no change.
+- **Expand `CurrentActivityEnum`** to the Step-1 taxonomy: add `GRADE_10 = "In Grade 10"`,
+  `GRADE_11 = "In Grade 11"`; keep `IN_SCHOOL = "Currently in Grade 12"`, `UPGRADING`, `GAP_YEAR`,
+  `EMPLOYED`, `UNIVERSITY`, `OTHER`. Additive string values — no migration beyond the existing
+  nullable column.
+
+**A4. New academic record type (prelims)** — `app/api/academic_records/schemas.py`
+- Add `grade_12_september = "grade_12_september"` (September prelims) to the `RecordType` enum,
+  alongside `grade_12_april` / `grade_12_june` / `grade_12_final`. `record_type` is a plain string
+  column (no PG enum) so **no migration is needed** — only the Pydantic enum (+ the frontend
+  `RECORD_TYPE_LABELS`). Supports the frontend's time-aware interim-results step.
 
 ---
 
@@ -73,10 +86,17 @@ service wiring is needed.
 
 The single highest-leverage file. Two orthogonal axes: **schooling status** and **citizenship**.
 
-**B1. Unblock upgrading** — `_guard_applicant_type`
+**B1. Unblock upgrading; gate profile-only statuses** — `_guard_applicant_type`
 - Remove `"upgrad"` from the universal block list; keep `"universit"` and `"postgrad"` blocked.
-- Update the error message to name the still-unsupported types.
+- **Add Grade 10 / Grade 11 to the apply-blocked set** (profile-only — can't apply yet) with a
+  clear "not eligible to apply yet" message, mirroring the at-university block. The frontend apply
+  gate carries the same set so the user sees it before a run is attempted.
+- Update the error message to name the still-unsupported / not-yet-eligible types.
 - Update the partner test that currently asserts an upgrader raises (see E1).
+
+**B1b. Prelim marks merge** — extend the April/June subject-mark merge (UCT and any portal taking
+interim marks) to also fold in a `grade_12_september` record when present, same pattern as the
+existing `_pick_record(records, "grade_12_june", …)` merge.
 
 **B2. Schooling-status branch** — `_applicant_branch`
 - Add a distinct `"upgrading"` return when `current_activity` contains `"upgrad"` (checked before
