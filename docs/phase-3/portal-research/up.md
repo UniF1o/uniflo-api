@@ -198,6 +198,64 @@ Full walkthrough on the live portal, synthetic Jane Doe, Application ID `T398988
 - Pure approach C is workable for plain fields, but modals/grids want the stable ids above (same conclusion as UCT).
 - Login is **two-phase**: (1) create → EmailChallengeSource must deliver `application_id` + `password` from the email; (2) password change on first login → derive the permanent password via `derive_portal_credentials` and store nothing.
 - The 12136017/12130017 distinction matters: programme choice must run the eligibility check reactively — catch `(31100, 501)` and fall back to the student's next choice rather than failing the run.
+
+---
+
+## Branch mapping (2026-06-27)
+
+> Live-driven via Playwright on the parked test account (**Application ID `T4005778`** / `JaneDoe@UP2027`, 2027 Undergraduate, parked at Payment with all sections Verified ✓). Re-login uses Application ID + password — **no captcha** on re-login (the captcha is only on new-application creation). Covers all five applicant-type tracks. **Nothing saved, nothing submitted** — every edit was reverted and the parked state confirmed intact (see "state left behind").
+>
+> **Adapter-safety fact verified live:** UP's OAP holds edits in a **client/component buffer that is NOT committed until the Save button (`UP_FAE_WRK_SAVE_PB`)**. Switching left-nav sections does **not** persist edits — after thrashing the Secondary Education cascade, a fresh reload of the app URL restored the parked header **and all 7 saved subjects**. So the adapter (and this research) can probe fields freely as long as Save is never clicked.
+
+### Applicant-type trigger architecture
+
+UP splits the applicant-type branch across **three** fields on **three** sections:
+
+| Field | Section | Control | Tracks it drives |
+|---|---|---|---|
+| **"Tell us more"** (`UP_FAE_STG_DEMO_*`, native `<select>`) | Demographic Details | dropdown, 7 options | Repeating, Gap year, Employed (+ the post-school/tertiary types) |
+| **Highest grade completed** + **Final School Year** → **Exemption Type** | Secondary Education | cascading `<select>`s | Completed matric (prior year) |
+| **Citizenship Status** (`UP_FAE_STG_PERS_UP_SA_CITZ_STAT`) | Personal Information | dropdown | SA Citizen ↔ SA Permanent Resident (the *foreign* branch is gated at signup, not here) |
+
+### Track: Repeating / Gap year / Employed — Demographic "Tell us more"
+
+**Trigger:** Demographic Details → **"Tell us more"** dropdown. Full **7-option list** (exact strings):
+1. `I am currently still in high school` — *(the done / current-Gr12 path)*
+2. `I am or was a Post School Technical College student`
+3. `I am or was a University of Technology student`
+4. `I am or was a University student`
+5. **`I am repeating school /subjects`** → **Repeating** track
+6. **`I am unemployed and haven't studied before at a tertiary institution`** → **Gap year** track
+7. **`I am working/employed and haven't studied before at a tertiary institution`** → **Employed** track
+
+**Fields revealed:** **none for any option.** Verified live (selected "repeating" and "employed"): the Demographic page stays Gender / Home Language / Population Group / Tell us more / Disability — no employer, occupation, gap-year-date, or institution sub-fields appear. "Tell us more" is a **flat applicant-type tag**.
+**Notes:** options 2–4 are the post-school/tertiary-student types (transfer-ish — out of scope per the hard rule; the actual prior-tertiary detail is captured on the separate **Tertiary Education** section, whose "previously enrolled?" = No for school-leavers). **Adapter implication:** map the student's current activity to one of the 7 strings; there are no follow-on fields to fill on this page.
+**Screenshots (local only, not committed):** `up-demographic-tellusmore-base.png`, `up-demographic-repeating.png`.
+
+### Track: Completed matric (prior year) — Secondary Education
+
+**Trigger:** the **Highest grade completed** (`UP_FAE_STG_SEDH_UP_GRADES_TYPE`: Grade 11 / Grade 12) + **Final School Year** (`…_UP_FINAL_SCHL_YEAR`) cascade, which drives the **Exemption Type** (`…_UP_EXEMPT_TYPE`) option set.
+**Behaviour (verified live):**
+- Current-Gr12 default (Grade 11, Final Year 2026): Exemption Type has the single option **`Currently busy with schooling`**.
+- Completed-matric (Highest grade = **Grade 12** + a **past** Final School Year, e.g. 2024): Exemption Type changes to the **three completed-matric exemption levels** — **`Admit to Bachelor's Degree` / `Admit to Certificate Studies` / `Admit to Diploma Studies`**.
+**Cascade order (each a server postback that clears the fields below it):** Final School Year → Examining Authority (`…_ORG_GRP_CD`, 26 boards) → School Grades Type (`…_UP_EXEMPT_LEVEL`: Nat Senior Cert or IEB / Non-NSC) → Highest grade → Exemption Type. The adapter must set them **top-down and re-assert** after each postback (changing Final School Year wipes Examining Authority/grade-type/Highest-grade/Exemption).
+**Examination Number** (`UP_FAE_STG_SEDH_EXTERNAL_SYSTEM_ID`) is present in both states (not a branch reveal; optional for current-Gr12, relevant once matric is complete).
+**Notes:** "Admit to Bachelor's Degree" is the matric-exemption level UP wants for degree applicants — the completed-matric exemption *is* the applicant's NSC pass level. **Adapter implication:** for a completed matriculant, set a past Final School Year + Grade 12 + the correct exemption level, and provide the Examination Number.
+**Screenshots (local only):** `up-secondary-grade11-base.png`, `up-secondary-grade12-completed.png`.
+
+### Track: International applicant — split (signup vs in-application)
+
+**In-application (Personal Information → Citizenship Status):** for this account (created with an SA ID) the **Citizenship Status** dropdown offers only **`1. SA Citizen` / `2. SA Permanent Resident`** — there is **no foreign/non-citizen option in-application**. Selecting **`2. SA Permanent Resident`** reveals a **`Country of Citizenship`** dropdown (`UP_FAE_STG_PERS_COUNTRY`) while **keeping** the SA National ID field (a PR holder has an SA ID). Resetting to SA Citizen hides Country and retains the SA ID.
+**At signup (the true foreign/passport branch):** the non-SA branch is gated at **account creation** by the **"Identify me by"** choice (`SA ID Number` / **`Passport Number`**) — choosing Passport replaces the South African National ID field with a Passport Number field (per the pre-application capture). A foreign applicant therefore creates the account as a passport-holder; their citizenship is not re-selectable to "foreign" inside the application.
+**Adapter implication:** decide SA-ID vs passport **at signup** based on the student's nationality. For SA permanent residents, set Citizenship Status = "SA Permanent Resident" + Country of Citizenship in Personal Information.
+**Screenshots (local only):** `up-personal-permanent-resident.png`.
+
+### Session notes / state left behind (2026-06-27)
+
+- **No save, no submit, no payment.** Application `T4005778` remains parked at Payment ("Must still verify & apply"), all sections Verified ✓.
+- Every probed field was reverted to its parked value; a fresh reload confirmed the saved state intact (Secondary Education: 2026 / Gauteng DoE / Nat Senior Cert or IEB / Grade 11 / Currently busy with schooling, **7 subjects** — Mathematics, English Home Language, Physical Science, Life Sciences, Life Orientation, Afrikaans 1st Add Language, Geography; Personal Information: SA Citizen + SA ID `0805140001084`).
+
+## Appendix — raw dictated walkthrough
 > Original unedited notes, kept as the source for anything the video doesn't show.
 
 First thing that'll happen is she'll be prompted with an I want to, then I'll be a drop down, and we're gonna select a new application. After that, new shows will pop up. We're gonna have to enter career of study and first year of study. These will be drop downs. Currently, you're gonna choose undergraduate, first year of studies can be whatever year we are applying to. Student number, first year applied to a UP is gonna be last blank if they don't have it. Last name, first name, middle names. Then you put in your email address, then you repeat on confirm email address, and then date of birth, which you're gonna click the button to actually select the date of birth. There is a show called Identify Me by: Gonna Choose Between SAID Number or Password Number and then you're gonna put in the actual value in the next step. And then much like the one in UCT, there's going to be a security code put in, and you have to enter it in order to continue. So you have to use computer vision for that for you to see the code, recognize it, and then enter. After that, login details will be sent to the supplied email. You can go back to the i one two, and instead now, we're going to log in to continue or view study application. We're gonna input whatever application ID was sent along with the password that was supplied. After entering all that, you'll be prompted to confirm your email and change your password. So you're gonna put here whatever old positive or supplied, the new positive, and then confirm the new positive and then click okay. Okay. Cool. After all of that, we'll move on to personal information. Let's select the title. We're gonna enter a preferred first name, which we should ask the student for in the app so to make note of that. Citizenship should be a safe citizen, and then African national ID should still be there. previous contact details, gonna put in the address. So countries are drop down address... this address line, one two three four. You only have to fill in address one, I assume. And then for city server, we actually have to click a button to actually search for the city. After a few chews around a city or suburbia, the postal code in the province will automatically be put in for you. You then have to enter your mobile number and an alternative mobile number, if applicable. Email address should already be there from previous steps. Moving on to demographic details, the gender which will be a drop down, home language is also going to be a drop down, population group which is basically just your ethnicity group, and then there's gonna be a tell us more part with a drop down. Options, I'm currently still in a high school. I am or was post school, technical, college student, university of technology student. I am or was a university student. I'm repeating. I am unemployed and haven't studied before at a tertiary institution. I am working and haven't studied before at a tertiary institution. Also be prompted to see if you have a disability or not. If you do, just click the slider and click the plus button to add your disabilities by category, then there'll be a part where they ask you for your required assistance. We should ensure we cover this in good detail in our app so we can map it to the degree required.
