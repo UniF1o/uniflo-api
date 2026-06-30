@@ -156,6 +156,15 @@ Playwright MCP, screenshot each step, resolve every `[VERIFY]` marker. Screensho
 
 > Frontend tests (E3) are covered in the frontend plan doc.
 
+### Offline adapter harness (Workstream F — `uniflo-testing` repo)
+The adapter changes (Workstream C) are also exercised offline by the **`uniflo-testing`** repo —
+aiohttp fake portals that run the real adapters with `allow_submit=False` (pass = `FILLED`). Its
+fakes must replicate every new conditional reveal (UJ `oapCitizenType`/`oapStudUpgrade`, UCT Step-2
+passport add-row swap, Wits nationality-driven ID type, UP upgrading exemption) or the new code
+paths ship untested. Full detail in `uniflo-testing/docs/phase-6/applicant-type-citizenship-plan.md`.
+Its CI (`fake-portal-tests.yml`) must run with `uniflo_api_ref = feature/applicant-type-citizenship`
+so the fakes test this branch's adapters.
+
 ---
 
 ## Sequencing (dependency order)
@@ -163,9 +172,11 @@ Playwright MCP, screenshot each step, resolve every `[VERIFY]` marker. Screensho
 1. **A** (data model + migration authored, not yet applied) — the contract both backend and
    frontend depend on.
 2. **B** (mapping) + **C** (adapters); **E1/E2** alongside.
-3. Frontend consumes the regenerated `schema.d.ts` (see frontend doc).
-4. Apply migration to prod (`alembic upgrade head`) after this PR merges.
-5. **E4** live foolproofing on parked accounts; clear `[VERIFY]` markers.
+3. **Workstream F** (`uniflo-testing` fakes + harness) tracks **C** in lock step — its CI runs
+   against this adapter branch via `uniflo_api_ref`.
+4. Frontend consumes the regenerated `schema.d.ts` (see frontend doc).
+5. Apply migration to prod (`alembic upgrade head`) after this PR merges.
+6. **E4** live foolproofing on parked accounts; clear `[VERIFY]` markers.
 
 Ships as `feature/applicant-type-citizenship` (same branch name in `uniflo-web`), Squash-and-Merge.
 
