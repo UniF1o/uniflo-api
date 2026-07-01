@@ -75,9 +75,13 @@ def make_mock_profile():
     mock.mailing_province = None
     mock.mailing_postal_code = None
     mock.is_sa_citizen = None
+    mock.citizenship_status = None
+    mock.passport_number = None
+    mock.study_permit_type = None
     mock.disability_detail = None
     mock.disability_assistance = None
     mock.current_activity = None
+    mock.subject_choices = None
     mock.exam_number = None
     mock.sport = None
     mock.wants_residence = None
@@ -88,6 +92,9 @@ def make_mock_profile():
     mock.nbt_year = None
     mock.nbt_date = None
     mock.redress_factors = None
+    mock.guardian_consent_at = None
+    mock.guardian_consent_by = None
+    mock.guardian_relationship = None
     mock.updated_at = None
     return mock
 

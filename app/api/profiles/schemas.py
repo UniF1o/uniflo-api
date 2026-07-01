@@ -3,7 +3,13 @@ from datetime import date, datetime
 from enum import Enum
 from typing import Any, Optional
 
-from pydantic import BaseModel, ConfigDict, computed_field, field_validator
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    computed_field,
+    field_validator,
+    model_validator,
+)
 
 
 class GenderEnum(str, Enum):
@@ -76,10 +82,47 @@ class TitleEnum(str, Enum):
     OTHER = "Other"
 
 
+class CitizenshipStatusEnum(str, Enum):
+    # Full residency taxonomy — mirrors UCT's Step-2 citizenship set. Drives the
+    # SA-ID-vs-passport branch on the portals and in profile setup.
+    SA_CITIZEN = "SA Citizen"
+    PERMANENT_RESIDENT = "Permanent Resident"
+    REFUGEE = "Refugee"
+    ASYLUM_SEEKER = "Asylum Seeker"
+    INTERNATIONAL = "International"
+
+
+class StudyPermitTypeEnum(str, Enum):
+    # UJ's oapStudyPermit LOV (17 options) — the canonical study-permit / visa
+    # vocabulary. Values are the portal's visible row text; the adapter
+    # fuzzy-matches them to the live LOV at fill time.
+    ASYLUM_SEEKER_PERMIT = "Asylum Seeker Permit"
+    BUSINESS_VISA = "Business Visa With Endorsement"
+    CRITICAL_SKILLS_VISA = "Critical Skills Visa"
+    DIPLOMATIC_PERMIT = "Diplomatic Permit"
+    EXCHANGE_STUDENT = "Exchange Student"
+    EXPERIENTIAL_LEARNING = "Experiential Learning"
+    EXTRA_CURRICULAR = "Extra Curricular"
+    LIMITED_CONTACT_SESSIONS = "Limited Contact Sessions"
+    ONLINE_PROGRAMME = "Online Programme - Not Applicable"
+    OTHER = "Other"
+    PERMANENT_RESIDENCE = "Permanent Residence Status"
+    QUOTA_WORK_VISA = "Quota Work Visa With Endorsement"
+    REFUGEES_PERMIT = "Refugees Permit"
+    RELATIVES_VISA = "Relatives Visa With Endorsement"
+    STUDY_VISA = "Study Visa"
+    VISITORS_VISA = "Visitor's Visa"
+    WORK_VISA = "Work Visa With Endorsement"
+
+
 class CurrentActivityEnum(str, Enum):
     # What the applicant is doing this year — maps to each portal's "current
     # activity" dropdown (UJ "GRADE 12 PUPIL", Wits "School", UP "still in high
-    # school", etc.).
+    # school", etc.). Grade 8-11 are profile-only (can't apply yet).
+    GRADE_8 = "In Grade 8"
+    GRADE_9 = "In Grade 9"
+    GRADE_10 = "In Grade 10"
+    GRADE_11 = "In Grade 11"
     IN_SCHOOL = "Currently in Grade 12"
     UPGRADING = "Upgrading matric"
     GAP_YEAR = "Gap year"
@@ -123,6 +166,9 @@ class StudentProfileWrite(BaseModel):
     mailing_postal_code: Optional[str] = None
     nationality: Optional[str] = None
     is_sa_citizen: Optional[bool] = None
+    citizenship_status: Optional[CitizenshipStatusEnum] = None
+    passport_number: Optional[str] = None
+    study_permit_type: Optional[StudyPermitTypeEnum] = None
     gender: Optional[GenderEnum] = None
     home_language: Optional[HomeLanguageEnum] = None
     religion: Optional[ReligionEnum] = None
@@ -132,6 +178,7 @@ class StudentProfileWrite(BaseModel):
     marital_status: Optional[MaritalStatusEnum] = None
     ethnicity: Optional[EthnicityEnum] = None
     current_activity: Optional[CurrentActivityEnum] = None
+    subject_choices: Optional[list[str]] = None
     exam_number: Optional[str] = None
     sport: Optional[str] = None
     wants_residence: Optional[bool] = None
@@ -142,6 +189,9 @@ class StudentProfileWrite(BaseModel):
     nbt_year: Optional[int] = None
     nbt_date: Optional[date] = None
     redress_factors: Optional[dict[str, Any]] = None
+    guardian_consent_at: Optional[datetime] = None
+    guardian_consent_by: Optional[str] = None
+    guardian_relationship: Optional[str] = None
 
     @field_validator("postal_code", "mailing_postal_code")
     @classmethod
@@ -156,6 +206,31 @@ class StudentProfileWrite(BaseModel):
         if v is not None and not 2000 <= v <= 2100:
             raise ValueError("nbt_year must be between 2000 and 2100")
         return v
+
+    @model_validator(mode="after")
+    def validate_citizenship(self) -> "StudentProfileWrite":
+        # Non-SA-citizen applicants must supply a passport (the portals swap the
+        # SA-ID field for it); International status additionally needs the permit
+        # type. SA citizens are unaffected. Only enforced when citizenship_status
+        # is explicitly set, so partial upserts of other fields are not blocked.
+        needs_passport = {
+            CitizenshipStatusEnum.PERMANENT_RESIDENT,
+            CitizenshipStatusEnum.REFUGEE,
+            CitizenshipStatusEnum.ASYLUM_SEEKER,
+            CitizenshipStatusEnum.INTERNATIONAL,
+        }
+        if self.citizenship_status in needs_passport and not self.passport_number:
+            raise ValueError(
+                "passport_number is required for non-SA-citizen applicants"
+            )
+        if (
+            self.citizenship_status == CitizenshipStatusEnum.INTERNATIONAL
+            and not self.study_permit_type
+        ):
+            raise ValueError(
+                "study_permit_type is required for international applicants"
+            )
+        return self
 
 
 # Create and update use the same shape (all fields optional, upsert semantics).
@@ -190,6 +265,9 @@ class StudentProfileResponse(BaseModel):
     mailing_postal_code: Optional[str] = None
     nationality: Optional[str] = None
     is_sa_citizen: Optional[bool] = None
+    citizenship_status: Optional[CitizenshipStatusEnum] = None
+    passport_number: Optional[str] = None
+    study_permit_type: Optional[StudyPermitTypeEnum] = None
     gender: Optional[GenderEnum] = None
     home_language: Optional[HomeLanguageEnum] = None
     religion: Optional[ReligionEnum] = None
@@ -199,6 +277,7 @@ class StudentProfileResponse(BaseModel):
     marital_status: Optional[MaritalStatusEnum] = None
     ethnicity: Optional[EthnicityEnum] = None
     current_activity: Optional[CurrentActivityEnum] = None
+    subject_choices: Optional[list[str]] = None
     exam_number: Optional[str] = None
     sport: Optional[str] = None
     wants_residence: Optional[bool] = None
@@ -209,6 +288,9 @@ class StudentProfileResponse(BaseModel):
     nbt_year: Optional[int] = None
     nbt_date: Optional[date] = None
     redress_factors: Optional[dict[str, Any]] = None
+    guardian_consent_at: Optional[datetime] = None
+    guardian_consent_by: Optional[str] = None
+    guardian_relationship: Optional[str] = None
     updated_at: Optional[datetime] = None
 
     @computed_field

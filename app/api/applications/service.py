@@ -107,6 +107,17 @@ def create_application(
             detail={"code": "profile_incomplete", "missing_fields": incomplete},
         )
 
+    # POPIA: a minor's application needs recorded guardian consent before we
+    # process and submit their personal data on their behalf.
+    dob = profile.date_of_birth
+    if isinstance(dob, date):
+        today = date.today()
+        age = today.year - dob.year - ((today.month, today.day) < (dob.month, dob.day))
+        if age < 18 and getattr(profile, "guardian_consent_at", None) is None:
+            raise HTTPException(
+                status_code=422, detail={"code": "guardian_consent_required"}
+            )
+
     # validate university exists and is active
     university = session.get(University, data.university_id)
     if not university:

@@ -39,6 +39,12 @@ class StudentProfile(SQLModel, table=True):
     mailing_postal_code: Optional[str] = Field(default=None, sa_column=Column(String(4), nullable=True))
     nationality: Optional[str] = Field(default=None, nullable=True)
     is_sa_citizen: Optional[bool] = Field(default=None, nullable=True)
+    # Full residency taxonomy — for non-SA-citizen applicants the portals swap
+    # the SA-ID field for a passport + permit block (UJ oapCitizenType=No, UCT
+    # Step-2 citizenship swap, Wits nationality-driven ID type).
+    citizenship_status: Optional[str] = Field(default=None, nullable=True)
+    passport_number: Optional[str] = Field(default=None, nullable=True)
+    study_permit_type: Optional[str] = Field(default=None, nullable=True)
     gender: Optional[str] = Field(default=None, nullable=True)
     home_language: Optional[str] = Field(default=None, nullable=True)
     religion: Optional[str] = Field(default=None, nullable=True)
@@ -53,6 +59,12 @@ class StudentProfile(SQLModel, table=True):
     current_activity: Optional[str] = Field(default=None, nullable=True)
     exam_number: Optional[str] = Field(default=None, nullable=True)
     sport: Optional[str] = Field(default=None, nullable=True)
+    # Chosen FET subject names (no marks) — captured in setup for Grade 10/11
+    # learners who have picked subjects but have no results yet. Feeds careers
+    # subject-matching before an AcademicRecord (with marks) exists.
+    subject_choices: Optional[Any] = Field(
+        default=None, sa_column=Column(JSONB, nullable=True)
+    )
     # Residence + funding intent (relayed to portals; not auto-actioned).
     wants_residence: Optional[bool] = Field(default=None, nullable=True)
     preferred_residence: Optional[str] = Field(default=None, nullable=True)
@@ -69,6 +81,14 @@ class StudentProfile(SQLModel, table=True):
     redress_factors: Optional[Any] = Field(
         default=None, sa_column=Column(JSONB, nullable=True)
     )
+    # Guardian consent (POPIA) — required before processing a minor's (<18)
+    # personal data. Details of the guardian live in the `contacts` table
+    # (type=guardian); these record that consent was given, by whom, and when.
+    guardian_consent_at: Optional[datetime] = Field(
+        default=None, sa_column=Column(DateTime(timezone=True), nullable=True)
+    )
+    guardian_consent_by: Optional[str] = Field(default=None, nullable=True)
+    guardian_relationship: Optional[str] = Field(default=None, nullable=True)
     updated_at: Optional[datetime] = Field(
         default_factory=lambda: datetime.now(timezone.utc),
         sa_column=Column(
