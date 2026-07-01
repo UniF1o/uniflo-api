@@ -251,7 +251,8 @@ def test_single_choice_keeps_legacy_programme_column():
 
 
 def test_at_university_fails_fast_for_all_portals():
-    """At-university / upgrader remains blocked for every portal."""
+    """At-university / transfer remains blocked for every portal (upgrading is
+    now supported — see the international/upgrading mapping tests)."""
     import pytest
 
     class _AtUniversityProfile(_Profile):

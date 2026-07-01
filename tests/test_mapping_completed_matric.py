@@ -155,9 +155,9 @@ def test_guard_blocks_at_university_for_up():
         _guard_applicant_type(_AtUniversityProfile(), "up", [])
 
 
-def test_guard_blocks_upgrader_for_up():
-    with pytest.raises(ValueError, match="upgrader"):
-        _guard_applicant_type(_UpgraderProfile(), "up", [])
+def test_guard_permits_upgrader_for_up():
+    # Upgrading is now a supported branch (no longer blocked).
+    _guard_applicant_type(_UpgraderProfile(), "up", [_GR12_FINAL])
 
 
 def test_guard_blocks_at_university_for_uj():

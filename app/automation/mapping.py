@@ -204,14 +204,18 @@ _COMPLETED_MATRIC_SLUGS: frozenset[str] = frozenset({"up", "uj", "wits", "uct"})
 
 
 def _applicant_branch(profile: Any, records: list[Any]) -> str:
-    """'completed_matric' or 'current_learner'.
+    """'upgrading', 'completed_matric' or 'current_learner'.
 
-    A grade_12_final record is the primary signal; current_activity patterns
-    are the fallback for applicants who completed matric but haven't uploaded
-    their final results yet."""
+    An upgrader (repeating matric to improve marks) is a distinct branch — they
+    hold a prior matric but the portals flag them as upgrading. Otherwise a
+    grade_12_final record is the primary signal; current_activity patterns are
+    the fallback for applicants who completed matric but haven't uploaded their
+    final results yet."""
+    activity = str(_g(profile, "current_activity") or "").lower()
+    if "upgrad" in activity:
+        return "upgrading"
     if _pick_record(records, "grade_12_final", fallback=False) is not None:
         return "completed_matric"
-    activity = str(_g(profile, "current_activity") or "").lower()
     if any(k in activity for k in ("gap", "employ", "work", "occupat", "complete")):
         return "completed_matric"
     return "current_learner"
@@ -222,27 +226,51 @@ def _guard_applicant_type(
 ) -> None:
     """Raise ValueError for applicant types the automation can't handle.
 
-    Universally blocked: at-university / transfer, upgrader (separate branch),
-    postgrad. Completed-matric / gap-year is permitted for all four portals
-    as of Task 5 / Task 6 (UP, UJ, Wits, UCT)."""
+    Blocked (profile-only / unsupported): Grade 8-11 (still in high school,
+    can't apply yet), at-university / transfer, postgrad. Upgrading is now
+    supported (a distinct branch). Completed-matric / gap-year / employed is
+    permitted for all four portals."""
     activity = str(_g(profile, "current_activity") or "").lower()
     if activity and any(
-        k in activity for k in ("universit", "upgrad", "postgrad")
+        k in activity for k in ("grade 8", "grade 9", "grade 10", "grade 11")
     ):
         raise ValueError(
-            f"{slug}: portal automation does not support at-university, "
-            f"upgrader or postgrad applicants — activity: {activity!r}"
+            f"{slug}: applicant is still in high school (activity {activity!r}) "
+            "— not eligible to apply yet"
+        )
+    if activity and any(k in activity for k in ("universit", "postgrad")):
+        raise ValueError(
+            f"{slug}: portal automation does not support at-university/transfer "
+            f"or postgrad applicants — activity: {activity!r}"
         )
     if slug in _COMPLETED_MATRIC_SLUGS:
         return
     if activity and any(
-        k in activity for k in ("gap", "employ", "work", "occupat", "complete")
+        k in activity for k in ("gap", "employ", "work", "occupat", "complete", "upgrad")
     ):
         raise ValueError(
             f"{slug}: portal automation currently supports applicants still in "
             f"Grade 12 — profile activity {activity!r} would be misreported; "
             "manual application required until the completed-matric flow is built"
         )
+
+
+def _citizenship(profile: Any) -> dict[str, Any]:
+    """Canonical citizenship / ID keys consumed by every portal mapper. The
+    SA-citizen path is unchanged (back-compat): when only `is_sa_citizen` is set
+    the derived values match the old behaviour. `citizenship_status` (the full
+    residency taxonomy) refines it for passport applicants."""
+    is_sa = _g(profile, "is_sa_citizen")
+    status = _g(profile, "citizenship_status")
+    if is_sa is None and status:
+        is_sa = str(status).strip().lower() == "sa citizen"
+    return {
+        "is_sa_citizen": is_sa,
+        "citizenship_status": status,
+        "nationality": _g(profile, "nationality"),
+        "passport_number": _g(profile, "passport_number"),
+        "study_permit_type": _g(profile, "study_permit_type"),
+    }
 
 
 def _contact_name(contact: Any) -> Optional[str]:
@@ -336,6 +364,24 @@ def _uct_date(value: Any, fmt: str) -> Optional[str]:
     return None
 
 
+# UCT Step-2 "Type of Citizenship or Residency in SA" (live-verified set). Maps
+# the canonical citizenship_status; "International" → "International (Non-SA
+# Citizen)". Falls back to the is_sa_citizen bool when no status is captured.
+_UCT_CITIZENSHIP = {
+    "sa citizen": "SA Citizen",
+    "permanent resident": "Permanent Resident",
+    "refugee": "Refugee",
+    "asylum seeker": "Asylum Seeker",
+    "international": "International (Non-SA Citizen)",
+}
+
+
+def _uct_citizenship(status: Optional[str], is_sa: Optional[bool]) -> Optional[str]:
+    if status:
+        return _UCT_CITIZENSHIP.get(str(status).strip().lower())
+    return "SA Citizen" if is_sa else None
+
+
 def _uct_mapping(
     *, profile: Any, application: Any, academic_record: Any, contacts: Any,
     email: Optional[str], choices: Any = None,
@@ -361,7 +407,9 @@ def _uct_mapping(
     app_year = _g(application, "application_year")
     matric_year = _matric_year(records, app_year)
 
-    is_completed = _applicant_branch(profile, records) == "completed_matric"
+    cit = _citizenship(profile)
+    is_sa = cit["is_sa_citizen"]
+    is_completed = _applicant_branch(profile, records) in ("completed_matric", "upgrading")
     subj_record = gr12_final if (is_completed and gr12_final is not None) else gr11
 
     subjects = _coerce_subjects(_g(subj_record, "subjects"))
@@ -373,11 +421,16 @@ def _uct_mapping(
     june = _marks_by_subject(
         _pick_record(records, "grade_12_june", fallback=False)
     )
+    september = _marks_by_subject(
+        _pick_record(records, "grade_12_september", fallback=False)
+    )
     for subject in subjects:
         if subject["name"] in april:
             subject["april"] = april[subject["name"]]
-        if subject["name"] in june:
-            subject["june"] = june[subject["name"]]
+        # September prelims are the latest interim marks — they win over June.
+        latest_interim = september or june
+        if subject["name"] in latest_interim:
+            subject["june"] = latest_interim[subject["name"]]
 
     redress_raw = _g(profile, "redress_factors") or {}
     redress: dict[str, Any] = {}
@@ -397,9 +450,18 @@ def _uct_mapping(
         "title": _title_case(_g(profile, "title")),
         "sex": _uct_sex(_g(profile, "gender")),
         "home_language": _title_case(_g(profile, "home_language")),
-        "citizenship_type": "SA Citizen" if _g(profile, "is_sa_citizen") else None,
+        "citizenship_type": _uct_citizenship(cit["citizenship_status"], is_sa),
         "race": _title_case(_g(profile, "ethnicity")),
-        "sa_id": _g(profile, "id_number"),
+        # International (is_sa explicitly False): Step-2 swaps the SA-ID block for
+        # a Passport Information add-row table. sa_id is kept for SA citizens and
+        # when citizenship is unknown (back-compat). [VERIFY] PR/Refugee/Asylum
+        # reveal behaviour on the first live non-SA run.
+        "sa_id": None if is_sa is False else _g(profile, "id_number"),
+        "passport_country": cit["nationality"] if is_sa is False else None,
+        "passport_citizenship_status": (
+            cit["citizenship_status"] if is_sa is False else None
+        ),
+        "passport_number": cit["passport_number"] if is_sa is False else None,
         # step 3 — contact
         "postal_code": _g(profile, "postal_code"),
         "suburb": (_g(profile, "suburb") or "").upper() or None,
@@ -477,9 +539,18 @@ def _up_mapping(
     Branch-aware: grade_12_final records / gap-year current_activity trigger the
     completed-matric path (highest_grade=Grade 12, grade_12_final subjects,
     completed-matric tell_us_more and exemption_type)."""
+    cit = _citizenship(profile)
+    if cit["is_sa_citizen"] is False:
+        # UP gates passport identification at SIGNUP, before the emailed-login
+        # flow the adapter drives — international applicants must apply manually.
+        raise ValueError(
+            "up: international/non-SA applicants must apply manually — UP gates "
+            "passport identification at signup, which the adapter cannot reach"
+        )
     records = _as_records(academic_record)
     branch = _applicant_branch(profile, records)
-    is_completed = branch == "completed_matric"
+    is_completed = branch in ("completed_matric", "upgrading")
+    is_upgrading = branch == "upgrading"
 
     app_year = _g(application, "application_year")
     matric_year = _matric_year(records, app_year)
@@ -490,7 +561,13 @@ def _up_mapping(
             _pick_record(records, "grade_12_final", fallback=False)
             or _pick_record(records, "grade_11_final")
         )
-        tell_us_more = _up_tell_us_more_completed(profile)
+        # Upgraders/repeaters pick UP's exact "repeating" tag; others map by
+        # activity (employed vs unemployed/gap).
+        tell_us_more = (
+            "I am repeating school /subjects"
+            if is_upgrading
+            else _up_tell_us_more_completed(profile)
+        )
         highest_grade = "Grade 12"
         exemption_type = "Admit to Bachelor Studies"
     else:
@@ -574,6 +651,8 @@ def _wits_activity(profile: Any) -> str:
     but mapping explicitly avoids relying on fuzzy for the completed-matric
     values whose wording differs from the profile's free text."""
     activity = str(_g(profile, "current_activity") or "").lower()
+    if "upgrad" in activity:
+        return "Currently upgrading matric"
     if "gap" in activity:
         return "Gap Year"
     if any(k in activity for k in ("employ", "work", "occupat")):
@@ -604,21 +683,29 @@ def _wits_mapping(
     matric_year = _matric_year(records, app_year)
     nok_first = _g(nok, "first_name") or ""
     postal_same = _g(profile, "mailing_same_as_residential")
+    cit = _citizenship(profile)
+    is_sa = cit["is_sa_citizen"]
 
-    is_completed = _applicant_branch(profile, records) == "completed_matric"
+    is_completed = _applicant_branch(profile, records) in ("completed_matric", "upgrading")
     gr12_final = _pick_record(records, "grade_12_final", fallback=False)
     subj_record = gr12_final if (is_completed and gr12_final is not None) else gr11
 
     values: dict[str, Any] = {
-        # Create Application ID (also passed via credentials.extra)
-        "nationality": "South Africa" if _g(profile, "is_sa_citizen") else None,
+        # Create Application ID (also passed via credentials.extra). Nationality
+        # auto-sets the National ID Type — a non-SA country flips it to passport.
+        "nationality": (
+            "South Africa" if is_sa else (cit["nationality"] if is_sa is False else None)
+        ),
         "title": _title_case(_g(profile, "title")),
         "first_name": _g(profile, "first_name"),
         "middle_names": _g(profile, "middle_names"),
         "last_name": _g(profile, "last_name"),
         "date_of_birth": _uct_date(_g(profile, "date_of_birth"), "%d/%m/%Y"),
         "gender": _wits_gender(_g(profile, "gender")),
-        "id_number": _g(profile, "id_number"),
+        # National ID field: SA ID for citizens, passport once nationality flips
+        # the ID type. id_number dropped only when explicitly international.
+        "id_number": None if is_sa is False else _g(profile, "id_number"),
+        "passport_number": cit["passport_number"] if is_sa is False else None,
         "email": email,
         "phone": _g(profile, "phone"),
         "application_year": str(app_year) if app_year is not None else None,
@@ -682,17 +769,21 @@ def _uj_mapping(
     *, profile: Any, application: Any, academic_record: Any, contacts: Any,
     email: Optional[str], choices: Any = None,
 ) -> FieldMapping:
-    is_sa = _g(profile, "is_sa_citizen")
+    cit = _citizenship(profile)
+    is_sa = cit["is_sa_citizen"]
     # One captured contact covers both roles (UJ's account contact "can be
     # yourself or any other party") — resolved via the shared fallback chains.
     nok = _resolve_contact(contacts, "next_of_kin")
     payer = _resolve_contact(contacts, "fee_payer")
     records = _as_records(academic_record)
-    # Branch-aware (Task 6): a grade_12_final record / gap-year activity takes the
-    # completed-matric path — Page C endorsement becomes the Bachelor's-degree NSC
-    # pass (not "CURRENTLY IN GR.12"), the subjects/school come from the final
-    # record, and Page D activity is no longer "GRADE 12 PUPIL".
-    is_completed = _applicant_branch(profile, records) == "completed_matric"
+    # Branch-aware: a grade_12_final record / gap-year / employed activity takes
+    # the completed-matric path — Page C endorsement becomes the Bachelor's-degree
+    # NSC pass (not "CURRENTLY IN GR.12"), subjects/school come from the final
+    # record, Page D activity is no longer "GRADE 12 PUPIL". Upgraders share that
+    # path and additionally set oapStudUpgrade=Yes.
+    branch = _applicant_branch(profile, records)
+    is_completed = branch in ("completed_matric", "upgrading")
+    is_upgrading = branch == "upgrading"
     if is_completed:
         subject_record = (
             _pick_record(records, "grade_12_final", fallback=False)
@@ -715,7 +806,12 @@ def _uj_mapping(
         # Page A — Biographical
         "sa_citizen": _yn(is_sa),
         "id_number": _g(profile, "id_number"),
-        "citizenship_code": "South Africa" if is_sa else _g(profile, "nationality"),
+        "citizenship_code": "South Africa" if is_sa else cit["nationality"],
+        # International reveal (oapCitizenType=No): passport + permit + explicit
+        # gender (not derivable from an SA ID). Dropped (None) for SA citizens.
+        "passport_number": None if is_sa else cit["passport_number"],
+        "study_permit": None if is_sa else cit["study_permit_type"],
+        "gender": None if is_sa else _g(profile, "gender"),
         "date_of_birth": _format_dob(_g(profile, "date_of_birth")),
         "title": (_g(profile, "title") or "").upper() or None,
         "initials": _initials(_g(profile, "first_name"), _g(profile, "middle_names")),
@@ -754,7 +850,7 @@ def _uj_mapping(
         # Page C — Matric
         "matric_year": str(matric_year) if matric_year is not None else None,
         "ug_or_pg": "Undergraduate",
-        "upgrading": "No",
+        "upgrading": _yn(is_upgrading),
         "matric_type": "SA Matric",
         "endorsement": endorsement,
         "exam_number": _g(profile, "exam_number"),
