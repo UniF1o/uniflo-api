@@ -15,8 +15,8 @@ from app.automation.adapters.wits import (
     local_mobile,
     split_dob,
 )
-from app.automation.base import FieldMapping
-from app.automation.exceptions import ValidationFailedError
+from app.automation.base import FieldMapping, PortalCredentials
+from app.automation.exceptions import AuthFailedError, ValidationFailedError
 from app.automation.mapping import build_field_mapping
 
 _ALLOWED_TYPES = {"text", "date", "select", "checkbox", "file", "subject_loop"}
@@ -120,6 +120,63 @@ def test_require_next_of_kin_rejects_same_mobile():
             "phone": "0825550142",
         }))
     assert exc.value.field == "nok_phone"
+
+
+# --- international: Create Application ID accepts a passport --------------------------
+
+
+async def test_create_application_id_requires_id_or_passport():
+    """The National ID / Passport field needs one of the two — an international
+    applicant has a passport, not an SA ID."""
+    adapter = WitsAdapter()
+    creds = PortalCredentials(
+        username="u", password="p",
+        extra={"first_name": "Tino", "last_name": "Moyo",
+               "date_of_birth": "01/06/2007", "email": "tino@x.z"},
+    )
+    with pytest.raises(AuthFailedError, match="id_number/passport_number"):
+        await adapter._create_application_id(None, creds)
+
+
+def test_wits_international_mapping_flips_to_passport():
+    class _Intl:
+        is_sa_citizen = False
+        citizenship_status = "International"
+        nationality = "Zimbabwe"
+        passport_number = "ZW1234567"
+        study_permit_type = "Study Visa"
+        id_number = None
+        title = "mr"
+        first_name = "Tino"
+        middle_names = None
+        last_name = "Moyo"
+        date_of_birth = date(2007, 6, 1)
+        gender = "Male"
+        phone = "0825550111"
+        street_address = "1 Rd"
+        suburb = "Town"
+        postal_code = "0001"
+        province = "Gauteng"
+        home_language = "English"
+        ethnicity = "African"
+        exam_number = "X1"
+        current_activity = None
+        mailing_same_as_residential = True
+        marital_status = None
+        religion = None
+        disability = None
+
+    class _App:
+        programme = "BEng"
+        application_year = 2027
+
+    mapping = build_field_mapping(
+        "wits", profile=_Intl(), application=_App(),
+        academic_record=None, contacts=[], email="tino@x.z",
+    )
+    assert mapping.get("nationality") == "Zimbabwe"
+    assert mapping.get("passport_number") == "ZW1234567"
+    assert mapping.get("id_number") is None  # SA ID dropped, passport flips the type
 
 
 # --- registry resolution ----------------------------------------------------------------

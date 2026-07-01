@@ -258,8 +258,13 @@ class WitsAdapter(UniversityAdapter):
         """The Create Application ID form → captcha → the Confirm Application
         Details review page → 'Confirmation of Email' → OK (email sent)."""
         extra = credentials.extra
-        required = ("first_name", "last_name", "date_of_birth", "id_number", "email")
+        required = ("first_name", "last_name", "date_of_birth", "email")
         missing = [k for k in required if not extra.get(k)]
+        # International applicants carry a passport instead of an SA ID — one of
+        # the two must be present for the National ID / Passport field.
+        national_id = extra.get("id_number") or extra.get("passport_number")
+        if not national_id:
+            missing.append("id_number/passport_number")
         if missing:
             raise AuthFailedError(
                 f"Wits Create Application ID needs credentials.extra keys: {missing}"
@@ -267,11 +272,13 @@ class WitsAdapter(UniversityAdapter):
         await fluid.js_click(page, _REGISTER_BTN)
         await fluid.settle(page)
         # Nationality defaults to South Africa; selecting re-renders, so only
-        # touch it for a non-default value. Every set settles (one-field rule).
+        # touch it for a non-default value. A non-SA country auto-flips the
+        # National ID Type to passport (verified in research), so the same field
+        # then receives the passport number. Every set settles (one-field rule).
         if (nationality := extra.get("nationality")) and nationality != "South Africa":
             await self._select_best(page, _CREATE["nationality"], nationality)
             await fluid.settle(page)
-        await fluid.js_fill(page, _CREATE["national_id"], extra["id_number"])
+        await fluid.js_fill(page, _CREATE["national_id"], national_id)
         if title := extra.get("title"):
             await self._select_best(page, _CREATE["title"], str(title))
             await fluid.settle(page, 600)

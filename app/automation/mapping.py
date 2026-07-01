@@ -753,6 +753,22 @@ def _wits_mapping(
     return FieldMapping(values={k: v for k, v in values.items() if v is not None})
 
 
+def _uj_gender(gender: Optional[str]) -> Optional[str]:
+    """UJ's Page-A gender select (`#oapGender`) labels its options
+    'F Female' / 'M Male' (harvested into uj.fields.json). SA citizens have
+    this auto-derived from the ID and it stays hidden; the international branch
+    (`oapCitizenType=No`) reveals it and needs the explicit option text.
+    [VERIFY] the exact casing on the first live international run."""
+    if not gender:
+        return None
+    g = gender.strip().lower()
+    if g.startswith("f"):
+        return "F Female"
+    if g.startswith("m"):
+        return "M Male"
+    return None
+
+
 def _uj_present_activity_completed(profile: Any) -> str:
     """UJ Page D 'What are you currently doing?' for a completed-matric applicant.
     Employed/working → EMPLOYED; gap-year/unspecified → UNEMPLOYED. The adapter
@@ -811,7 +827,7 @@ def _uj_mapping(
         # gender (not derivable from an SA ID). Dropped (None) for SA citizens.
         "passport_number": None if is_sa else cit["passport_number"],
         "study_permit": None if is_sa else cit["study_permit_type"],
-        "gender": None if is_sa else _g(profile, "gender"),
+        "gender": None if is_sa else _uj_gender(_g(profile, "gender")),
         "date_of_birth": _format_dob(_g(profile, "date_of_birth")),
         "title": (_g(profile, "title") or "").upper() or None,
         "initials": _initials(_g(profile, "first_name"), _g(profile, "middle_names")),

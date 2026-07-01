@@ -207,6 +207,29 @@ def test_up_mapping_builds_expected_values():
     assert mapping.get("up_funding") == "No"
 
 
+def test_up_upgrading_mapping_sets_completed_matric_fields():
+    """UP gains the upgrading branch with no adapter code change — the existing
+    data-driven Secondary/Demographic sections select whatever the mapping puts
+    in tell_us_more / highest_grade / exemption_type. A grade_12_final record
+    plus an 'Upgrading' activity must drive the completed-matric values."""
+    class _Upgrader(_Profile):
+        current_activity = "Upgrading matric"
+
+    gr12 = type("R", (), {
+        "record_type": "grade_12_final", "year": 2026,
+        "institution": "Soshanguve South Secondary School",
+        "subjects": [{"name": "Mathematics", "mark": 72}],
+    })()
+    mapping = build_field_mapping(
+        "up", profile=_Upgrader(), application=_Application(),
+        academic_record=[gr12], email=None,
+    )
+    assert mapping.get("tell_us_more") == "I am repeating school /subjects"
+    assert mapping.get("highest_grade") == "Grade 12"
+    assert mapping.get("exemption_type") == "Admit to Bachelor Studies"
+    assert mapping.get("final_school_year") == "2026"
+
+
 def test_up_mapping_drops_unknowns_and_defaults():
     class _Empty:
         pass

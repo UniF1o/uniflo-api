@@ -216,8 +216,13 @@ class UCTAdapter(UniversityAdapter):
         """Create the applicant account on publicaccess (verified live):
         fill → Create → OTP modal (iframe) → Verify → auto-redirect to login."""
         extra = credentials.extra
-        required = ("first_name", "last_name", "date_of_birth", "id_number", "email")
+        required = ("first_name", "last_name", "date_of_birth", "email")
         missing = [k for k in required if not extra.get(k)]
+        # The account "National ID / International Passport Number" field takes
+        # either — international applicants have a passport, not an SA ID.
+        national_id = extra.get("id_number") or extra.get("passport_number")
+        if not national_id:
+            missing.append("id_number/passport_number")
         if missing:
             raise AuthFailedError(
                 f"UCT account creation needs credentials.extra keys: {missing}"
@@ -236,7 +241,7 @@ class UCTAdapter(UniversityAdapter):
         ).fill(extra["date_of_birth"])
         await page.get_by_role(
             "textbox", name=re.compile(r"National ID")
-        ).fill(extra["id_number"])
+        ).fill(national_id)
         await fluid.js_fill(page, _ACC_EMAIL, extra["email"])
         await fluid.js_fill(page, _ACC_EMAIL_REPEAT, extra["email"])
         await page.get_by_role(
@@ -368,13 +373,57 @@ class UCTAdapter(UniversityAdapter):
         await self._select_by_label_text(
             page, "*Indicate Type of Citizenship or Residency in SA", citizenship
         )
-        await fluid.settle(page)  # reveals SA ID + may revert Race
+        await fluid.settle(page)  # reveals SA ID (or the passport table) + may revert Race
         if race := mapping.get("race"):
             await self._select_by_label_text(page, "*Race", race)
         if sa_id := mapping.get("sa_id"):
             await self._fill_by_label_text(page, "*SA ID Number", sa_id)
+        elif mapping.get("passport_number"):
+            # International (Non-SA Citizen): the citizenship select hid the SA-ID
+            # block and revealed the Passport Information add-row table instead.
+            await self._add_passport_information(page, mapping)
         await fluid.save_step(page, step="2 Personal Information")
         await fluid.next_step(page)
+
+    async def _add_passport_information(
+        self, page: Page, mapping: FieldMapping
+    ) -> None:
+        """International branch: fill the Step-2 Passport Information add-row
+        table. 'Add Passport Information' (+) opens a modal (iframe) with
+        *Country / *Citizenship Status / *Passport Number (Country first — the
+        Citizenship Status list only populates after it). Modelled from
+        docs/phase-3/portal-research/uct.md; **[VERIFY]** the modal control ids
+        and the Citizenship-Status option set on the first live non-SA run."""
+        country = str(mapping.get("passport_country") or "")
+        number = str(mapping.get("passport_number") or "")
+        status = str(mapping.get("passport_citizenship_status") or "")
+        try:
+            await fluid.click_button(page, "Add Passport Information")
+        except PortalChangedError as exc:
+            raise PortalChangedError(
+                "UCT 'Add Passport Information' button not found on the "
+                "international branch",
+                selector="Add Passport Information",
+            ) from exc
+        frame = await fluid.wait_modal_frame(page)
+        await fluid.settle(page, 800)
+        frame = await fluid.wait_modal_frame(page)
+        if country:
+            await self._select_in_frame_by_label(frame, "Country", country)
+            await fluid.settle(page, 600)  # populates the Citizenship Status list
+        frame = await fluid.wait_modal_frame(page)
+        # Modal Citizenship Status options (Citizen / Permanent Resident /
+        # Temporary Resident / Unknown) differ from the profile's residency
+        # taxonomy — fuzzy-match, defaulting an International applicant to Citizen
+        # (a citizen of their passport country).
+        await self._select_in_frame_by_label(
+            frame, "Citizenship Status", status or "Citizen", fallback="Citizen"
+        )
+        if number:
+            await self._fill_in_frame_by_label(frame, "Passport Number", number)
+        await fluid.click_button(frame, "Save")
+        await fluid.wait_modal_closed(page)
+        await fluid.settle(page, 600)
 
     async def _step3_contact(self, page: Page, mapping: FieldMapping) -> None:
         """Postal code typed directly populates the Suburb dropdown — no lookup
@@ -883,6 +932,69 @@ class UCTAdapter(UniversityAdapter):
                 f"select {label!r} has no option {option_text!r} "
                 f"(live: {result.get('options')})",
                 selector=label,
+            )
+
+    async def _select_in_frame_by_label(
+        self, frame, label: str, wanted: str, *, fallback: Optional[str] = None
+    ) -> None:
+        """Select an option in a modal iframe by a label *substring* (tolerates
+        the '*Country' required-marker prefix), fuzzy-matched against the live
+        options with an optional fallback when nothing matches."""
+        options = await frame.evaluate(
+            """(label) => {
+              const sel = [...document.querySelectorAll('select')]
+                .find(s => s.offsetParent !== null && s.labels && s.labels[0]
+                      && s.labels[0].textContent.includes(label));
+              return sel
+                ? [...sel.options].map(o => o.text.trim()).filter(Boolean)
+                : null;
+            }""",
+            label,
+        )
+        if options is None:
+            raise PortalChangedError(
+                f"passport modal select labelled {label!r} not found", selector=label
+            )
+        chosen = wanted if wanted in options else best_option_match(wanted, options)
+        if not chosen and fallback:
+            chosen = (
+                fallback if fallback in options else best_option_match(fallback, options)
+            )
+        if not chosen:
+            raise ValidationFailedError(
+                f"no passport-modal option for {label!r} matched {wanted!r} "
+                f"(live: {options[:10]})",
+                field=label,
+            )
+        await frame.evaluate(
+            """([label, txt]) => {
+              const sel = [...document.querySelectorAll('select')]
+                .find(s => s.offsetParent !== null && s.labels && s.labels[0]
+                      && s.labels[0].textContent.includes(label));
+              const opt = [...sel.options].find(o => o.text.trim() === txt);
+              sel.value = opt.value;
+              sel.dispatchEvent(new Event('change', {bubbles: true}));
+            }""",
+            [label, chosen],
+        )
+
+    async def _fill_in_frame_by_label(self, frame, label: str, value: str) -> None:
+        """Fill a text input in a modal iframe by a label substring."""
+        ok = await frame.evaluate(
+            """([label, val]) => {
+              const inp = [...document.querySelectorAll('input')]
+                .find(i => i.offsetParent !== null && i.labels && i.labels[0]
+                      && i.labels[0].textContent.includes(label));
+              if (!inp) return false;
+              inp.value = val;
+              inp.dispatchEvent(new Event('change', {bubbles: true}));
+              return true;
+            }""",
+            [label, str(value)],
+        )
+        if not ok:
+            raise PortalChangedError(
+                f"passport modal input labelled {label!r} not found", selector=label
             )
 
     async def _fill_by_label_text(self, page: Page, label: str, value: str) -> None:

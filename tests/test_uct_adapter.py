@@ -17,8 +17,8 @@ from app.automation.adapters.uct import (
     load_field_schema,
     order_subjects_for_slots,
 )
-from app.automation.base import FieldMapping
-from app.automation.exceptions import ValidationFailedError
+from app.automation.base import FieldMapping, PortalCredentials
+from app.automation.exceptions import AuthFailedError, ValidationFailedError
 from app.automation.mapping import build_field_mapping
 
 _ALLOWED_TYPES = {"text", "date", "select", "checkbox", "lov", "file", "subject_loop"}
@@ -258,6 +258,91 @@ def test_uct_mapping_builds_expected_values():
     assert mapping.get("redress_mother_race") == "Black"
     assert mapping.get("redress_social_pension") == "No"
     assert mapping.get("programme") == "Civil Engineering"
+
+
+# --- international branch: passport table + account creation ------------------------
+
+
+class _FakeModalFrame:
+    """Records the label/value writes the passport-modal helpers make; returns
+    the canned option list for a Country/Citizenship-Status read (str arg) and
+    True for a write ([label, value] arg)."""
+
+    def __init__(self, options_by_label):
+        self.options_by_label = options_by_label
+        self.writes = []
+
+    async def evaluate(self, js, arg=None):
+        if isinstance(arg, str):
+            for label, opts in self.options_by_label.items():
+                if label in arg or arg in label:
+                    return opts
+            return None
+        self.writes.append(tuple(arg))
+        return True
+
+
+def test_schema_has_passport_fields():
+    by_id = {f["field_id"]: f for f in load_field_schema()["fields"]}
+    for field_id in (
+        "passport_country", "passport_citizenship_status", "passport_number"
+    ):
+        assert field_id in by_id, field_id
+        assert by_id[field_id]["page"] == "2"
+        assert by_id[field_id].get("conditional") is True
+
+
+async def test_select_in_frame_by_label_fuzzy_and_fallback():
+    adapter = UCTAdapter()
+    frame = _FakeModalFrame({
+        "Country": ["Zambia", "Zimbabwe", "South Africa"],
+        "Citizenship Status": [
+            "Citizen", "Permanent Resident", "Temporary Resident", "Unknown"
+        ],
+    })
+    await adapter._select_in_frame_by_label(frame, "Country", "Zimbabwe")
+    assert ("Country", "Zimbabwe") in frame.writes
+    # 'International' has no exact modal option → falls back to 'Citizen'.
+    await adapter._select_in_frame_by_label(
+        frame, "Citizenship Status", "International", fallback="Citizen"
+    )
+    assert ("Citizenship Status", "Citizen") in frame.writes
+
+
+async def test_fill_in_frame_by_label_writes_value():
+    adapter = UCTAdapter()
+    frame = _FakeModalFrame({})
+    await adapter._fill_in_frame_by_label(frame, "Passport Number", "ZW1234567")
+    assert ("Passport Number", "ZW1234567") in frame.writes
+
+
+async def test_account_creation_requires_id_or_passport():
+    adapter = UCTAdapter()
+    creds = PortalCredentials(
+        username="u", password="p",
+        extra={"first_name": "T", "last_name": "M",
+               "date_of_birth": "01/06/2007", "email": "t@x.z"},
+    )
+    with pytest.raises(AuthFailedError, match="id_number/passport_number"):
+        await adapter._create_account(None, creds)
+
+
+def test_uct_international_mapping_swaps_sa_id_for_passport():
+    class _Intl(_Profile):
+        is_sa_citizen = False
+        citizenship_status = "International"
+        nationality = "Zimbabwe"
+        passport_number = "ZW1234567"
+        id_number = None
+
+    mapping = build_field_mapping(
+        "uct", profile=_Intl(), application=_Application(),
+        academic_record=_Record(), contacts=[_Guardian()], email=None,
+    )
+    assert mapping.get("citizenship_type") == "International (Non-SA Citizen)"
+    assert mapping.get("passport_country") == "Zimbabwe"
+    assert mapping.get("passport_number") == "ZW1234567"
+    assert mapping.get("sa_id") is None  # SA-ID field dropped on this branch
 
 
 def test_uct_mapping_drops_unknowns():

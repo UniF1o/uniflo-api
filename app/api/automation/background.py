@@ -360,8 +360,13 @@ def _account_extra(profile, application, email) -> dict:
     fill_form only after login()."""
     extra: dict[str, str] = {}
     if profile is not None:
+        # `nationality`/`passport_number` drive the international branch: a non-SA
+        # nationality flips Wits' National ID Type to passport, and UCT's account
+        # "National ID / Passport" field + Step-2 passport table take the passport
+        # when the applicant has no SA ID.
         for key in ("first_name", "middle_names", "last_name", "id_number",
-                    "title", "gender", "phone"):
+                    "title", "gender", "phone", "nationality",
+                    "passport_number"):
             if value := getattr(profile, key, None):
                 extra[key] = value
         if getattr(profile, "date_of_birth", None):
