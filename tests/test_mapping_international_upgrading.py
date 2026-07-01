@@ -110,7 +110,8 @@ def test_uj_international_mapping():
     assert m.values["citizenship_code"] == "Zimbabwe"
     assert m.values["passport_number"] == "ZW1234567"
     assert m.values["study_permit"] == "Study Visa"
-    assert m.values["gender"] == "Female"
+    # UJ's gender <select> labels are 'F Female' / 'M Male' (uj.fields.json).
+    assert m.values["gender"] == "F Female"
 
 
 def test_uct_international_mapping():

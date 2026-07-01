@@ -13,6 +13,7 @@ import pytest
 import app.api.automation.background as bg
 from app.api.automation.background import (
     JOB_ERROR_CODES,
+    _account_extra,
     _apply_result,
     _map_error_code,
     derive_portal_pin,
@@ -143,6 +144,37 @@ def test_derive_portal_pin_differs_by_application():
     a, b = uuid.uuid4(), uuid.uuid4()
     # overwhelmingly likely to differ; guards against a constant PIN
     assert derive_portal_pin(a) != derive_portal_pin(b)
+
+
+def test_account_extra_passes_sa_citizen_identity():
+    profile = SimpleNamespace(
+        first_name="Jane", middle_names=None, last_name="Doe",
+        id_number="0803124001089", title="Miss", gender="Female",
+        phone="0825550142", nationality="South Africa", passport_number=None,
+        date_of_birth=date(2008, 3, 12),
+    )
+    application = SimpleNamespace(application_year=2027)
+    extra = _account_extra(profile, application, "jane@x.z")
+    assert extra["id_number"] == "0803124001089"
+    assert extra["nationality"] == "South Africa"
+    assert extra["date_of_birth"] == "12/03/2008"
+    assert "passport_number" not in extra  # falsy values are dropped
+
+
+def test_account_extra_passes_international_passport_and_nationality():
+    """International applicants carry a passport + non-SA nationality (no SA ID)
+    — both must reach credentials.extra for the Wits/UCT account-creation flows."""
+    profile = SimpleNamespace(
+        first_name="Tino", middle_names=None, last_name="Moyo",
+        id_number=None, title="Mr", gender="Male", phone="0825550111",
+        nationality="Zimbabwe", passport_number="ZW1234567",
+        date_of_birth=date(2007, 6, 1),
+    )
+    application = SimpleNamespace(application_year=2027)
+    extra = _account_extra(profile, application, "tino@x.z")
+    assert extra["nationality"] == "Zimbabwe"
+    assert extra["passport_number"] == "ZW1234567"
+    assert "id_number" not in extra  # no SA ID for an international applicant
 
 
 def test_consent_required_is_canonical():

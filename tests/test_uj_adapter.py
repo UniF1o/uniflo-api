@@ -447,6 +447,57 @@ async def test_add_subject_drives_lovs_and_clicks_add():
     assert ("click", "#oapAddMatric", None) in page.calls
 
 
+# --- international reveal (oapCitizenType=No): passport + permit + gender -------
+
+class _VisibleFakePage(FakePage):
+    """FakePage where the `_is_visible` probe (a bare selector string passed to
+    evaluate) reports visible — so the conditional international-branch fields
+    get driven instead of skipped."""
+
+    async def evaluate(self, js, arg=None):
+        if isinstance(arg, str):
+            return True
+        return await super().evaluate(js, arg)
+
+
+def test_schema_has_international_reveal_fields():
+    by_id = {f["field_id"]: f for f in load_field_schema()["fields"]}
+    for field_id, selector in (
+        ("passport_number", "#oapPPnumber"),
+        ("study_permit", "#oapStudyPermit"),
+        ("gender", "#oapGender"),
+    ):
+        assert field_id in by_id, field_id
+        assert by_id[field_id]["page"] == "A"
+        assert by_id[field_id]["selector"] == selector
+        assert by_id[field_id].get("conditional") is True
+
+
+async def test_fill_simple_fills_international_reveal_when_visible():
+    a, page = UJAdapter(), _VisibleFakePage()
+    mapping = FieldMapping(
+        values={
+            "sa_citizen": "No",  # #oapCitizenType — drives the reveal
+            "passport_number": "ZW1234567",  # conditional text -> #oapPPnumber
+            "study_permit": "Study Visa",  # conditional select -> #oapStudyPermit
+            "gender": "F Female",  # conditional select -> #oapGender
+        }
+    )
+    await a._fill_simple(page, mapping, "A")
+    assert ("select", "#oapCitizenType", "No") in page.calls
+    assert ("fill", "#oapPPnumber", "ZW1234567") in page.calls
+    assert ("select", "#oapStudyPermit", "Study Visa") in page.calls
+    assert ("select", "#oapGender", "F Female") in page.calls
+
+
+async def test_fill_simple_skips_international_reveal_when_hidden():
+    # default FakePage.evaluate returns None -> _is_visible False -> conditional
+    # passport field is skipped (SA citizens never see it).
+    a, page = UJAdapter(), FakePage()
+    await a._fill_simple(page, FieldMapping(values={"passport_number": "ZW1234567"}), "A")
+    assert not any(c == ("fill", "#oapPPnumber", "ZW1234567") for c in page.calls)
+
+
 async def test_fill_previous_studies_page():
     popup = FakeLovPopup()
     a, page = UJAdapter(), FakePage(next_popup=popup)
