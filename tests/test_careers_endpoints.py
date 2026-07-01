@@ -87,7 +87,7 @@ class TestListCareers:
                         outlook="Exceptional",
                         pathways=["BSc Computer Science (3–4 years)"],
                     ),
-                    recommended_subjects=None,
+                    recommended_subjects=[],
                 ),
             ]
         )

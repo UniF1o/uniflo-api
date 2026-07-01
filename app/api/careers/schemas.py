@@ -27,11 +27,19 @@ class CareerRead(BaseModel):
     description: str
     compensation: CompensationOut
     employability: EmployabilityOut
+    # Subject-combination guidance (from the career's subject_rule): the subjects
+    # a learner should choose from Grade 10 to keep this career open. required =
+    # all_of (all needed), any_of = at least one, recommended = nice-to-have.
     required_subjects: list[str] = []
+    any_of_subjects: list[str] = []
+    recommended_subjects: list[str] = []
 
 
 class CareersListResponse(BaseModel):
     careers: list[CareerRead]
+    # True when the learner has no subjects yet (Grade 8-9): the list is the full
+    # browse set rather than a subject-matched shortlist.
+    explore: bool = False
 
 
 # Per-university group returned by GET /careers/{id}/programmes.
@@ -43,8 +51,11 @@ class CareerProgrammeMatch(BaseModel):
     qualification_type: Optional[str] = None
     duration_years: Optional[int] = None
     min_aps: Optional[int] = None
-    status: str  # qualifies | borderline | not_yet
+    status: str  # qualifies | borderline | not_yet | requirements
     unmet_rules: list[Any] = []
+    # Admission subject rules as guidance strings — always populated, and the
+    # primary payload in "requirements" mode (learner has no marks yet).
+    subject_requirements: list[str] = []
     notes: Optional[str] = None
 
 

@@ -263,6 +263,27 @@ def _requirement_str(accepted: list[str], min_mark: int) -> str:
     return f"{' / '.join(accepted)} {min_mark}%"
 
 
+def subject_requirements(programme: Any) -> list[str]:
+    """A programme's admission subject rules as student-facing strings, needing
+    no student marks. Used to guide younger learners (Grade 8-9) on the subject
+    combinations to choose from Grade 10 to reach a programme — the inverse of
+    evaluate(), which checks the same rules against a captured record."""
+    requirements: dict[str, Any] = getattr(programme, "requirements", None) or {}
+    out: list[str] = []
+    for rule in requirements.get("subject_rules", []):
+        if "options" in rule:
+            parts = [
+                f"{opt['subject']} {_effective_min_mark(opt)}%"
+                for opt in rule["options"]
+            ]
+            out.append(" or ".join(parts))
+        else:
+            accepted = rule.get("subjects", [])
+            if accepted:
+                out.append(_requirement_str(accepted, _effective_min_mark(rule)))
+    return out
+
+
 def _eval_rule(
     subjects: list[SubjectIn], rule: dict[str, Any]
 ) -> tuple[bool, UnmetRule | None, int]:

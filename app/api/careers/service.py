@@ -18,7 +18,12 @@ from app.api.careers.schemas import (
     EmployabilityOut,
 )
 from app.api.recommendations.schemas import UnmetRule
-from app.api.recommendations.scoring import aps_margin_for, compute_aps, evaluate
+from app.api.recommendations.scoring import (
+    aps_margin_for,
+    compute_aps,
+    evaluate,
+    subject_requirements,
+)
 from app.api.recommendations.service import (
     _APS_MAX,
     _STATUS_ORDER,
@@ -78,7 +83,21 @@ def _career_to_read(career: Career) -> CareerRead:
             employment_note=emp.get("employment_note"),
         ),
         required_subjects=subject_rule.get("all_of", []),
+        any_of_subjects=subject_rule.get("any_of", []),
+        recommended_subjects=career.recommended_subjects or [],
     )
+
+
+def _student_subjects(profile, record) -> set[str]:
+    """Subject names the learner has chosen or been marked on. subject_choices
+    (names only, captured in setup for Grade 10/11) count even before an
+    AcademicRecord (with marks) exists."""
+    names: set[str] = {s for s in (profile.subject_choices or []) if s}
+    if record is not None:
+        names |= {
+            s.get("name", "") for s in (record.subjects or []) if s.get("name")
+        }
+    return names
 
 
 def list_careers(
@@ -88,25 +107,28 @@ def list_careers(
 ) -> CareersListResponse:
     profile = _get_profile(session, user_id)
     record = _best_available_record(session, profile.id, None)
-    if record is None:
-        raise HTTPException(status_code=409, detail={"code": "no_academic_record"})
-
-    student_subjects: set[str] = {
-        s.get("name", "") for s in (record.subjects or []) if s.get("name")
-    }
+    student_subjects = _student_subjects(profile, record)
 
     careers = session.exec(
         select(Career).where(Career.is_active == True)  # noqa: E712
     ).all()
+    active = [
+        c for c in careers if not (c.employability or {}).get("tvet_only", False)
+    ]
+
+    # Explore mode (Grade 8-9, no subjects yet): browse all careers with the
+    # subject combinations to aim for, instead of a subject-matched shortlist.
+    if not student_subjects:
+        return CareersListResponse(
+            careers=[_career_to_read(c) for c in active], explore=True
+        )
 
     matched = [
         _career_to_read(c)
-        for c in careers
+        for c in active
         if _passes_subject_rule(student_subjects, c.subject_rule or {})
-        and not (c.employability or {}).get("tvet_only", False)
     ]
-
-    return CareersListResponse(careers=matched)
+    return CareersListResponse(careers=matched, explore=False)
 
 
 def list_career_programmes(
@@ -126,14 +148,18 @@ def list_career_programmes(
 
     keywords: list[str] = career.programme_keywords or []
     active_year = intake_year or active_intake_year()
-    subjects = [SubjectIn(**s) for s in (record.subjects or [])]
+    # A learner with no marks yet (Grade 8-10) gets guidance mode: the programmes
+    # that lead to this career plus the subjects to aim for, rather than an APS
+    # match. No hard 409 — the careers feature is open to younger learners.
+    has_marks = record is not None
+    subjects = [SubjectIn(**s) for s in (record.subjects or [])] if has_marks else []
 
     universities = session.exec(select(University)).all()
 
     university_groups: list[CareerUniversityGroup] = []
     for uni in universities:
         method = uni.scoring_method or "up_aps"
-        aps = compute_aps(subjects, method)
+        aps = compute_aps(subjects, method) if has_marks else 0
         aps_max = _APS_MAX.get(method, 42)
         margin = aps_margin_for(method)
 
@@ -144,21 +170,33 @@ def list_career_programmes(
         if not matched_progs:
             continue
 
-        sorted_matches = []
-        for prog in matched_progs:
-            result = evaluate(subjects, aps, prog, aps_margin=margin)
-            sorted_matches.append((prog, result))
-
-        sorted_matches.sort(
-            key=lambda item: (
-                _STATUS_ORDER.get(item[1].status, 99),
-                max(0, (item[0].min_aps or 0) - aps),
+        if has_marks:
+            matched_progs.sort(
+                key=lambda p: (
+                    _STATUS_ORDER.get(
+                        evaluate(subjects, aps, p, aps_margin=margin).status, 99
+                    ),
+                    max(0, (p.min_aps or 0) - aps),
+                )
             )
-        )
+        else:
+            matched_progs.sort(key=lambda p: p.name)
 
         programme_matches = []
-        for prog, result in sorted_matches:
+        for prog in matched_progs:
             faculty = faculties.get(prog.faculty_id)
+            if has_marks:
+                result = evaluate(subjects, aps, prog, aps_margin=margin)
+                status = result.status
+                unmet = [
+                    UnmetRule(
+                        requirement=r.requirement, have=r.have, shortfall=r.shortfall
+                    )
+                    for r in result.unmet_rules
+                ]
+            else:
+                status = "requirements"
+                unmet = []
             programme_matches.append(
                 CareerProgrammeMatch(
                     id=str(prog.id),
@@ -167,15 +205,9 @@ def list_career_programmes(
                     qualification_type=prog.qualification_type,
                     duration_years=prog.duration_years,
                     min_aps=prog.min_aps,
-                    status=result.status,
-                    unmet_rules=[
-                        UnmetRule(
-                            requirement=r.requirement,
-                            have=r.have,
-                            shortfall=r.shortfall,
-                        )
-                        for r in result.unmet_rules
-                    ],
+                    status=status,
+                    unmet_rules=unmet,
+                    subject_requirements=subject_requirements(prog),
                     notes=prog.notes,
                 )
             )
